@@ -6,6 +6,12 @@ buildscript {
         mavenCentral()
     }
 }
+
+plugins {
+    id 'net.saliman.cobertura' version '2.3.1'
+    id 'com.github.kt3k.coveralls' version '2.8.1'
+}
+
 apply plugin: 'java'
 
 repositories {
@@ -22,7 +28,8 @@ jfx {
     mainClass = 'Main'
 }
 
-version '0.1'
+cobertura.coverageFormats = ['html', 'xml']
 
+version '0.1'
 
 sourceCompatibility = 1.8
