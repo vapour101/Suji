@@ -15,25 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui;
+package util;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.util.Pair;
 
-public class Main extends Application {
+public class Coords {
+    private Pair<Integer, Integer> coordinates;
 
-    public static void main(String[] args) {
-        launch(args);
+    public Coords(int x, int y) {
+        coordinates = new Pair<>(x, y);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        else if (!(other instanceof Coords))
+            return false;
+        else {
+            Coords compare = (Coords) other;
+            return this.coordinates.equals(compare.coordinates);
+        }
+    }
+
+    public int hashCode() {
+        return this.coordinates.hashCode();
     }
 }

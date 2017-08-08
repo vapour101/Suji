@@ -15,25 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui;
+package logic;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import org.junit.Test;
+import util.Coords;
 
-public class Main extends Application {
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertThat;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+public class BoardTest {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+    @Test
+    public void playMoves() {
+        Board board = new Board();
+
+        Coords coords = new Coords(4, 4);
+        board.playBlackStone(coords);
+        assertThat(board.getBlackStones(), hasItems(coords));
+
+        coords = new Coords(5,5);
+        board.playWhiteStone(coords);
+        assertThat(board.getWhiteStones(), hasItems(coords));
     }
 }
