@@ -33,7 +33,7 @@ public class BoardTest {
         board.playBlackStone(coords);
         assertThat(board.getBlackStones(), hasItems(coords));
 
-        coords = new Coords(5,5);
+        coords = new Coords(5, 5);
         board.playWhiteStone(coords);
         assertThat(board.getWhiteStones(), hasItems(coords));
     }

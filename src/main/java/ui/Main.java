@@ -1,4 +1,4 @@
-package ui;/*
+/*
  * Copyright (C) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,8 @@ package ui;/*
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package ui;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,8 +32,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/board.fxml"));
+
+        primaryStage.setResizable(true);
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
     }
 }
