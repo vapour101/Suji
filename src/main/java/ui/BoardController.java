@@ -17,5 +17,18 @@
 
 package ui;
 
-public class Controller {
+import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.*;
+
+
+public class BoardController {
+    public Canvas boardCanvas;
+
+    @FXML
+    public void canvasClicked(MouseEvent mouseEvent) {
+
+    }
 }
