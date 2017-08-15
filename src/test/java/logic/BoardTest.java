@@ -17,7 +17,6 @@
 
 package logic;
 
-import org.junit.Assert;
 import org.junit.Test;
 import util.Coords;
 
@@ -36,14 +35,13 @@ public class BoardTest {
         board.playBlackStone(coords);
         assertThat(board.getBlackStones(), hasItems(coords));
 
-        coords = Coords.get(5,5);
+        coords = Coords.get(5, 5);
         board.playWhiteStone(coords);
         assertThat(board.getWhiteStones(), hasItems(coords));
     }
 
     @Test
-    public void blockOccupiedSameColour()
-    {
+    public void blockOccupiedSameColour() {
         Board board = new Board();
 
         board.playBlackStone(Coords.get(4, 3));
@@ -52,9 +50,7 @@ public class BoardTest {
 
         try {
             board.playBlackStone(Coords.get(4, 3));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
             noThrow = false;
         }
@@ -64,19 +60,16 @@ public class BoardTest {
     }
 
     @Test
-    public void blockOccupiedDifferentColour()
-    {
+    public void blockOccupiedDifferentColour() {
         Board board = new Board();
 
         board.playBlackStone(Coords.get(4, 3));
 
-        boolean noThrow  = true;
+        boolean noThrow = true;
 
         try {
             board.playWhiteStone(Coords.get(4, 3));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
             noThrow = false;
         }

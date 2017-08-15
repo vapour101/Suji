@@ -17,28 +17,22 @@
 
 package util;
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.both;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 public class CoordsTest {
 
     @Test
-    public void getCoords()
-    {
-        Coords coords = new Coords(4,3);
+    public void getCoords() {
+        Coords coords = new Coords(4, 3);
 
         assertThat(Coords.get(4, 3), is(coords));
     }
 
     @Test
-    public void convertToString()
-    {
+    public void convertToString() {
         assertThat(Coords.get(3, 4).toString(), is("(3, 4)"));
     }
 }

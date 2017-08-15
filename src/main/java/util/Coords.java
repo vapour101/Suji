@@ -26,6 +26,10 @@ public class Coords {
         coordinates = new Pair<>(x, y);
     }
 
+    public static Coords get(int x, int y) {
+        return new Coords(x, y);
+    }
+
     public boolean equals(Object other) {
         if (this == other)
             return true;
@@ -37,12 +41,7 @@ public class Coords {
         }
     }
 
-    public static Coords get(int x, int y) {
-        return new Coords(x,y);
-    }
-
-    public String toString()
-    {
+    public String toString() {
         String result = "(";
         result += coordinates.getKey().toString();
         result += ", ";
