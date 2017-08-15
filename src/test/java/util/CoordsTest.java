@@ -15,26 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package util;
 
 import org.junit.Test;
-import util.Coords;
 
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BoardTest {
+public class CoordsTest {
 
     @Test
-    public void playMoves() {
-        Board board = new Board();
+    public void getCoords()
+    {
+        Coords coords = new Coords(4,3);
 
-        Coords coords = Coords.get(4, 4);
-        board.playBlackStone(coords);
-        assertThat(board.getBlackStones(), hasItems(coords));
-
-        coords = Coords.get(5,5);
-        board.playWhiteStone(coords);
-        assertThat(board.getWhiteStones(), hasItems(coords));
+        assertThat(Coords.get(4, 3), is(coords));
     }
 }

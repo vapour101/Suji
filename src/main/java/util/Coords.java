@@ -22,7 +22,7 @@ import javafx.util.Pair;
 public class Coords {
     private Pair<Integer, Integer> coordinates;
 
-    public Coords(int x, int y) {
+    Coords(int x, int y) {
         coordinates = new Pair<>(x, y);
     }
 
@@ -35,6 +35,10 @@ public class Coords {
             Coords compare = (Coords) other;
             return this.coordinates.equals(compare.coordinates);
         }
+    }
+
+    public static Coords get(int x, int y) {
+        return new Coords(x,y);
     }
 
     public int hashCode() {
