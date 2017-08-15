@@ -17,11 +17,14 @@
 
 package logic;
 
+import org.junit.Assert;
 import org.junit.Test;
 import util.Coords;
 
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class BoardTest {
 
@@ -36,5 +39,49 @@ public class BoardTest {
         coords = Coords.get(5,5);
         board.playWhiteStone(coords);
         assertThat(board.getWhiteStones(), hasItems(coords));
+    }
+
+    @Test
+    public void blockOccupiedSameColour()
+    {
+        Board board = new Board();
+
+        board.playBlackStone(Coords.get(4, 3));
+
+        boolean noThrow = true;
+
+        try {
+            board.playBlackStone(Coords.get(4, 3));
+        }
+        catch (Exception e)
+        {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+            noThrow = false;
+        }
+
+        if (noThrow)
+            fail("Board did not throw exception when playing on top of an existing stone with a stone of the same colour.");
+    }
+
+    @Test
+    public void blockOccupiedDifferentColour()
+    {
+        Board board = new Board();
+
+        board.playBlackStone(Coords.get(4, 3));
+
+        boolean noThrow  = true;
+
+        try {
+            board.playWhiteStone(Coords.get(4, 3));
+        }
+        catch (Exception e)
+        {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+            noThrow = false;
+        }
+
+        if (noThrow)
+            fail("Board did not throw exception when playing on top of an existing stone with a stone of a different colour.");
     }
 }

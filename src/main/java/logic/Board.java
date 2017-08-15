@@ -44,10 +44,25 @@ public class Board {
     }
 
     protected void playBlackStone(Coords coords) {
+        throwIfOccupied(coords);
+
         blackStones.add(coords);
     }
 
     protected void playWhiteStone(Coords coords) {
+        throwIfOccupied(coords);
+
         whiteStones.add(coords);
+    }
+
+    private void throwIfOccupied(Coords coords)
+    {
+        if (isOccupied(coords))
+            throw new IllegalArgumentException(coords.toString() + " is already occupied.");
+    }
+
+    private boolean isOccupied(Coords coords)
+    {
+        return blackStones.contains(coords) || whiteStones.contains(coords);
     }
 }
