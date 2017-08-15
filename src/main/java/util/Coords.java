@@ -41,6 +41,16 @@ public class Coords {
         return new Coords(x,y);
     }
 
+    public String toString()
+    {
+        String result = "(";
+        result += coordinates.getKey().toString();
+        result += ", ";
+        result += coordinates.getValue().toString();
+        result += ")";
+        return result;
+    }
+
     public int hashCode() {
         return this.coordinates.hashCode();
     }
