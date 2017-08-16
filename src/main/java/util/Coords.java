@@ -50,6 +50,16 @@ public class Coords {
         return result;
     }
 
+    public final int x()
+    {
+        return coordinates.getKey();
+    }
+
+    public final int y()
+    {
+        return coordinates.getValue();
+    }
+
     public int hashCode() {
         return this.coordinates.hashCode();
     }

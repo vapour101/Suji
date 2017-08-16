@@ -31,16 +31,12 @@ public class Board {
         whiteStones = new HashSet<>();
     }
 
-    public Set<Coords> getBlackStones() {
-        Set<Coords> result = (HashSet<Coords>) blackStones.clone();
-
-        return result;
+    public final Set<Coords> getBlackStones() {
+       return blackStones;
     }
 
-    public Set<Coords> getWhiteStones() {
-        Set<Coords> result = (HashSet<Coords>) whiteStones.clone();
-
-        return result;
+    public final Set<Coords> getWhiteStones() {
+        return whiteStones;
     }
 
     protected void playBlackStone(Coords coords) {
