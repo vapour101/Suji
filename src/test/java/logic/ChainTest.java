@@ -23,8 +23,10 @@ import util.Coords;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static util.Coords.getCoords;
 
 public class ChainTest {
@@ -39,13 +41,14 @@ public class ChainTest {
     @Test
     public void adjacency() {
         Chain chain = new Chain(getCoords(4, 4));
-        Chain other = new Chain(getCoords(3, 4));
+        Chain adjacent = new Chain(getCoords(3, 4));
+        Chain nonadjacent = new Chain(getCoords(3,3));
 
         assertThat(chain.isAdjacentTo(getCoords(3, 4)), is(true));
-
         assertThat(chain.isAdjacentTo(getCoords(3, 3)), is(false));
 
-        assertThat(chain.isAdjacentTo(other), is(true));
+        assertThat(chain.isAdjacentTo(adjacent), is(true));
+        assertThat(chain.isAdjacentTo(nonadjacent), is(false));
     }
 
     @Test
@@ -86,7 +89,21 @@ public class ChainTest {
         assertThat(main.contains(getCoords(4, 4)), is(true));
         assertThat(main.contains(getCoords(3, 4)), is(true));
 
-        assertThat(main.getLiberties().size(), is(6));
-        assertThat(other.getLiberties().size(), is(0));
+        assertThat(main.countLiberties(), is(6));
+        assertThat(other.countLiberties(), is(0));
+    }
+
+    @Test
+    public void throwOnBadMerge()
+    {
+        Chain main = new Chain(getCoords(4,4));
+        Chain other = new Chain(getCoords(3,3));
+
+        try {
+            main.mergeChain(other);
+            fail("Chain did not throw an exception when trying to merge with a non-adjacent chain.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
     }
 }
