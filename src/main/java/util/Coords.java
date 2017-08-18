@@ -81,8 +81,7 @@ public class Coords {
         return new Coords(x() + 1, y());
     }
 
-    public Set<Coords> getNeighbours()
-    {
+    public Set<Coords> getNeighbours() {
         HashSet<Coords> neighbours = new HashSet<>();
 
         if (north() != null)
@@ -100,13 +99,11 @@ public class Coords {
         return neighbours;
     }
 
-    public final int x()
-    {
+    public final int x() {
         return coordinates.getKey();
     }
 
-    public final int y()
-    {
+    public final int y() {
         return coordinates.getValue();
     }
 

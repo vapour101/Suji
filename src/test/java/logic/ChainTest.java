@@ -22,45 +22,42 @@ import util.Coords;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static util.Coords.getCoords;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static util.Coords.getCoords;
 
 public class ChainTest {
 
     @Test
-    public void contains()
-    {
+    public void contains() {
         Chain chain = new Chain(getCoords(3, 4));
 
-        assertThat(chain.contains(getCoords(3,4)), is(true));
+        assertThat(chain.contains(getCoords(3, 4)), is(true));
     }
 
     @Test
-    public void adjacency()
-    {
-        Chain chain = new Chain(getCoords(4,4));
+    public void adjacency() {
+        Chain chain = new Chain(getCoords(4, 4));
 
-        assertThat(chain.isAdjacentTo(getCoords(3,4)), is(true));
+        assertThat(chain.isAdjacentTo(getCoords(3, 4)), is(true));
 
-        assertThat(chain.isAdjacentTo(getCoords(3,3)), is(false));
+        assertThat(chain.isAdjacentTo(getCoords(3, 3)), is(false));
     }
 
     @Test
-    public void liberties()
-    {
-        Chain chain = new Chain(getCoords(4,4));
+    public void liberties() {
+        Chain chain = new Chain(getCoords(4, 4));
 
         Set<Coords> liberties = chain.getLiberties();
 
         assertThat(liberties.size(), is(4));
-        assertThat(liberties, hasItems(getCoords(3,4),
-                getCoords(4,3),
-                getCoords(5,4),
-                getCoords(4,5)));
+        assertThat(liberties, hasItems(getCoords(3, 4),
+                getCoords(4, 3),
+                getCoords(5, 4),
+                getCoords(4, 5)));
 
-        chain = new Chain(getCoords(1,1));
+        chain = new Chain(getCoords(1, 1));
         liberties = chain.getLiberties();
 
         assertThat(liberties.size(), is(2));

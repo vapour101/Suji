@@ -25,39 +25,33 @@ import java.util.Set;
 public class Chain {
     private HashSet<Coords> stones;
 
-    Chain(Coords coords)
-    {
+    Chain(Coords coords) {
         stones = new HashSet<>();
         stones.add(coords);
     }
 
-    protected boolean contains(Coords stone)
-    {
+    protected boolean contains(Coords stone) {
         return stones.contains(stone);
     }
 
-    protected Set<Coords> getLiberties()
-    {
+    protected Set<Coords> getLiberties() {
         HashSet<Coords> liberties = new HashSet<>();
 
-        for (Coords stone : stones)
-        {
+        for (Coords stone : stones) {
             Set<Coords> neighbours = stone.getNeighbours();
 
             for (Coords c : neighbours)
-                if ( ! this.contains(c) )
+                if (!this.contains(c))
                     liberties.add(c);
         }
 
         return liberties;
     }
 
-    protected boolean isAdjacentTo(Coords coords)
-    {
+    protected boolean isAdjacentTo(Coords coords) {
         Set<Coords> neighbours = coords.getNeighbours();
 
-        for (Coords c : neighbours)
-        {
+        for (Coords c : neighbours) {
             if (this.contains(c))
                 return true;
         }

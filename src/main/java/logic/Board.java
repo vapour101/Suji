@@ -32,7 +32,7 @@ public class Board {
     }
 
     public final Set<Coords> getBlackStones() {
-       return blackStones;
+        return blackStones;
     }
 
     public final Set<Coords> getWhiteStones() {
@@ -51,13 +51,11 @@ public class Board {
         whiteStones.add(coords);
     }
 
-    public boolean isLegalWhiteMove(Coords coords)
-    {
+    public boolean isLegalWhiteMove(Coords coords) {
         return !isOccupied(coords);
     }
 
-    public boolean isLegalBlackMove(Coords coords)
-    {
+    public boolean isLegalBlackMove(Coords coords) {
         return !isOccupied(coords);
     }
 

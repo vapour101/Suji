@@ -20,23 +20,19 @@ package logic;
 import util.Coords;
 
 import java.util.HashSet;
-import java.util.function.Consumer;
 
 public class ChainSet {
     private HashSet<Chain> chains;
 
-    public ChainSet()
-    {
+    public ChainSet() {
         chains = new HashSet<>();
     }
 
-    public boolean contains(Coords stone)
-    {
+    public boolean contains(Coords stone) {
         boolean inChains = false;
 
         for (Chain chain : chains) {
-            if (chain.contains(stone))
-            {
+            if (chain.contains(stone)) {
                 inChains = true;
                 break;
             }
@@ -45,15 +41,13 @@ public class ChainSet {
         return inChains;
     }
 
-    public void addStone(Coords stone)
-    {
+    public void addStone(Coords stone) {
         Chain chain = new Chain(stone);
 
         addChain(chain);
     }
 
-    private void addChain(Chain chain)
-    {
+    private void addChain(Chain chain) {
 
     }
 }
