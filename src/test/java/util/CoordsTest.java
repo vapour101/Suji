@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
@@ -33,10 +34,10 @@ public class CoordsTest {
         Coords c2 = new Coords(4, 3);
         Pair<Integer, Integer> notCoords = new Pair<>(4, 3);
 
-        assertThat(c1.equals(c2), is(true));
-        assertThat(c2.equals(c1), is(true));
-        assertThat(c1.equals(c1), is(true));
-        assertThat(c1.equals(notCoords), is(false));
+        assertThat(c1, is(c2));
+        assertThat(c2, is(c1));
+        assertThat(c1, is(c1));
+        assertThat(c1, not(notCoords));
     }
 
     @Test
