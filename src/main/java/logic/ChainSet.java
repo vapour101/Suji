@@ -19,35 +19,35 @@ package logic;
 
 import util.Coords;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 public class ChainSet {
-    private HashSet<Chain> chains;
+    private HashMap<Chain, Integer> chains;
 
     public ChainSet() {
-        chains = new HashSet<>();
+        chains = new HashMap<>();
     }
 
     public boolean contains(Coords stone) {
-        boolean inChains = false;
+        for (Chain chain : chains.keySet())
+            if (chain.contains(stone))
+                return true;
 
-        for (Chain chain : chains) {
-            if (chain.contains(stone)) {
-                inChains = true;
-                break;
-            }
-        }
-
-        return inChains;
+        return false;
     }
 
     public void addStone(Coords stone) {
-        Chain chain = new Chain(stone);
-
-        addChain(chain);
+        addChain(new Chain(stone));
     }
 
     private void addChain(Chain chain) {
+        for (Chain existing : chains.keySet())
+            if (existing.isAdjacentTo(chain)) {
+                existing.mergeChain(chain);
+                return;
+            }
+
+        chains.put(chain, chain.countLiberties());
 
     }
 }

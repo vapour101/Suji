@@ -49,7 +49,7 @@ public class Chain {
         return stones.contains(stone);
     }
 
-    protected Set<Coords> getLiberties() {
+    protected HashSet<Coords> getLiberties() {
         return liberties;
     }
 
@@ -72,6 +72,10 @@ public class Chain {
     private void clear() {
         stones.clear();
         liberties.clear();
+    }
+
+    protected int countLiberties() {
+        return liberties.size();
     }
 
     protected void mergeChain(Chain other) {
