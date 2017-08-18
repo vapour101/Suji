@@ -19,6 +19,9 @@ package util;
 
 import javafx.util.Pair;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Coords {
     private Pair<Integer, Integer> coordinates;
 
@@ -26,7 +29,7 @@ public class Coords {
         coordinates = new Pair<>(x, y);
     }
 
-    public static Coords get(int x, int y) {
+    public static Coords getCoords(int x, int y) {
         return new Coords(x, y);
     }
 
@@ -48,6 +51,53 @@ public class Coords {
         result += coordinates.getValue().toString();
         result += ")";
         return result;
+    }
+
+    private Coords north() {
+        if (y() == 19)
+            return null;
+
+        return new Coords(x(), y() + 1);
+    }
+
+    private Coords south() {
+        if (y() == 1)
+            return null;
+
+        return new Coords(x(), y() - 1);
+    }
+
+    private Coords west() {
+        if (x() == 1)
+            return null;
+
+        return new Coords(x() - 1, y());
+    }
+
+    private Coords east() {
+        if (x() == 19)
+            return null;
+
+        return new Coords(x() + 1, y());
+    }
+
+    public Set<Coords> getNeighbours()
+    {
+        HashSet<Coords> neighbours = new HashSet<>();
+
+        if (north() != null)
+            neighbours.add(north());
+
+        if (south() != null)
+            neighbours.add(south());
+
+        if (west() != null)
+            neighbours.add(west());
+
+        if (east() != null)
+            neighbours.add(east());
+
+        return neighbours;
     }
 
     public final int x()

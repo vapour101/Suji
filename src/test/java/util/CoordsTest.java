@@ -21,18 +21,19 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static util.Coords.getCoords;
 
 public class CoordsTest {
 
     @Test
-    public void getCoords() {
+    public void coordsGetter() {
         Coords coords = new Coords(4, 3);
 
-        assertThat(Coords.get(4, 3), is(coords));
+        assertThat(getCoords(4, 3), is(coords));
     }
 
     @Test
     public void convertToString() {
-        assertThat(Coords.get(3, 4).toString(), is("(3, 4)"));
+        assertThat(getCoords(3, 4).toString(), is("(3, 4)"));
     }
 }
