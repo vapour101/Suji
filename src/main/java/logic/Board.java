@@ -39,17 +39,28 @@ public class Board {
         return whiteStones;
     }
 
-    protected void playBlackStone(Coords coords) {
+    public void playBlackStone(Coords coords) {
         throwIfOccupied(coords);
 
         blackStones.add(coords);
     }
 
-    protected void playWhiteStone(Coords coords) {
+    public void playWhiteStone(Coords coords) {
         throwIfOccupied(coords);
 
         whiteStones.add(coords);
     }
+
+    public boolean isLegalWhiteMove(Coords coords)
+    {
+        return !isOccupied(coords);
+    }
+
+    public boolean isLegalBlackMove(Coords coords)
+    {
+        return !isOccupied(coords);
+    }
+
 
     private void throwIfOccupied(Coords coords) {
         if (isOccupied(coords))
