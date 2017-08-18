@@ -22,6 +22,7 @@ import util.Coords;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static util.Coords.getCoords;
@@ -42,40 +43,81 @@ public class BoardTest {
     }
 
     @Test
-    public void blockOccupiedSameColour() {
+    public void blockOccupiedSameColourBlack() {
         Board board = new Board();
 
         board.playBlackStone(getCoords(4, 3));
-
-        boolean noThrow = true;
 
         try {
             board.playBlackStone(getCoords(4, 3));
+            fail("Board did not throw exception when playing on top of an existing stone with a stone of the same colour.");
         } catch (Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
-            noThrow = false;
         }
-
-        if (noThrow)
-            fail("Board did not throw exception when playing on top of an existing stone with a stone of the same colour.");
     }
 
     @Test
-    public void blockOccupiedDifferentColour() {
+    public void blockOccupiedDifferentColourBlack() {
         Board board = new Board();
 
         board.playBlackStone(getCoords(4, 3));
 
-        boolean noThrow = true;
+        try {
+            board.playWhiteStone(getCoords(4, 3));
+            fail("Board did not throw exception when playing on top of an existing stone with a stone of a different colour.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+    }
+
+    @Test
+    public void blockOccupiedSameColourWhite() {
+        Board board = new Board();
+
+        board.playWhiteStone(getCoords(4, 3));
 
         try {
             board.playWhiteStone(getCoords(4, 3));
+            fail("Board did not throw exception when playing on top of an existing stone with a stone of the same colour.");
         } catch (Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
-            noThrow = false;
         }
+    }
 
-        if (noThrow)
+    @Test
+    public void blockOccupiedDifferentColourWhite() {
+        Board board = new Board();
+
+        board.playWhiteStone(getCoords(4, 3));
+
+        try {
+            board.playBlackStone(getCoords(4, 3));
             fail("Board did not throw exception when playing on top of an existing stone with a stone of a different colour.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+    }
+
+    @Test
+    public void playingOnOccupiedSpaceIsIllegal()
+    {
+        Board board = new Board();
+
+        board.playBlackStone(getCoords(4,4));
+
+        assertThat(board.isLegalBlackMove(getCoords(4,4)), is(false));
+        assertThat(board.isLegalWhiteMove(getCoords(4,4)), is(false));
+
+        assertThat(board.isLegalBlackMove(getCoords(3,4)), is(true));
+        assertThat(board.isLegalWhiteMove(getCoords(3,4)), is(true));
+
+        board = new Board();
+        board.playWhiteStone(getCoords(4,4));
+
+        assertThat(board.isLegalBlackMove(getCoords(4,4)), is(false));
+        assertThat(board.isLegalWhiteMove(getCoords(4,4)), is(false));
+
+        assertThat(board.isLegalBlackMove(getCoords(3,4)), is(true));
+        assertThat(board.isLegalWhiteMove(getCoords(3,4)), is(true));
     }
 }
