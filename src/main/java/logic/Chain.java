@@ -20,6 +20,7 @@ package logic;
 import util.Coords;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public class Chain {
     private HashSet<Coords> stones;
@@ -35,4 +36,32 @@ public class Chain {
         return stones.contains(stone);
     }
 
+    protected Set<Coords> getLiberties()
+    {
+        HashSet<Coords> liberties = new HashSet<>();
+
+        for (Coords stone : stones)
+        {
+            Set<Coords> neighbours = stone.getNeighbours();
+
+            for (Coords c : neighbours)
+                if ( ! this.contains(c) )
+                    liberties.add(c);
+        }
+
+        return liberties;
+    }
+
+    protected boolean isAdjacentTo(Coords coords)
+    {
+        Set<Coords> neighbours = coords.getNeighbours();
+
+        for (Coords c : neighbours)
+        {
+            if (this.contains(c))
+                return true;
+        }
+
+        return false;
+    }
 }

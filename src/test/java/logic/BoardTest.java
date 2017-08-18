@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static util.Coords.getCoords;
 
 public class BoardTest {
 
@@ -31,11 +32,11 @@ public class BoardTest {
     public void playMoves() {
         Board board = new Board();
 
-        Coords coords = Coords.get(4, 4);
+        Coords coords = getCoords(4, 4);
         board.playBlackStone(coords);
         assertThat(board.getBlackStones(), hasItems(coords));
 
-        coords = Coords.get(5, 5);
+        coords = getCoords(5, 5);
         board.playWhiteStone(coords);
         assertThat(board.getWhiteStones(), hasItems(coords));
     }
@@ -44,12 +45,12 @@ public class BoardTest {
     public void blockOccupiedSameColour() {
         Board board = new Board();
 
-        board.playBlackStone(Coords.get(4, 3));
+        board.playBlackStone(getCoords(4, 3));
 
         boolean noThrow = true;
 
         try {
-            board.playBlackStone(Coords.get(4, 3));
+            board.playBlackStone(getCoords(4, 3));
         } catch (Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
             noThrow = false;
@@ -63,12 +64,12 @@ public class BoardTest {
     public void blockOccupiedDifferentColour() {
         Board board = new Board();
 
-        board.playBlackStone(Coords.get(4, 3));
+        board.playBlackStone(getCoords(4, 3));
 
         boolean noThrow = true;
 
         try {
-            board.playWhiteStone(Coords.get(4, 3));
+            board.playWhiteStone(getCoords(4, 3));
         } catch (Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
             noThrow = false;
