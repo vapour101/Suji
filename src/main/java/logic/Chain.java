@@ -24,18 +24,17 @@ import java.util.Set;
 
 public class Chain {
     private HashSet<Coords> stones;
+    private HashSet<Coords> liberties;
 
     Chain(Coords coords) {
         stones = new HashSet<>();
+
         stones.add(coords);
+        recalculateLiberties();
     }
 
-    protected boolean contains(Coords stone) {
-        return stones.contains(stone);
-    }
-
-    protected Set<Coords> getLiberties() {
-        HashSet<Coords> liberties = new HashSet<>();
+    private void recalculateLiberties() {
+        liberties = new HashSet<>();
 
         for (Coords stone : stones) {
             Set<Coords> neighbours = stone.getNeighbours();
@@ -44,18 +43,17 @@ public class Chain {
                 if (!this.contains(c))
                     liberties.add(c);
         }
+    }
 
+    protected boolean contains(Coords stone) {
+        return stones.contains(stone);
+    }
+
+    protected Set<Coords> getLiberties() {
         return liberties;
     }
 
     protected boolean isAdjacentTo(Coords coords) {
-        Set<Coords> neighbours = coords.getNeighbours();
-
-        for (Coords c : neighbours) {
-            if (this.contains(c))
-                return true;
-        }
-
-        return false;
+        return liberties.contains(coords);
     }
 }
