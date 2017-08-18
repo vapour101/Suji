@@ -56,4 +56,32 @@ public class Chain {
     protected boolean isAdjacentTo(Coords coords) {
         return liberties.contains(coords);
     }
+
+    protected boolean isAdjacentTo(Chain other) {
+        for (Coords lib : liberties)
+            if (other.contains(lib))
+                return true;
+
+        return false;
+    }
+
+    protected int size() {
+        return stones.size();
+    }
+
+    private void clear() {
+        stones.clear();
+        liberties.clear();
+    }
+
+    protected void mergeChain(Chain other) {
+        if (!isAdjacentTo(other))
+            throw new IllegalArgumentException("Chains are not adjacent and cannot be merged.");
+
+        stones.addAll(other.stones);
+
+        other.clear();
+
+        recalculateLiberties();
+    }
 }

@@ -39,10 +39,13 @@ public class ChainTest {
     @Test
     public void adjacency() {
         Chain chain = new Chain(getCoords(4, 4));
+        Chain other = new Chain(getCoords(3, 4));
 
         assertThat(chain.isAdjacentTo(getCoords(3, 4)), is(true));
 
         assertThat(chain.isAdjacentTo(getCoords(3, 3)), is(false));
+
+        assertThat(chain.isAdjacentTo(other), is(true));
     }
 
     @Test
@@ -61,5 +64,29 @@ public class ChainTest {
         liberties = chain.getLiberties();
 
         assertThat(liberties.size(), is(2));
+    }
+
+    @Test
+    public void size() {
+        Chain chain = new Chain(getCoords(1, 1));
+
+        assertThat(chain.size(), is(1));
+    }
+
+    @Test
+    public void merge() {
+        Chain main = new Chain(getCoords(4, 4));
+        Chain other = new Chain(getCoords(3, 4));
+
+        main.mergeChain(other);
+
+        assertThat(main.size(), is(2));
+        assertThat(other.size(), is(0));
+
+        assertThat(main.contains(getCoords(4, 4)), is(true));
+        assertThat(main.contains(getCoords(3, 4)), is(true));
+
+        assertThat(main.getLiberties().size(), is(6));
+        assertThat(other.getLiberties().size(), is(0));
     }
 }
