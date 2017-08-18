@@ -29,8 +29,8 @@ public class CoordsTest {
 
     @Test
     public void equalTo() {
-        Coords c1 = new Coords(4,3);
-        Coords c2 = new Coords(4,3);
+        Coords c1 = new Coords(4, 3);
+        Coords c2 = new Coords(4, 3);
         Pair<Integer, Integer> notCoords = new Pair<>(4, 3);
 
         assertThat(c1.equals(c2), is(true));
@@ -52,27 +52,26 @@ public class CoordsTest {
     }
 
     @Test
-    public void neighbours()
-    {
-        Coords center = getCoords(10,10);
-        Coords topLeft = getCoords(1,1);
-        Coords bottomRight = getCoords(19,19);
+    public void neighbours() {
+        Coords center = getCoords(10, 10);
+        Coords topLeft = getCoords(1, 1);
+        Coords bottomRight = getCoords(19, 19);
 
         assertThat(center.getNeighbours().size(), is(4));
         assertThat(center.getNeighbours(), hasItems(
-                getCoords(10,9),
-                getCoords(9,10),
-                getCoords(10,11),
-                getCoords(11,10)));
+                getCoords(10, 9),
+                getCoords(9, 10),
+                getCoords(10, 11),
+                getCoords(11, 10)));
 
         assertThat(topLeft.getNeighbours().size(), is(2));
         assertThat(topLeft.getNeighbours(), hasItems(
-                getCoords(1,2),
-                getCoords(2,1)));
+                getCoords(1, 2),
+                getCoords(2, 1)));
 
         assertThat(bottomRight.getNeighbours().size(), is(2));
         assertThat(bottomRight.getNeighbours(), hasItems(
-                getCoords(19,18),
-                getCoords(18,19)));
+                getCoords(19, 18),
+                getCoords(18, 19)));
     }
 }

@@ -22,9 +22,7 @@ import util.Coords;
 
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static util.Coords.getCoords;
@@ -42,7 +40,7 @@ public class ChainTest {
     public void adjacency() {
         Chain chain = new Chain(getCoords(4, 4));
         Chain adjacent = new Chain(getCoords(3, 4));
-        Chain nonadjacent = new Chain(getCoords(3,3));
+        Chain nonadjacent = new Chain(getCoords(3, 3));
 
         assertThat(chain.isAdjacentTo(getCoords(3, 4)), is(true));
         assertThat(chain.isAdjacentTo(getCoords(3, 3)), is(false));
@@ -94,10 +92,9 @@ public class ChainTest {
     }
 
     @Test
-    public void throwOnBadMerge()
-    {
-        Chain main = new Chain(getCoords(4,4));
-        Chain other = new Chain(getCoords(3,3));
+    public void throwOnBadMerge() {
+        Chain main = new Chain(getCoords(4, 4));
+        Chain other = new Chain(getCoords(3, 3));
 
         try {
             main.mergeChain(other);

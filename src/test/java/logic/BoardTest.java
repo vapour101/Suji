@@ -20,9 +20,7 @@ package logic;
 import org.junit.Test;
 import util.Coords;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static util.Coords.getCoords;
@@ -99,25 +97,24 @@ public class BoardTest {
     }
 
     @Test
-    public void playingOnOccupiedSpaceIsIllegal()
-    {
+    public void playingOnOccupiedSpaceIsIllegal() {
         Board board = new Board();
 
-        board.playBlackStone(getCoords(4,4));
+        board.playBlackStone(getCoords(4, 4));
 
-        assertThat(board.isLegalBlackMove(getCoords(4,4)), is(false));
-        assertThat(board.isLegalWhiteMove(getCoords(4,4)), is(false));
+        assertThat(board.isLegalBlackMove(getCoords(4, 4)), is(false));
+        assertThat(board.isLegalWhiteMove(getCoords(4, 4)), is(false));
 
-        assertThat(board.isLegalBlackMove(getCoords(3,4)), is(true));
-        assertThat(board.isLegalWhiteMove(getCoords(3,4)), is(true));
+        assertThat(board.isLegalBlackMove(getCoords(3, 4)), is(true));
+        assertThat(board.isLegalWhiteMove(getCoords(3, 4)), is(true));
 
         board = new Board();
-        board.playWhiteStone(getCoords(4,4));
+        board.playWhiteStone(getCoords(4, 4));
 
-        assertThat(board.isLegalBlackMove(getCoords(4,4)), is(false));
-        assertThat(board.isLegalWhiteMove(getCoords(4,4)), is(false));
+        assertThat(board.isLegalBlackMove(getCoords(4, 4)), is(false));
+        assertThat(board.isLegalWhiteMove(getCoords(4, 4)), is(false));
 
-        assertThat(board.isLegalBlackMove(getCoords(3,4)), is(true));
-        assertThat(board.isLegalWhiteMove(getCoords(3,4)), is(true));
+        assertThat(board.isLegalBlackMove(getCoords(3, 4)), is(true));
+        assertThat(board.isLegalWhiteMove(getCoords(3, 4)), is(true));
     }
 }
