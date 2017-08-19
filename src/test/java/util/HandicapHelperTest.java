@@ -25,17 +25,17 @@ import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
 public class HandicapHelperTest {
-    public static final Coords TOP_LEFT = getCoords("D16");
-    public static final Coords TOP_RIGHT = getCoords("Q16");
-    public static final Coords BOTTOM_LEFT = getCoords("D4");
-    public static final Coords BOTTOM_RIGHT = getCoords("Q4");
+    private static final Coords TOP_LEFT = getCoords("D16");
+    private static final Coords TOP_RIGHT = getCoords("Q16");
+    private static final Coords BOTTOM_LEFT = getCoords("D4");
+    private static final Coords BOTTOM_RIGHT = getCoords("Q4");
 
-    public static final Coords TOP = getCoords("K16");
-    public static final Coords BOTTOM = getCoords("K4");
-    public static final Coords LEFT = getCoords("D10");
-    public static final Coords RIGHT = getCoords("Q10");
+    private static final Coords TOP = getCoords("K16");
+    private static final Coords BOTTOM = getCoords("K4");
+    private static final Coords LEFT = getCoords("D10");
+    private static final Coords RIGHT = getCoords("Q10");
 
-    public static final Coords TENGEN = getCoords("K10");
+    private static final Coords TENGEN = getCoords("K10");
 
     @Test
     public void constructor() {
