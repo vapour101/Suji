@@ -25,7 +25,12 @@ public class Board {
     private ChainSet blackStones;
     private ChainSet whiteStones;
 
+    private int blackCaptures;
+    private int whiteCaptures;
+
     public Board() {
+        blackCaptures = 0;
+        whiteCaptures = 0;
         blackStones = new ChainSet();
         whiteStones = new ChainSet();
     }
@@ -66,5 +71,13 @@ public class Board {
 
     private boolean isOccupied(Coords coords) {
         return blackStones.contains(coords) || whiteStones.contains(coords);
+    }
+
+    public int getBlackCaptures() {
+        return blackCaptures;
+    }
+
+    public int getWhiteCaptures() {
+        return whiteCaptures;
     }
 }
