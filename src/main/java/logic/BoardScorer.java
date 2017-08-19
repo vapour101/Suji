@@ -17,6 +17,9 @@
 
 package logic;
 
+import util.Coords;
+
+import java.util.HashSet;
 import java.util.Set;
 
 public class BoardScorer {
@@ -26,13 +29,14 @@ public class BoardScorer {
     private Set<Chain> deadWhiteChains;
 
     public BoardScorer(Board board) {
-        this.board = board;
-        komi = 0;
+        this(board, 0);
     }
 
     public BoardScorer(Board board, double komi) {
         this.board = board;
         this.komi = komi;
+        deadBlackChains = new HashSet<>();
+        deadWhiteChains = new HashSet<>();
     }
 
     public double getScore() {
@@ -43,6 +47,9 @@ public class BoardScorer {
         double blackScore = countBlackTerritory();
         blackScore += board.getBlackCaptures();
 
+        for (Chain chain : deadWhiteChains)
+            blackScore += chain.size();
+
         if (komi < 0)
             blackScore -= komi;
 
@@ -52,6 +59,9 @@ public class BoardScorer {
     public double getWhiteScore() {
         double whiteScore = countWhiteTerritory();
         whiteScore += board.getWhiteCaptures();
+
+        for (Chain chain : deadBlackChains)
+            whiteScore += chain.size();
 
         if (komi > 0)
             whiteScore += komi;
@@ -65,5 +75,42 @@ public class BoardScorer {
 
     private int countBlackTerritory() {
         return 0;
+    }
+
+    public void markGroupDead(Coords coords) {
+        Chain deadChain = board.getChainAtCoords(coords);
+
+        if (deadChain == null)
+            return;
+
+        if (board.getBlackStones().contains(coords))
+            deadBlackChains.add(deadChain);
+        else
+            deadWhiteChains.add(deadChain);
+    }
+
+    public void unmarkGroupDead(Coords coords) {
+        Chain undeadChain = null;
+
+        for (Chain deadChain : deadWhiteChains)
+            if (deadChain.contains(coords)) {
+                undeadChain = deadChain;
+                break;
+            }
+
+        if (undeadChain != null) {
+            deadWhiteChains.remove(undeadChain);
+            return;
+        }
+
+        for (Chain deadChain : deadBlackChains)
+            if (deadChain.contains(coords)) {
+                undeadChain = deadChain;
+                break;
+            }
+
+        if (undeadChain != null)
+            deadBlackChains.remove(undeadChain);
+
     }
 }
