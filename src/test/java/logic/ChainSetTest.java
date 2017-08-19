@@ -89,4 +89,20 @@ public class ChainSetTest {
         assertThat(black.chainIsCaptured(getCoords(5, 4), white), is(true));
         assertThat(black.chainIsCaptured(getCoords(4, 5), white), is(false));
     }
+
+    @Test
+    public void checkingForSuicide() {
+        ChainSet black = new ChainSet();
+        ChainSet white = new ChainSet();
+
+        white.add(getCoords(3, 4));
+        white.add(getCoords(5, 4));
+        white.add(getCoords(4, 3));
+
+        assertThat(black.isSuicide(getCoords(4, 4), white), is(false));
+
+        white.add(getCoords(4, 5));
+
+        assertThat(black.isSuicide(getCoords(4, 4), white), is(true));
+    }
 }

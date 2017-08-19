@@ -119,6 +119,17 @@ public class BoardTest {
     }
 
     @Test
+    public void suicideIsIllegal() {
+        Board board = new Board();
+
+        board.playBlackStone(getCoords(5, 4));
+        board.playBlackStone(getCoords(3, 4));
+        board.playBlackStone(getCoords(4, 5));
+        board.playBlackStone(getCoords(4, 3));
+
+        assertThat(board.isLegalWhiteMove(getCoords(4, 4)), is(false));
+    }
+
     public void simpleCapturing() {
         Board board = new Board();
 

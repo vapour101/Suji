@@ -58,6 +58,12 @@ public class ChainSet {
         return false;
     }
 
+    protected boolean isSuicide(Coords stone, ChainSet other) {
+
+
+        return false;
+    }
+
     public void add(Coords stone) {
         addChain(new Chain(stone));
     }

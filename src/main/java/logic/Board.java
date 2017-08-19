@@ -58,19 +58,29 @@ public class Board {
     }
 
     public boolean isLegalWhiteMove(Coords coords) {
-        boolean isLegal = true;
+        boolean isLegal;
 
-        isLegal &= !isOccupied(coords);
+        isLegal = !isOccupied(coords);
+        isLegal &= !isWhiteSuicide(coords);
 
         return isLegal;
     }
 
     public boolean isLegalBlackMove(Coords coords) {
-        boolean isLegal = true;
+        boolean isLegal;
 
-        isLegal &= !isOccupied(coords);
+        isLegal = !isOccupied(coords);
+        isLegal &= !isBlackSuicide(coords);
 
         return isLegal;
+    }
+
+    private boolean isBlackSuicide(Coords coords) {
+        return blackStones.isSuicide(coords, whiteStones);
+    }
+
+    private boolean isWhiteSuicide(Coords coords) {
+        return whiteStones.isSuicide(coords, blackStones);
     }
 
 
