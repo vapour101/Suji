@@ -26,6 +26,14 @@ public class Chain {
     private HashSet<Coords> stones;
     private HashSet<Coords> liberties;
 
+    private Chain(Chain other) {
+        stones = new HashSet<>();
+
+        stones.addAll(other.stones);
+
+        recalculateLiberties();
+    }
+
     Chain(Coords coords) {
         stones = new HashSet<>();
 
@@ -100,5 +108,9 @@ public class Chain {
         openLiberties.removeAll(others.getStones());
 
         return openLiberties;
+    }
+
+    protected Chain copy() {
+        return new Chain(this);
     }
 }

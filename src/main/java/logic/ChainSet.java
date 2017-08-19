@@ -78,4 +78,13 @@ public class ChainSet {
         chains.add(chain);
 
     }
+
+    private ChainSet copy() {
+        ChainSet result = new ChainSet();
+
+        for (Chain chain : chains)
+            result.chains.add(chain.copy());
+
+        return result;
+    }
 }
