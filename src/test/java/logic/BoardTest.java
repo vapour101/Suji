@@ -41,6 +41,47 @@ public class BoardTest {
     }
 
     @Test
+    public void findingChains() {
+        Board board = new Board();
+
+        String[] stones = {"D3", "D4", "D5", "E6"};
+
+        for (String stone : stones)
+            board.playBlackStone(getCoords(stone));
+
+        stones = new String[]{"F5", "F6"};
+        for (String stone : stones)
+            board.playWhiteStone(getCoords(stone));
+
+        assertThat(board.getChainAtCoords(getCoords("D4")).getStones(), hasItems(
+                getCoords("D3"),
+                getCoords("D4"),
+                getCoords("D5")
+        ));
+
+        assertThat(board.getChainAtCoords(getCoords("D3")).getStones(), hasItems(
+                getCoords("D3"),
+                getCoords("D4"),
+                getCoords("D5")
+        ));
+
+        assertThat(board.getChainAtCoords(getCoords("E6")).getStones(), hasItem(getCoords("E6")));
+
+        assertThat(board.getChainAtCoords(getCoords("D4")).size(), is(3));
+        assertThat(board.getChainAtCoords(getCoords("D5")).size(), is(3));
+        assertThat(board.getChainAtCoords(getCoords("E6")).size(), is(1));
+        assertThat(board.getChainAtCoords(getCoords("F5")).size(), is(2));
+
+        assertThat(board.getChainAtCoords(getCoords("F5")).getStones(), hasItems(
+                getCoords("F5"),
+                getCoords("F6")
+        ));
+
+        assertThat(board.getChainAtCoords(getCoords("A1")), nullValue());
+
+    }
+
+    @Test
     public void blockOccupiedSameColourBlack() {
         Board board = new Board();
 

@@ -94,6 +94,16 @@ public class Board {
         throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
     }
 
+    protected Chain getChainAtCoords(Coords coords) {
+        if (blackStones.contains(coords))
+            return blackStones.getChainFromStone(coords);
+
+        if (whiteStones.contains(coords))
+            return whiteStones.getChainFromStone(coords);
+
+        return null;
+    }
+
     private boolean isOccupied(Coords coords) {
         return blackStones.contains(coords) || whiteStones.contains(coords);
     }
