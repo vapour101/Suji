@@ -152,7 +152,7 @@ public class ChainSetTest {
     }
 
     @Test
-    public void complexCapturing() {
+    public void capturingMultipleSingleStones() {
         ChainSet black = new ChainSet();
         ChainSet white = new ChainSet();
 
@@ -173,6 +173,52 @@ public class ChainSetTest {
         assertThat(black.captureStones(getCoords("C4"), white), is(0));
 
         assertThat(black.captureStones(getCoords("D5"), white), is(2));
+        assertThat(black.getChainCount(), is(0));
+    }
+
+    @Test
+    public void capturingGroupWithSmallEye() {
+        ChainSet black = new ChainSet();
+        ChainSet white = new ChainSet();
+
+        String[] stones = new String[]{"C3", "C4", "C5", "D3", "D5", "E3", "E4", "E5"};
+        for (String stone : stones)
+            black.add(getCoords(stone));
+
+        stones = new String[]{"B3", "B4", "B5", "C2", "D2", "E2", "C6", "D6", "E6", "F3", "F4", "F5"};
+        for (String stone : stones)
+            white.add(getCoords(stone));
+
+        assertThat(black.getChainCount(), is(1));
+        assertThat(white.getChainCount(), is(4));
+
+        assertThat(white.isSuicide(getCoords("D4"), black), is(false));
+        assertThat(black.chainIsCaptured(getCoords("D4"), white), is(true));
+        assertThat(black.captureStones(getCoords("D4"), white), is(8));
+
+        assertThat(black.getChainCount(), is(0));
+    }
+
+    @Test
+    public void capturingGroupWithBigEye() {
+        ChainSet black = new ChainSet();
+        ChainSet white = new ChainSet();
+
+        String[] stones = new String[]{"C3", "C4", "C5", "C6", "D3", "D6", "E3", "E4", "E5", "E6"};
+        for (String stone : stones)
+            black.add(getCoords(stone));
+
+        stones = new String[]{"B3", "B4", "B5", "B6", "C2", "D2", "E2", "C7", "D7", "E7", "F3", "F4", "F5", "F6", "D5"};
+        for (String stone : stones)
+            white.add(getCoords(stone));
+
+        assertThat(black.getChainCount(), is(1));
+        assertThat(white.getChainCount(), is(5));
+
+        assertThat(white.isSuicide(getCoords("D4"), black), is(false));
+        assertThat(black.chainIsCaptured(getCoords("D4"), white), is(true));
+        assertThat(black.captureStones(getCoords("D4"), white), is(10));
+
         assertThat(black.getChainCount(), is(0));
     }
 
