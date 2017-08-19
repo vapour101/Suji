@@ -58,6 +58,28 @@ public class ChainSet {
         return false;
     }
 
+    protected int captureStones(Coords stone, ChainSet other) {
+        Set<Chain> deadChains = new HashSet<>();
+
+        for (Chain chain : chains) {
+            if (chain.getLiberties().contains(stone)) {
+                Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+
+                if (freeLiberties.size() == 1 && freeLiberties.contains(stone))
+                    deadChains.add(chain);
+            }
+        }
+
+        int deadStones = 0;
+
+        for (Chain chain : deadChains)
+            deadStones += chain.size();
+
+        chains.removeAll(deadChains);
+
+        return deadStones;
+    }
+
     protected boolean isSuicide(Coords stone, ChainSet other) {
         //Any play that results in a capture is never suicide
         if (other.chainIsCaptured(stone, this))

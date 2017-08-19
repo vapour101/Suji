@@ -121,6 +121,38 @@ public class ChainSetTest {
 
         assertThat(black.isSuicide(getCoords(4, 4), white), is(false));
 
+        black = new ChainSet();
+        white = new ChainSet();
+
+        white.add(getCoords(3, 3));
+        black.add(getCoords(5, 5));
+        assertThat(black.isSuicide(getCoords(4, 4), white), is(false));
+    }
+
+    @Test
+    public void capturing() {
+        ChainSet black = new ChainSet();
+        ChainSet white = new ChainSet();
+
+        white.add(getCoords(3, 4));
+        white.add(getCoords(5, 4));
+        white.add(getCoords(4, 5));
+        white.add(getCoords(3, 2));
+
+        black.add(getCoords(4, 4));
+        black.add(getCoords(3, 3));
+        black.add(getCoords(5, 5));
+
+        assertThat(black.chainIsCaptured(getCoords(4, 3), white), is(true));
+        assertThat(black.getChainCount(), is(3));
+
+        assertThat(black.captureStones(getCoords(4, 5), white), is(0));
+        assertThat(black.getChainCount(), is(3));
+
+        assertThat(black.captureStones(getCoords(4, 3), white), is(1));
+        assertThat(black.getChainCount(), is(2));
+    }
+
     @Test
     public void findingChains() {
         ChainSet chains = new ChainSet();
