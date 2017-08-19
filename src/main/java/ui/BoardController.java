@@ -17,35 +17,65 @@
 
 package ui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import logic.Board;
 
-public class BoardController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class BoardController implements Initializable {
     public Canvas boardCanvas;
     public Pane pane;
+    private Board board;
 
-    public void canvasClicked(MouseEvent mouseEvent) {
-        boardCanvas.setHeight(pane.getHeight());
-        boardCanvas.setWidth(pane.getWidth());
-        drawBoard();
-
+    public BoardController() {
+        board = new Board();
     }
 
-    public void drawBoard() {
-        Pair<Double, Double> topLeft = getTopLeftCorner();
+    public void canvasClicked(MouseEvent mouseEvent) {
+        drawBoard();
+    }
+
+    private void resizeCanvas() {
+        boardCanvas.setHeight(pane.getHeight());
+        boardCanvas.setWidth(pane.getWidth());
+    }
+
+    private void drawBoard() {
+        drawBackground();
+        drawBoardTexture(getTopLeftCorner());
+        drawBoardLines();
+        drawStones();
+    }
+
+    private void drawBoardTexture(Pair<Double, Double> topLeft) {
+        GraphicsContext context = boardCanvas.getGraphicsContext2D();
         double length = getBoardLength();
 
+        context.setFill(Color.web("0xB78600"));
+        context.fillRect(topLeft.getKey(), topLeft.getValue(), length, length);
+    }
+
+    private void drawBackground() {
         GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
         context.setFill(Color.GREEN);
         context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
+    }
 
-        context.setFill(Color.web("0xB78600"));
-        context.fillRect(topLeft.getKey(), topLeft.getValue(), length, length);
+    private void drawBoardLines() {
+
+    }
+
+    private void drawStones() {
+
     }
 
     private double getBoardLength() {
@@ -69,5 +99,17 @@ public class BoardController {
             y = (canvasHeight - length) / 2;
 
         return new Pair<>(x, y);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ChangeListener<Number> paneChangeListener = (observableValue, number, t1) -> {
+            resizeCanvas();
+            drawBoard();
+        };
+        pane.widthProperty().addListener(paneChangeListener);
+        pane.heightProperty().addListener(paneChangeListener);
+
+        drawBoard();
     }
 }

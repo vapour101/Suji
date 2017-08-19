@@ -28,7 +28,10 @@ jfx {
     mainClass = 'ui.Main'
 }
 
-cobertura.coverageFormats = ['html', 'xml']
+cobertura {
+    coverageFormats = ['html', 'xml']
+    coverageExcludes = ['.*instrumented_classes.ui.*']
+}
 
 version '0.1'
 
