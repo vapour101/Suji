@@ -138,6 +138,7 @@ public class BoardTest {
         assertThat(board.isLegalBlackMove(getCoords(4, 4)), is(false));
     }
 
+    @Test
     public void simpleCapturing() {
         Board board = new Board();
 
@@ -158,5 +159,27 @@ public class BoardTest {
 
         assertThat(board.getWhiteCaptures(), is(1));
         assertThat(board.getBlackStones().size(), is(0));
+
+
+
+        board = new Board();
+
+        assertThat(board.getBlackCaptures(), is(0));
+        assertThat(board.getWhiteCaptures(), is(0));
+
+        board.playWhiteStone(getCoords(4, 4));
+        board.playBlackStone(getCoords(3, 4));
+        board.playBlackStone(getCoords(5, 4));
+        board.playBlackStone(getCoords(4, 3));
+
+        assertThat(board.getBlackStones().size(), is(3));
+        assertThat(board.getWhiteStones().size(), is(1));
+        assertThat(board.getBlackCaptures(), is(0));
+        assertThat(board.getWhiteCaptures(), is(0));
+
+        board.playBlackStone(getCoords(4, 5));
+
+        assertThat(board.getBlackCaptures(), is(1));
+        assertThat(board.getWhiteStones().size(), is(0));
     }
 }

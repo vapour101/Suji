@@ -47,12 +47,18 @@ public class Board {
         if (!isLegalBlackMove(coords))
             throwIllegalMove(coords);
 
+        if (whiteStones.chainIsCaptured(coords, blackStones))
+            blackCaptures += whiteStones.captureStones(coords, blackStones);
+
         blackStones.add(coords);
     }
 
     public void playWhiteStone(Coords coords) {
         if (!isLegalWhiteMove(coords))
             throwIllegalMove(coords);
+
+        if (blackStones.chainIsCaptured(coords, whiteStones))
+            whiteCaptures += blackStones.captureStones(coords, whiteStones);
 
         whiteStones.add(coords);
     }
