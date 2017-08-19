@@ -19,9 +19,9 @@ package util;
 
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static util.Coords.getCoords;
 
 public class HandicapHelperTest {
