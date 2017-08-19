@@ -44,29 +44,38 @@ public class Board {
     }
 
     public void playBlackStone(Coords coords) {
-        throwIfOccupied(coords);
+        if (!isLegalBlackMove(coords))
+            throwIllegalMove(coords);
 
         blackStones.add(coords);
     }
 
     public void playWhiteStone(Coords coords) {
-        throwIfOccupied(coords);
+        if (!isLegalWhiteMove(coords))
+            throwIllegalMove(coords);
 
         whiteStones.add(coords);
     }
 
     public boolean isLegalWhiteMove(Coords coords) {
-        return !isOccupied(coords);
+        boolean isLegal = true;
+
+        isLegal &= !isOccupied(coords);
+
+        return isLegal;
     }
 
     public boolean isLegalBlackMove(Coords coords) {
-        return !isOccupied(coords);
+        boolean isLegal = true;
+
+        isLegal &= !isOccupied(coords);
+
+        return isLegal;
     }
 
 
-    private void throwIfOccupied(Coords coords) {
-        if (isOccupied(coords))
-            throw new IllegalArgumentException(coords.toString() + " is already occupied.");
+    private void throwIllegalMove(Coords coords) {
+        throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
     }
 
     private boolean isOccupied(Coords coords) {

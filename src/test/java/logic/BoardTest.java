@@ -17,7 +17,6 @@
 
 package logic;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import util.Coords;
 
@@ -119,7 +118,6 @@ public class BoardTest {
         assertThat(board.isLegalWhiteMove(getCoords(3, 4)), is(true));
     }
 
-    @Ignore
     @Test
     public void simpleCapturing() {
         Board board = new Board();
