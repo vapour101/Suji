@@ -26,18 +26,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import logic.Board;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.shape.Rectangle;
+import util.CoordProjector;
+
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.stage.Stage;
+
+import static util.Coords.getCoords;
 
 public class BoardController implements Initializable {
     public Canvas boardCanvas;
     public Pane pane;
     private Board board;
-    public primaryStage;
 
     public BoardController() {
         board = new Board();
@@ -75,31 +74,30 @@ public class BoardController implements Initializable {
     }
 
     private void drawBoardLines() {
+        double length = getBoardLength();
+        Pair<Double, Double> topLeft = getTopLeftCorner();
 
-        Group root = new Group();
-        double canvasWidth = boardCanvas.getWidth();
-        double canvasHeight = boardCanvas.getHeight();
-        Scene scene = new Scene(root, canvasWidth, canvasHeight, Color.GREEN);
+        GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-        Rectangle[][] rec = new Rectangle[canvasWidth][canvasHeight];
+        for (int i = 1; i < 20; i++) {
+            //Horizontal Lines
+            Pair<Double, Double> start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
+            Pair<Double, Double> end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
 
-        for(int i=0; i<canvasWidth; i++){
-            for(int j=0; j<canvasHeight; j++){
+            start = addCoords(start, topLeft);
+            end = addCoords(end, topLeft);
 
-                rec[i][j] = new Rectangle();
-                rec[i][j].setX(i * canvasWidth);
-                rec[i][j].setY(j * canvasWidth);
-                rec[i][j].setWidth(canvasWidth);
-                rec[i][j].setHeight(canvasWidth);
-                rec[i][j].setFill(null);
+            context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
 
-                rec[i][j].setStrokeWidth(3);
-                rec[i][j].setStroke(Color.BLACK);
-                root.getChildren().add(rec[i][j]);
-            }
+            //Vertical Lines
+            start = CoordProjector.fromBoardCoords(getCoords(i, 1), length);
+            end = CoordProjector.fromBoardCoords(getCoords(i, 19), length);
+
+            start = addCoords(start, topLeft);
+            end = addCoords(end, topLeft);
+
+            context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
         }
-        primaryStage.setScene(scene);
-        primaryStage.show();
 
     }
 
@@ -140,5 +138,12 @@ public class BoardController implements Initializable {
         pane.heightProperty().addListener(paneChangeListener);
 
         drawBoard();
+    }
+
+    private Pair<Double, Double> addCoords(Pair<Double, Double> lhs, Pair<Double, Double> rhs) {
+        double x = lhs.getKey() + rhs.getKey();
+        double y = lhs.getValue() + rhs.getValue();
+
+        return new Pair<>(x, y);
     }
 }
