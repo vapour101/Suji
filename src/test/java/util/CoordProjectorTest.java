@@ -31,6 +31,6 @@ public class CoordProjectorTest {
         CoordProjector proj = new CoordProjector();
         Pair<Double, Double> projection = fromBoardCoords(getCoords("D4"), 20);
 
-        assertThat(projection, is(new Pair<Double, Double>(2.0, 2.0)));
+        assertThat(projection, is(new Pair<Double, Double>(4.0, 4.0)));
     }
 }
