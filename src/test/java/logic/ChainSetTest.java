@@ -46,6 +46,15 @@ public class ChainSetTest {
 
         assertThat(chains.contains(getCoords(4, 4)), is(true));
         assertThat(chains.contains(getCoords(4, 3)), is(true));
+        assertThat(chains.getChainCount(), is(1));
+
+        chains.add(getCoords(4, 6));
+
+        assertThat(chains.getChainCount(), is(2));
+
+        chains.add(getCoords(4, 5));
+
+        assertThat(chains.getChainCount(), is(1));
     }
 
     @Test

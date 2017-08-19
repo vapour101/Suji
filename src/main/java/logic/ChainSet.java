@@ -84,7 +84,9 @@ public class ChainSet {
     private void addChain(Chain chain) {
         for (Chain existing : chains)
             if (existing.isAdjacentTo(chain)) {
+                chains.remove(existing);
                 existing.mergeChain(chain);
+                addChain(existing);
                 return;
             }
 
@@ -99,5 +101,9 @@ public class ChainSet {
             result.chains.add(chain.copy());
 
         return result;
+    }
+
+    protected int getChainCount() {
+        return chains.size();
     }
 }
