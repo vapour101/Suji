@@ -47,7 +47,14 @@ public class ChainSet {
     }
 
     protected boolean chainIsCaptured(Coords stone, ChainSet other) {
-        boolean result = false;
+        for (Chain chain : chains)
+            if (chain.getLiberties().contains(stone))
+            {
+                Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+
+                if (freeLiberties.size() == 1 && freeLiberties.contains(stone))
+                    return true;
+            }
 
         return false;
     }
