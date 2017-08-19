@@ -92,4 +92,13 @@ public class Chain {
     protected Set<Coords> getStones() {
         return stones;
     }
+
+    protected Set<Coords> getOpenLiberties(ChainSet others) {
+        HashSet<Coords> openLiberties = new HashSet<>();
+
+        openLiberties.addAll(getLiberties());
+        openLiberties.removeAll(others.getStones());
+
+        return openLiberties;
+    }
 }

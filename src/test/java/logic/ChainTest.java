@@ -103,4 +103,34 @@ public class ChainTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
     }
+
+    @Test
+    public void getOpenLiberties() {
+        Chain blackChain = new Chain(getCoords(4, 4));
+        ChainSet whiteStones = new ChainSet();
+
+        assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(4));
+        assertThat(blackChain.getOpenLiberties(whiteStones), hasItems(
+                getCoords(3, 4),
+                getCoords(5, 4),
+                getCoords(4, 3),
+                getCoords(4, 5)));
+
+        whiteStones.add(getCoords(3, 3));
+
+        assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(4));
+        assertThat(blackChain.getOpenLiberties(whiteStones), hasItems(
+                getCoords(3, 4),
+                getCoords(5, 4),
+                getCoords(4, 3),
+                getCoords(4, 5)));
+
+        whiteStones.add(getCoords(3, 4));
+
+        assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(3));
+        assertThat(blackChain.getOpenLiberties(whiteStones), hasItems(
+                getCoords(5, 4),
+                getCoords(4, 3),
+                getCoords(4, 5)));
+    }
 }
