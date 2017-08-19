@@ -113,4 +113,22 @@ public class BoardScorer {
             deadBlackChains.remove(undeadChain);
 
     }
+
+    public Set<Coords> getDeadBlackStones() {
+        Set<Coords> deadBlackStones = new HashSet<>();
+
+        for (Chain chain : deadBlackChains)
+            deadBlackStones.addAll(chain.getStones());
+
+        return deadBlackStones;
+    }
+
+    public Set<Coords> getDeadWhiteStones() {
+        Set<Coords> deadWhiteStones = new HashSet<>();
+
+        for (Chain chain : deadWhiteChains)
+            deadWhiteStones.addAll(chain.getStones());
+
+        return deadWhiteStones;
+    }
 }
