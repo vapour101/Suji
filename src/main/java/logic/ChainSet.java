@@ -126,8 +126,7 @@ public class ChainSet {
         return chains.size();
     }
 
-    protected Chain getChainFromStone(Coords stone)
-    {
+    protected Chain getChainFromStone(Coords stone) {
         for (Chain chain : chains)
             if (chain.contains(stone)) {
                 return chain;
