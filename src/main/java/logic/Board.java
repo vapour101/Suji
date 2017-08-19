@@ -19,24 +19,23 @@ package logic;
 
 import util.Coords;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class Board {
-    private HashSet<Coords> blackStones;
-    private HashSet<Coords> whiteStones;
+    private ChainSet blackStones;
+    private ChainSet whiteStones;
 
     public Board() {
-        blackStones = new HashSet<>();
-        whiteStones = new HashSet<>();
+        blackStones = new ChainSet();
+        whiteStones = new ChainSet();
     }
 
     public final Set<Coords> getBlackStones() {
-        return blackStones;
+        return blackStones.getStones();
     }
 
     public final Set<Coords> getWhiteStones() {
-        return whiteStones;
+        return whiteStones.getStones();
     }
 
     public void playBlackStone(Coords coords) {

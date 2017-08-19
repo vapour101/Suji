@@ -19,6 +19,7 @@ package logic;
 
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
@@ -29,7 +30,7 @@ public class ChainSetTest {
     public void trackStones() {
         ChainSet chains = new ChainSet();
 
-        chains.addStone(getCoords(4, 4));
+        chains.add(getCoords(4, 4));
 
         assertThat(chains.contains(getCoords(4, 4)), is(true));
         assertThat(chains.contains(getCoords(3, 3)), is(false));
@@ -39,9 +40,9 @@ public class ChainSetTest {
     public void autoMergeChains() {
         ChainSet chains = new ChainSet();
 
-        chains.addStone(getCoords(4, 4));
+        chains.add(getCoords(4, 4));
 
-        chains.addStone(getCoords(4, 3));
+        chains.add(getCoords(4, 3));
 
         assertThat(chains.contains(getCoords(4, 4)), is(true));
         assertThat(chains.contains(getCoords(4, 3)), is(true));
@@ -51,11 +52,22 @@ public class ChainSetTest {
     public void nonContiguousChains() {
         ChainSet chains = new ChainSet();
 
-        chains.addStone(getCoords(4, 4));
+        chains.add(getCoords(4, 4));
 
-        chains.addStone(getCoords(3, 3));
+        chains.add(getCoords(3, 3));
 
         assertThat(chains.contains(getCoords(4, 4)), is(true));
         assertThat(chains.contains(getCoords(3, 3)), is(true));
+    }
+
+    @Test
+    public void getting() {
+        ChainSet chains = new ChainSet();
+
+        chains.add(getCoords(3, 3));
+        chains.add(getCoords(4, 4));
+
+        assertThat(chains.getStones(), hasItems(getCoords(3, 3), getCoords(4, 4)));
+        assertThat(chains.getStones().size(), is(2));
     }
 }

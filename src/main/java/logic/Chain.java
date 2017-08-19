@@ -88,4 +88,8 @@ public class Chain {
 
         recalculateLiberties();
     }
+
+    protected Set<Coords> getStones() {
+        return stones;
+    }
 }

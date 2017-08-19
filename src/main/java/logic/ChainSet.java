@@ -20,6 +20,8 @@ package logic;
 import util.Coords;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ChainSet {
     private HashMap<Chain, Integer> chains;
@@ -36,7 +38,16 @@ public class ChainSet {
         return false;
     }
 
-    public void addStone(Coords stone) {
+    public Set<Coords> getStones() {
+        Set<Coords> stones = new HashSet<>();
+
+        for (Chain chain : chains.keySet())
+            stones.addAll(chain.getStones());
+
+        return stones;
+    }
+
+    public void add(Coords stone) {
         addChain(new Chain(stone));
     }
 

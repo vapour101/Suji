@@ -20,9 +20,7 @@ package util;
 import javafx.util.Pair;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
