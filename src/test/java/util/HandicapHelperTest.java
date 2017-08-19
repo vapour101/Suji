@@ -21,6 +21,11 @@ public class HandicapHelperTest {
     public static final Coords TENGEN = getCoords("K10");
 
     @Test
+    public void constructor() {
+        HandicapHelper helper = new HandicapHelper();
+    }
+
+    @Test
     public void oneStoneHandicap() {
         assertThat(HandicapHelper.getHandicapStones(1).isEmpty(), is(true));
     }
