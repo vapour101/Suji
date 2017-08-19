@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
@@ -119,5 +120,14 @@ public class ChainSetTest {
         black.add(getCoords(4, 6));
 
         assertThat(black.isSuicide(getCoords(4, 4), white), is(false));
+
+    @Test
+    public void findingChains() {
+        ChainSet chains = new ChainSet();
+
+        chains.add(getCoords(4, 4));
+
+        assertThat(chains.getChainFromStone(getCoords(4, 4)).contains(getCoords(4, 4)), is(true));
+        assertThat(chains.getChainFromStone(getCoords(3,3)), nullValue());
     }
 }

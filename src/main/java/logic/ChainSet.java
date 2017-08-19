@@ -67,12 +67,9 @@ public class ChainSet {
         boolean suicide = false;
 
         futureChain.add(stone);
+        Chain stoneChain = futureChain.getChainFromStone(stone);
 
-        for (Chain chain : futureChain.chains)
-            if (chain.contains(stone)) {
-                suicide = (chain.getOpenLiberties(other).size() == 0);
-                break;
-            }
+        suicide = (stoneChain.getOpenLiberties(other).size() == 0);
 
         return suicide;
     }
@@ -105,5 +102,15 @@ public class ChainSet {
 
     protected int getChainCount() {
         return chains.size();
+    }
+
+    protected Chain getChainFromStone(Coords stone)
+    {
+        for (Chain chain : chains)
+            if (chain.contains(stone)) {
+                return chain;
+            }
+
+        return null;
     }
 }
