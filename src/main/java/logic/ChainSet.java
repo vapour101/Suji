@@ -59,9 +59,22 @@ public class ChainSet {
     }
 
     protected boolean isSuicide(Coords stone, ChainSet other) {
+        //Any play that results in a capture is never suicide
+        if (other.chainIsCaptured(stone, this))
+            return false;
 
+        ChainSet futureChain = copy();
+        boolean suicide = false;
 
-        return false;
+        futureChain.add(stone);
+
+        for (Chain chain : futureChain.chains)
+            if (chain.contains(stone)) {
+                suicide = (chain.getOpenLiberties(other).size() == 0);
+                break;
+            }
+
+        return suicide;
     }
 
     public void add(Coords stone) {

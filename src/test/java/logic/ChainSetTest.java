@@ -104,5 +104,11 @@ public class ChainSetTest {
         white.add(getCoords(4, 5));
 
         assertThat(black.isSuicide(getCoords(4, 4), white), is(true));
+
+        black.add(getCoords(3, 5));
+        black.add(getCoords(5, 5));
+        black.add(getCoords(4, 6));
+
+        assertThat(black.isSuicide(getCoords(4, 4), white), is(false));
     }
 }

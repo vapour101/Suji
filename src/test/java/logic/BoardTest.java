@@ -128,6 +128,14 @@ public class BoardTest {
         board.playBlackStone(getCoords(4, 3));
 
         assertThat(board.isLegalWhiteMove(getCoords(4, 4)), is(false));
+
+        board = new Board();
+        board.playWhiteStone(getCoords(5, 4));
+        board.playWhiteStone(getCoords(3, 4));
+        board.playWhiteStone(getCoords(4, 5));
+        board.playWhiteStone(getCoords(4, 3));
+
+        assertThat(board.isLegalBlackMove(getCoords(4, 4)), is(false));
     }
 
     public void simpleCapturing() {
