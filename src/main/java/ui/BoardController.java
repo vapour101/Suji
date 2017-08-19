@@ -26,14 +26,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import logic.Board;
-
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.shape.Rectangle;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.stage.Stage;
 
 public class BoardController implements Initializable {
     public Canvas boardCanvas;
     public Pane pane;
     private Board board;
+    public primaryStage;
 
     public BoardController() {
         board = new Board();
@@ -71,6 +75,31 @@ public class BoardController implements Initializable {
     }
 
     private void drawBoardLines() {
+
+        Group root = new Group();
+        double canvasWidth = boardCanvas.getWidth();
+        double canvasHeight = boardCanvas.getHeight();
+        Scene scene = new Scene(root, canvasWidth, canvasHeight, Color.GREEN);
+
+        Rectangle[][] rec = new Rectangle[canvasWidth][canvasHeight];
+
+        for(int i=0; i<canvasWidth; i++){
+            for(int j=0; j<canvasHeight; j++){
+
+                rec[i][j] = new Rectangle();
+                rec[i][j].setX(i * canvasWidth);
+                rec[i][j].setY(j * canvasWidth);
+                rec[i][j].setWidth(canvasWidth);
+                rec[i][j].setHeight(canvasWidth);
+                rec[i][j].setFill(null);
+
+                rec[i][j].setStrokeWidth(3);
+                rec[i][j].setStroke(Color.BLACK);
+                root.getChildren().add(rec[i][j]);
+            }
+        }
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
     }
 
