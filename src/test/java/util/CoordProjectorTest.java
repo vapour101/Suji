@@ -29,7 +29,7 @@ public class CoordProjectorTest {
     @Test
     public void conversion() {
         CoordProjector proj = new CoordProjector();
-        Pair<Double, Double> projection = fromBoardCoords(getCoords(4, 4), 20);
+        Pair<Double, Double> projection = fromBoardCoords(getCoords("D4"), 20);
 
         assertThat(projection, is(new Pair<Double, Double>(2.0, 2.0)));
     }
