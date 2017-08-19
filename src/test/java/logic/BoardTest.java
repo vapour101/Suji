@@ -161,7 +161,6 @@ public class BoardTest {
         assertThat(board.getBlackStones().size(), is(0));
 
 
-
         board = new Board();
 
         assertThat(board.getBlackCaptures(), is(0));

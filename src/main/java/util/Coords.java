@@ -33,6 +33,18 @@ public class Coords {
         return new Coords(x, y);
     }
 
+    public static Coords getCoords(String coords) {
+        if (!coords.matches("[a-hj-tA-HJ-T]((1?[1-9])|(10))"))
+            throw new IllegalArgumentException("String: '" + coords + "' is not recognizable as Go coordinates.");
+
+        int x = coords.toUpperCase().charAt(0) - 'A';
+        if (x < 9)
+            x++;
+        int y = Integer.parseInt(coords.replaceAll("[a-tA-T]", ""));
+
+        return new Coords(x, y);
+    }
+
     public boolean equals(Object other) {
         if (this == other)
             return true;

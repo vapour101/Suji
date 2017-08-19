@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static util.Coords.getCoords;
 
 public class CoordsTest {
@@ -72,5 +73,55 @@ public class CoordsTest {
         assertThat(bottomRight.getNeighbours(), hasItems(
                 getCoords(19, 18),
                 getCoords(18, 19)));
+    }
+
+    @Test
+    public void symbolicCoordinates() {
+        assertThat(getCoords("K10"), is(getCoords(10, 10)));
+        assertThat(getCoords("k19"), is(getCoords(10, 19)));
+        assertThat(getCoords("a1"), is(getCoords(1, 1)));
+        assertThat(getCoords("T19"), is(getCoords(19, 19)));
+        assertThat(getCoords("A10"), is(getCoords(1, 10)));
+        assertThat(getCoords("t10"), is(getCoords(19, 10)));
+
+        assertThat(getCoords("h14"), is(getCoords(8, 14)));
+        assertThat(getCoords("j8"), is(getCoords(9, 8)));
+        assertThat(getCoords("H9"), is(getCoords(8, 9)));
+        assertThat(getCoords("J1"), is(getCoords(9, 1)));
+
+        try {
+            getCoords("I1");
+            fail("Coords did not throw an exception when given bad symbolic coordinates.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+
+        try {
+            getCoords("i10");
+            fail("Coords did not throw an exception when given bad symbolic coordinates.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+
+        try {
+            getCoords("A0");
+            fail("Coords did not throw an exception when given bad symbolic coordinates.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+
+        try {
+            getCoords("k20");
+            fail("Coords did not throw an exception when given bad symbolic coordinates.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+
+        try {
+            getCoords("Z5");
+            fail("Coords did not throw an exception when given bad symbolic coordinates.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
     }
 }
