@@ -72,19 +72,18 @@ public class ChainSetTest {
     }
 
     @Test
-    public void checkingForCaptures()
-    {
+    public void checkingForCaptures() {
         ChainSet black = new ChainSet();
         ChainSet white = new ChainSet();
 
-        black.add(getCoords(4,4));
-        white.add(getCoords(4,3));
-        white.add(getCoords(4,5));
+        black.add(getCoords(4, 4));
+        white.add(getCoords(4, 3));
+        white.add(getCoords(4, 5));
 
-        assertThat(black.chainIsCaptured(getCoords(3,4), white), is(false));
+        assertThat(black.chainIsCaptured(getCoords(3, 4), white), is(false));
 
-        white.add(getCoords(3,4));
+        white.add(getCoords(3, 4));
 
-        assertThat(black.chainIsCaptured(getCoords(5,4), white), is(true));
+        assertThat(black.chainIsCaptured(getCoords(5, 4), white), is(true));
     }
 }

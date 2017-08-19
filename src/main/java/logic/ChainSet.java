@@ -17,22 +17,20 @@
 
 package logic;
 
-import util.CoordProjector;
 import util.Coords;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ChainSet {
-    private HashMap<Chain, Integer> chains;
+    private HashSet<Chain> chains;
 
     public ChainSet() {
-        chains = new HashMap<>();
+        chains = new HashSet<>();
     }
 
     public boolean contains(Coords stone) {
-        for (Chain chain : chains.keySet())
+        for (Chain chain : chains)
             if (chain.contains(stone))
                 return true;
 
@@ -42,14 +40,13 @@ public class ChainSet {
     public Set<Coords> getStones() {
         Set<Coords> stones = new HashSet<>();
 
-        for (Chain chain : chains.keySet())
+        for (Chain chain : chains)
             stones.addAll(chain.getStones());
 
         return stones;
     }
 
-    protected boolean chainIsCaptured(Coords stone, ChainSet other)
-    {
+    protected boolean chainIsCaptured(Coords stone, ChainSet other) {
         boolean result = false;
 
         return false;
@@ -60,13 +57,13 @@ public class ChainSet {
     }
 
     private void addChain(Chain chain) {
-        for (Chain existing : chains.keySet())
+        for (Chain existing : chains)
             if (existing.isAdjacentTo(chain)) {
                 existing.mergeChain(chain);
                 return;
             }
 
-        chains.put(chain, chain.countLiberties());
+        chains.add(chain);
 
     }
 }
