@@ -17,6 +17,7 @@
 
 package logic;
 
+import util.CoordProjector;
 import util.Coords;
 
 import java.util.HashMap;
@@ -45,6 +46,13 @@ public class ChainSet {
             stones.addAll(chain.getStones());
 
         return stones;
+    }
+
+    protected boolean chainIsCaptured(Coords stone, ChainSet other)
+    {
+        boolean result = false;
+
+        return false;
     }
 
     public void add(Coords stone) {

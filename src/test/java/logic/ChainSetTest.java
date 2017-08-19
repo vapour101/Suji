@@ -70,4 +70,21 @@ public class ChainSetTest {
         assertThat(chains.getStones(), hasItems(getCoords(3, 3), getCoords(4, 4)));
         assertThat(chains.getStones().size(), is(2));
     }
+
+    @Test
+    public void checkingForCaptures()
+    {
+        ChainSet black = new ChainSet();
+        ChainSet white = new ChainSet();
+
+        black.add(getCoords(4,4));
+        white.add(getCoords(4,3));
+        white.add(getCoords(4,5));
+
+        assertThat(black.chainIsCaptured(getCoords(3,4), white), is(false));
+
+        white.add(getCoords(3,4));
+
+        assertThat(black.chainIsCaptured(getCoords(5,4), white), is(true));
+    }
 }
