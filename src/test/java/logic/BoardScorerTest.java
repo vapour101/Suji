@@ -17,7 +17,6 @@
 
 package logic;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import util.Coords;
 
@@ -106,6 +105,19 @@ public class BoardScorerTest {
 		assertThat(scorer.getContiguousEmptySection(emptyPoints, getCoords("S19")), hasItems(getCoords("S19")));
 	}
 
+	private Board buildTestBoard(String[] sequence) {
+		Board testBoard = new Board();
+
+		for (int i = 0; i < sequence.length; i++) {
+			if ( i % 2 == 0 )
+				testBoard.playBlackStone(getCoords(sequence[i]));
+			else
+				testBoard.playWhiteStone(getCoords(sequence[i]));
+		}
+
+		return testBoard;
+	}
+
 	@Test
 	public void markingDeadStones() {
 		Board board = buildTestBoard(testBoard1);
@@ -132,19 +144,6 @@ public class BoardScorerTest {
 
 		assertThat(scorer.getDeadWhiteStones(), hasItems(getCoords("M18")));
 		assertThat(scorer.getDeadWhiteStones().size(), is(1));
-	}
-
-	private Board buildTestBoard(String[] sequence) {
-		Board testBoard = new Board();
-
-		for (int i = 0; i < sequence.length; i++) {
-			if ( i % 2 == 0 )
-				testBoard.playBlackStone(getCoords(sequence[i]));
-			else
-				testBoard.playWhiteStone(getCoords(sequence[i]));
-		}
-
-		return testBoard;
 	}
 
 	@Test
