@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static util.Coords.getCoords;
+import static util.HandicapHelper.getHandicapStones;
 
 public class BoardController implements Initializable {
 
@@ -53,12 +54,12 @@ public class BoardController implements Initializable {
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
 		drawBoard();
 
-		double diameter = getStoneDiameter();
+		double diameter = getStoneRadius();
 		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
 		context.setFill(Paint.valueOf("#000000"));
-		drawStone(context, projector.fromBoardCoords(projector.nearestCoords(mousePosition)), diameter);
+		drawCircle(context, projector.fromBoardCoords(projector.nearestCoords(mousePosition)), diameter);
 	}
 
 	private void drawBoard() {
@@ -118,26 +119,34 @@ public class BoardController implements Initializable {
 
 			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 		}
+
+		for (Coords c : getHandicapStones(9)) {
+			DrawCoords star = projector.fromBoardCoords(c);
+			double radius = context.getLineWidth() * 4;
+
+			context.setFill(Paint.valueOf("#000000"));
+			drawCircle(context, star, radius);
+		}
 	}
 
 	private void drawStones() {
-		double diameter = getStoneDiameter();
+		double radius = getStoneRadius();
 		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
 		for (Coords stone : board.getBlackStones()) {
 			context.setFill(Paint.valueOf("#000000"));
-			drawStone(context, projector.fromBoardCoords(stone), diameter);
+			drawCircle(context, projector.fromBoardCoords(stone), radius);
 		}
 
 		for (Coords stone : board.getWhiteStones()) {
 			context.setFill(Paint.valueOf("#FFFFFF"));
-			drawStone(context, projector.fromBoardCoords(stone), diameter);
+			drawCircle(context, projector.fromBoardCoords(stone), radius);
 		}
 	}
 
-	private void drawStone(GraphicsContext context, DrawCoords pos, double diameter) {
-		context.fillOval(pos.getX() - (diameter / 2), pos.getY() - (diameter / 2), diameter, diameter);
+	private void drawCircle(GraphicsContext context, DrawCoords pos, double radius) {
+		context.fillOval(pos.getX() - radius, pos.getY() - radius, 2 * radius, 2 * radius);
 	}
 
 	private double getBoardLength() {
@@ -147,8 +156,8 @@ public class BoardController implements Initializable {
 		return Math.min(canvasHeight, canvasWidth);
 	}
 
-	private double getStoneDiameter() {
-		return getBoardLength() / (19 + 1);
+	private double getStoneRadius() {
+		return getBoardLength() / (19 + 1) / 2;
 	}
 
 	@Override
