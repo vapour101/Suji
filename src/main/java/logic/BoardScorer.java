@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,112 +23,112 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BoardScorer {
-    private Board board;
-    private double komi;
-    private Set<Chain> deadBlackChains;
-    private Set<Chain> deadWhiteChains;
 
-    public BoardScorer(Board board) {
-        this(board, 0);
-    }
+	private Board board;
+	private double komi;
+	private Set<Chain> deadBlackChains;
+	private Set<Chain> deadWhiteChains;
 
-    public BoardScorer(Board board, double komi) {
-        this.board = board;
-        this.komi = komi;
-        deadBlackChains = new HashSet<>();
-        deadWhiteChains = new HashSet<>();
-    }
+	public BoardScorer(Board board) {
+		this(board, 0);
+	}
 
-    public double getScore() {
-        return getBlackScore() - getWhiteScore();
-    }
+	public BoardScorer(Board board, double komi) {
+		this.board = board;
+		this.komi = komi;
+		deadBlackChains = new HashSet<>();
+		deadWhiteChains = new HashSet<>();
+	}
 
-    public double getBlackScore() {
-        double blackScore = countBlackTerritory();
-        blackScore += board.getBlackCaptures();
+	public double getScore() {
+		return getBlackScore() - getWhiteScore();
+	}
 
-        for (Chain chain : deadWhiteChains)
-            blackScore += chain.size();
+	public double getBlackScore() {
+		double blackScore = countBlackTerritory();
+		blackScore += board.getBlackCaptures();
 
-        if (komi < 0)
-            blackScore -= komi;
+		for (Chain chain : deadWhiteChains)
+			blackScore += chain.size();
 
-        return blackScore;
-    }
+		if ( komi < 0 )
+			blackScore -= komi;
 
-    public double getWhiteScore() {
-        double whiteScore = countWhiteTerritory();
-        whiteScore += board.getWhiteCaptures();
+		return blackScore;
+	}
 
-        for (Chain chain : deadBlackChains)
-            whiteScore += chain.size();
+	public double getWhiteScore() {
+		double whiteScore = countWhiteTerritory();
+		whiteScore += board.getWhiteCaptures();
 
-        if (komi > 0)
-            whiteScore += komi;
+		for (Chain chain : deadBlackChains)
+			whiteScore += chain.size();
 
-        return whiteScore;
-    }
+		if ( komi > 0 )
+			whiteScore += komi;
 
-    private int countWhiteTerritory() {
-        return 0;
-    }
+		return whiteScore;
+	}
 
-    private int countBlackTerritory() {
-        return 0;
-    }
+	private int countBlackTerritory() {
+		return 0;
+	}
 
-    public void markGroupDead(Coords coords) {
-        Chain deadChain = board.getChainAtCoords(coords);
+	private int countWhiteTerritory() {
+		return 0;
+	}
 
-        if (deadChain == null)
-            return;
+	public void markGroupDead(Coords coords) {
+		Chain deadChain = board.getChainAtCoords(coords);
 
-        if (board.getBlackStones().contains(coords))
-            deadBlackChains.add(deadChain);
-        else
-            deadWhiteChains.add(deadChain);
-    }
+		if ( deadChain == null )
+			return;
 
-    public void unmarkGroupDead(Coords coords) {
-        Chain undeadChain = null;
+		if ( board.getBlackStones().contains(coords) )
+			deadBlackChains.add(deadChain);
+		else
+			deadWhiteChains.add(deadChain);
+	}
 
-        for (Chain deadChain : deadWhiteChains)
-            if (deadChain.contains(coords)) {
-                undeadChain = deadChain;
-                break;
-            }
+	public void unmarkGroupDead(Coords coords) {
+		Chain undeadChain = null;
 
-        if (undeadChain != null) {
-            deadWhiteChains.remove(undeadChain);
-            return;
-        }
+		for (Chain deadChain : deadWhiteChains)
+			if ( deadChain.contains(coords) ) {
+				undeadChain = deadChain;
+				break;
+			}
 
-        for (Chain deadChain : deadBlackChains)
-            if (deadChain.contains(coords)) {
-                undeadChain = deadChain;
-                break;
-            }
+		if ( undeadChain != null ) {
+			deadWhiteChains.remove(undeadChain);
+			return;
+		}
 
-        if (undeadChain != null)
-            deadBlackChains.remove(undeadChain);
+		for (Chain deadChain : deadBlackChains)
+			if ( deadChain.contains(coords) ) {
+				undeadChain = deadChain;
+				break;
+			}
 
-    }
+		if ( undeadChain != null )
+			deadBlackChains.remove(undeadChain);
+	}
 
-    public Set<Coords> getDeadBlackStones() {
-        Set<Coords> deadBlackStones = new HashSet<>();
+	public Set<Coords> getDeadBlackStones() {
+		Set<Coords> deadBlackStones = new HashSet<>();
 
-        for (Chain chain : deadBlackChains)
-            deadBlackStones.addAll(chain.getStones());
+		for (Chain chain : deadBlackChains)
+			deadBlackStones.addAll(chain.getStones());
 
-        return deadBlackStones;
-    }
+		return deadBlackStones;
+	}
 
-    public Set<Coords> getDeadWhiteStones() {
-        Set<Coords> deadWhiteStones = new HashSet<>();
+	public Set<Coords> getDeadWhiteStones() {
+		Set<Coords> deadWhiteStones = new HashSet<>();
 
-        for (Chain chain : deadWhiteChains)
-            deadWhiteStones.addAll(chain.getStones());
+		for (Chain chain : deadWhiteChains)
+			deadWhiteStones.addAll(chain.getStones());
 
-        return deadWhiteStones;
-    }
+		return deadWhiteStones;
+	}
 }

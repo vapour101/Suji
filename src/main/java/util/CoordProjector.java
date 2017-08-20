@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,15 @@ package util;
 import javafx.util.Pair;
 
 public class CoordProjector {
-    private static final int BOARD_SIZE = 19;
 
-    static public Pair<Double, Double> fromBoardCoords(Coords boardCoords, double boardLength) {
-        double offset = (boardLength / (BOARD_SIZE + 1));
+	private static final int BOARD_SIZE = 19;
 
-        double realX = boardCoords.x() * offset;
-        double realY = boardCoords.y() * offset;
+	static public Pair<Double, Double> fromBoardCoords(Coords boardCoords, double boardLength) {
+		double offset = (boardLength / (BOARD_SIZE + 1));
 
-        return new Pair<>(realX, realY);
-    }
+		double realX = boardCoords.x() * offset;
+		double realY = boardCoords.y() * offset;
+
+		return new Pair<>(realX, realY);
+	}
 }

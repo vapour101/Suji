@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,97 +22,97 @@ import util.Coords;
 import java.util.Set;
 
 public class Board {
-    private ChainSet blackStones;
-    private ChainSet whiteStones;
 
-    private int blackCaptures;
-    private int whiteCaptures;
+	private ChainSet blackStones;
+	private ChainSet whiteStones;
 
-    public Board() {
-        blackCaptures = 0;
-        whiteCaptures = 0;
-        blackStones = new ChainSet();
-        whiteStones = new ChainSet();
-    }
+	private int blackCaptures;
+	private int whiteCaptures;
 
-    public final Set<Coords> getBlackStones() {
-        return blackStones.getStones();
-    }
+	public Board() {
+		blackCaptures = 0;
+		whiteCaptures = 0;
+		blackStones = new ChainSet();
+		whiteStones = new ChainSet();
+	}
 
-    public final Set<Coords> getWhiteStones() {
-        return whiteStones.getStones();
-    }
+	public final Set<Coords> getBlackStones() {
+		return blackStones.getStones();
+	}
 
-    public void playBlackStone(Coords coords) {
-        if (!isLegalBlackMove(coords))
-            throwIllegalMove(coords);
+	public final Set<Coords> getWhiteStones() {
+		return whiteStones.getStones();
+	}
 
-        if (whiteStones.chainIsCaptured(coords, blackStones))
-            blackCaptures += whiteStones.captureStones(coords, blackStones);
+	public void playBlackStone(Coords coords) {
+		if ( !isLegalBlackMove(coords) )
+			throwIllegalMove(coords);
 
-        blackStones.add(coords);
-    }
+		if ( whiteStones.chainIsCaptured(coords, blackStones) )
+			blackCaptures += whiteStones.captureStones(coords, blackStones);
 
-    public void playWhiteStone(Coords coords) {
-        if (!isLegalWhiteMove(coords))
-            throwIllegalMove(coords);
+		blackStones.add(coords);
+	}
 
-        if (blackStones.chainIsCaptured(coords, whiteStones))
-            whiteCaptures += blackStones.captureStones(coords, whiteStones);
+	public boolean isLegalBlackMove(Coords coords) {
+		boolean isLegal;
 
-        whiteStones.add(coords);
-    }
+		isLegal = !isOccupied(coords);
+		isLegal &= !isBlackSuicide(coords);
 
-    public boolean isLegalWhiteMove(Coords coords) {
-        boolean isLegal;
+		return isLegal;
+	}
 
-        isLegal = !isOccupied(coords);
-        isLegal &= !isWhiteSuicide(coords);
+	private void throwIllegalMove(Coords coords) {
+		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
+	}
 
-        return isLegal;
-    }
+	private boolean isOccupied(Coords coords) {
+		return blackStones.contains(coords) || whiteStones.contains(coords);
+	}
 
-    public boolean isLegalBlackMove(Coords coords) {
-        boolean isLegal;
+	private boolean isBlackSuicide(Coords coords) {
+		return blackStones.isSuicide(coords, whiteStones);
+	}
 
-        isLegal = !isOccupied(coords);
-        isLegal &= !isBlackSuicide(coords);
+	public void playWhiteStone(Coords coords) {
+		if ( !isLegalWhiteMove(coords) )
+			throwIllegalMove(coords);
 
-        return isLegal;
-    }
+		if ( blackStones.chainIsCaptured(coords, whiteStones) )
+			whiteCaptures += blackStones.captureStones(coords, whiteStones);
 
-    private boolean isBlackSuicide(Coords coords) {
-        return blackStones.isSuicide(coords, whiteStones);
-    }
+		whiteStones.add(coords);
+	}
 
-    private boolean isWhiteSuicide(Coords coords) {
-        return whiteStones.isSuicide(coords, blackStones);
-    }
+	public boolean isLegalWhiteMove(Coords coords) {
+		boolean isLegal;
 
+		isLegal = !isOccupied(coords);
+		isLegal &= !isWhiteSuicide(coords);
 
-    private void throwIllegalMove(Coords coords) {
-        throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
-    }
+		return isLegal;
+	}
 
-    protected Chain getChainAtCoords(Coords coords) {
-        if (blackStones.contains(coords))
-            return blackStones.getChainFromStone(coords);
+	private boolean isWhiteSuicide(Coords coords) {
+		return whiteStones.isSuicide(coords, blackStones);
+	}
 
-        if (whiteStones.contains(coords))
-            return whiteStones.getChainFromStone(coords);
+	protected Chain getChainAtCoords(Coords coords) {
+		if ( blackStones.contains(coords) )
+			return blackStones.getChainFromStone(coords);
 
-        return null;
-    }
+		if ( whiteStones.contains(coords) )
+			return whiteStones.getChainFromStone(coords);
 
-    private boolean isOccupied(Coords coords) {
-        return blackStones.contains(coords) || whiteStones.contains(coords);
-    }
+		return null;
+	}
 
-    public int getBlackCaptures() {
-        return blackCaptures;
-    }
+	public int getBlackCaptures() {
+		return blackCaptures;
+	}
 
-    public int getWhiteCaptures() {
-        return whiteCaptures;
-    }
+	public int getWhiteCaptures() {
+		return whiteCaptures;
+	}
 }

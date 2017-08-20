@@ -27,84 +27,82 @@ import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
 public class BoardScorerTest {
-    private static final String[] testSequence = {"D1", "E1", "D2", "E2", "D3", "E4", "E3", "F3", "D4", "E5", "F2",
-            "G2", "F1", "G1", "D5", "D6", "C5", "C6", "B4", "G4", "B6", "B7", "A7", "A8", "A6", "B8", "T19", "S18",
-            "T18", "S17", "T17", "S15", "T16", "R14", "S16", "R16", "T15", "T14", "Q19", "R19", "Q18", "R18", "Q17",
-            "R17", "Q16", "Q15", "P15", "P14", "O15", "O14", "N15", "N14", "N17", "M15", "M16", "L16", "L17", "K16",
-            "K17", "J16", "J17", "H16", "H17", "G16", "G17", "F16", "F17", "E17", "E18", "D17", "D18", "C18", "C19",
-            "B19", "B18", "C17", "A19", "B17", "B19", "A17", "F18", "A18", "D19", "M18", "M17"};
 
-    private Board buildTestBoard() {
-        Board testBoard = new Board();
+	private static final String[] testSequence = {"D1", "E1", "D2", "E2", "D3", "E4", "E3", "F3", "D4", "E5", "F2",
+			"G2", "F1", "G1", "D5", "D6", "C5", "C6", "B4", "G4", "B6", "B7", "A7", "A8", "A6", "B8", "T19", "S18",
+			"T18", "S17", "T17", "S15", "T16", "R14", "S16", "R16", "T15", "T14", "Q19", "R19", "Q18", "R18", "Q17",
+			"R17", "Q16", "Q15", "P15", "P14", "O15", "O14", "N15", "N14", "N17", "M15", "M16", "L16", "L17", "K16",
+			"K17", "J16", "J17", "H16", "H17", "G16", "G17", "F16", "F17", "E17", "E18", "D17", "D18", "C18", "C19",
+			"B19", "B18", "C17", "A19", "B17", "B19", "A17", "F18", "A18", "D19", "M18", "M17"};
 
-        for (int i = 0; i < testSequence.length; i++) {
-            if (i % 2 == 0)
-                testBoard.playBlackStone(getCoords(testSequence[i]));
-            else
-                testBoard.playWhiteStone(getCoords(testSequence[i]));
-        }
+	@Test
+	public void emptyBoardIsZeroPoints() {
+		Board board = new Board();
+		BoardScorer scorer = new BoardScorer(board);
 
-        return testBoard;
-    }
+		assertThat(scorer.getBlackScore(), is(0.0));
+		assertThat(scorer.getWhiteScore(), is(0.0));
+		assertThat(scorer.getScore(), is(0.0));
+	}
 
-    @Test
-    public void emptyBoardIsZeroPoints() {
-        Board board = new Board();
-        BoardScorer scorer = new BoardScorer(board);
+	@Test
+	public void normalKomi() {
+		Board board = new Board();
+		BoardScorer scorer = new BoardScorer(board, 6.5);
 
-        assertThat(scorer.getBlackScore(), is(0.0));
-        assertThat(scorer.getWhiteScore(), is(0.0));
-        assertThat(scorer.getScore(), is(0.0));
-    }
+		assertThat(scorer.getBlackScore(), is(0.0));
+		assertThat(scorer.getWhiteScore(), is(6.5));
+		assertThat(scorer.getScore(), is(-6.5));
+	}
 
-    @Test
-    public void normalKomi() {
-        Board board = new Board();
-        BoardScorer scorer = new BoardScorer(board, 6.5);
+	@Test
+	public void negativeKomi() {
+		Board board = new Board();
+		BoardScorer scorer = new BoardScorer(board, -6.5);
 
-        assertThat(scorer.getBlackScore(), is(0.0));
-        assertThat(scorer.getWhiteScore(), is(6.5));
-        assertThat(scorer.getScore(), is(-6.5));
-    }
+		assertThat(scorer.getBlackScore(), is(6.5));
+		assertThat(scorer.getWhiteScore(), is(0.0));
+		assertThat(scorer.getScore(), is(6.5));
+	}
 
-    @Test
-    public void negativeKomi() {
-        Board board = new Board();
-        BoardScorer scorer = new BoardScorer(board, -6.5);
+	@Test
+	public void markingDeadStones() {
+		Board board = buildTestBoard();
+		BoardScorer scorer = new BoardScorer(board);
 
-        assertThat(scorer.getBlackScore(), is(6.5));
-        assertThat(scorer.getWhiteScore(), is(0.0));
-        assertThat(scorer.getScore(), is(6.5));
-    }
+		scorer.markGroupDead(getCoords("K10"));
+		assertThat(scorer.getDeadWhiteStones().size(), is(0));
+		assertThat(scorer.getDeadBlackStones().size(), is(0));
 
-    @Test
-    public void markingDeadStones() {
-        Board board = buildTestBoard();
-        BoardScorer scorer = new BoardScorer(board);
+		assertThat(board.getBlackCaptures(), is(3));
+		assertThat(board.getWhiteCaptures(), is(0));
 
-        scorer.markGroupDead(getCoords("K10"));
-        assertThat(scorer.getDeadWhiteStones().size(), is(0));
-        assertThat(scorer.getDeadBlackStones().size(), is(0));
+		scorer.markGroupDead(getCoords("M18"));
+		scorer.markGroupDead(getCoords("T19"));
 
-        assertThat(board.getBlackCaptures(), is(3));
-        assertThat(board.getWhiteCaptures(), is(0));
+		assertThat(scorer.getDeadBlackStones(),
+				   hasItems(getCoords("S16"),
+							getCoords("T15"),
+							getCoords("T16"),
+							getCoords("T17"),
+							getCoords("T18"),
+							getCoords("T19")));
+		assertThat(scorer.getDeadBlackStones().size(), is(6));
 
-        scorer.markGroupDead(getCoords("M18"));
-        scorer.markGroupDead(getCoords("T19"));
+		assertThat(scorer.getDeadWhiteStones(), hasItems(getCoords("M18")));
+		assertThat(scorer.getDeadWhiteStones().size(), is(1));
+	}
 
-        assertThat(scorer.getDeadBlackStones(), hasItems(
-                getCoords("S16"),
-                getCoords("T15"),
-                getCoords("T16"),
-                getCoords("T17"),
-                getCoords("T18"),
-                getCoords("T19")
-        ));
-        assertThat(scorer.getDeadBlackStones().size(), is(6));
+	private Board buildTestBoard() {
+		Board testBoard = new Board();
 
-        assertThat(scorer.getDeadWhiteStones(), hasItems(
-                getCoords("M18")
-        ));
-        assertThat(scorer.getDeadWhiteStones().size(), is(1));
-    }
+		for (int i = 0; i < testSequence.length; i++) {
+			if ( i % 2 == 0 )
+				testBoard.playBlackStone(getCoords(testSequence[i]));
+			else
+				testBoard.playWhiteStone(getCoords(testSequence[i]));
+		}
+
+		return testBoard;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,116 +34,116 @@ import java.util.ResourceBundle;
 import static util.Coords.getCoords;
 
 public class BoardController implements Initializable {
-    public Canvas boardCanvas;
-    public Pane pane;
-    private Board board;
 
-    public BoardController() {
-        board = new Board();
-    }
+	public Canvas boardCanvas;
+	public Pane pane;
+	private Board board;
 
-    public void canvasClicked(MouseEvent mouseEvent) {
-        drawBoard();
-    }
+	public BoardController() {
+		board = new Board();
+	}
 
-    private void resizeCanvas() {
-        boardCanvas.setHeight(pane.getHeight());
-        boardCanvas.setWidth(pane.getWidth());
-    }
+	public void canvasClicked(MouseEvent mouseEvent) {
+		drawBoard();
+	}
 
-    private void drawBoard() {
-        drawBackground();
-        drawBoardTexture(getTopLeftCorner());
-        drawBoardLines();
-        drawStones();
-    }
+	private void drawBoard() {
+		drawBackground();
+		drawBoardTexture(getTopLeftCorner());
+		drawBoardLines();
+		drawStones();
+	}
 
-    private void drawBoardTexture(Pair<Double, Double> topLeft) {
-        GraphicsContext context = boardCanvas.getGraphicsContext2D();
-        double length = getBoardLength();
+	private void drawBackground() {
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-        context.setFill(Color.web("0xB78600"));
-        context.fillRect(topLeft.getKey(), topLeft.getValue(), length, length);
-    }
+		context.setFill(Color.GREEN);
+		context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
+	}
 
-    private void drawBackground() {
-        GraphicsContext context = boardCanvas.getGraphicsContext2D();
+	private void drawBoardTexture(Pair<Double, Double> topLeft) {
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		double length = getBoardLength();
 
-        context.setFill(Color.GREEN);
-        context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
-    }
+		context.setFill(Color.web("0xB78600"));
+		context.fillRect(topLeft.getKey(), topLeft.getValue(), length, length);
+	}
 
-    private void drawBoardLines() {
-        double length = getBoardLength();
-        Pair<Double, Double> topLeft = getTopLeftCorner();
+	private Pair<Double, Double> getTopLeftCorner() {
+		double length = getBoardLength();
+		double canvasWidth = boardCanvas.getWidth();
+		double canvasHeight = boardCanvas.getHeight();
 
-        GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		double x = 0;
+		double y = 0;
 
-        for (int i = 1; i < 20; i++) {
-            //Horizontal Lines
-            Pair<Double, Double> start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
-            Pair<Double, Double> end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
+		if ( canvasWidth > length )
+			x = (canvasWidth - length) / 2;
+		else
+			y = (canvasHeight - length) / 2;
 
-            start = addCoords(start, topLeft);
-            end = addCoords(end, topLeft);
+		return new Pair<>(x, y);
+	}
 
-            context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
+	private void drawBoardLines() {
+		double length = getBoardLength();
+		Pair<Double, Double> topLeft = getTopLeftCorner();
 
-            //Vertical Lines
-            start = CoordProjector.fromBoardCoords(getCoords(i, 1), length);
-            end = CoordProjector.fromBoardCoords(getCoords(i, 19), length);
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-            start = addCoords(start, topLeft);
-            end = addCoords(end, topLeft);
+		for (int i = 1; i < 20; i++) {
+			//Horizontal Lines
+			Pair<Double, Double> start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
+			Pair<Double, Double> end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
 
-            context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
-        }
+			start = addCoords(start, topLeft);
+			end = addCoords(end, topLeft);
 
-    }
+			context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
 
-    private void drawStones() {
+			//Vertical Lines
+			start = CoordProjector.fromBoardCoords(getCoords(i, 1), length);
+			end = CoordProjector.fromBoardCoords(getCoords(i, 19), length);
 
-    }
+			start = addCoords(start, topLeft);
+			end = addCoords(end, topLeft);
 
-    private double getBoardLength() {
-        double canvasWidth = boardCanvas.getWidth();
-        double canvasHeight = boardCanvas.getHeight();
+			context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
+		}
+	}
 
-        return Math.min(canvasHeight, canvasWidth);
-    }
+	private void drawStones() {
 
-    private Pair<Double, Double> getTopLeftCorner() {
-        double length = getBoardLength();
-        double canvasWidth = boardCanvas.getWidth();
-        double canvasHeight = boardCanvas.getHeight();
+	}
 
-        double x = 0;
-        double y = 0;
+	private double getBoardLength() {
+		double canvasWidth = boardCanvas.getWidth();
+		double canvasHeight = boardCanvas.getHeight();
 
-        if (canvasWidth > length)
-            x = (canvasWidth - length) / 2;
-        else
-            y = (canvasHeight - length) / 2;
+		return Math.min(canvasHeight, canvasWidth);
+	}
 
-        return new Pair<>(x, y);
-    }
+	private Pair<Double, Double> addCoords(Pair<Double, Double> lhs, Pair<Double, Double> rhs) {
+		double x = lhs.getKey() + rhs.getKey();
+		double y = lhs.getValue() + rhs.getValue();
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ChangeListener<Number> paneChangeListener = (observableValue, number, t1) -> {
-            resizeCanvas();
-            drawBoard();
-        };
-        pane.widthProperty().addListener(paneChangeListener);
-        pane.heightProperty().addListener(paneChangeListener);
+		return new Pair<>(x, y);
+	}
 
-        drawBoard();
-    }
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		ChangeListener<Number> paneChangeListener = (observableValue, number, t1) -> {
+			resizeCanvas();
+			drawBoard();
+		};
+		pane.widthProperty().addListener(paneChangeListener);
+		pane.heightProperty().addListener(paneChangeListener);
 
-    private Pair<Double, Double> addCoords(Pair<Double, Double> lhs, Pair<Double, Double> rhs) {
-        double x = lhs.getKey() + rhs.getKey();
-        double y = lhs.getValue() + rhs.getValue();
+		drawBoard();
+	}
 
-        return new Pair<>(x, y);
-    }
+	private void resizeCanvas() {
+		boardCanvas.setHeight(pane.getHeight());
+		boardCanvas.setWidth(pane.getWidth());
+	}
 }

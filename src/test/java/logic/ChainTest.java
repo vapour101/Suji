@@ -29,108 +29,98 @@ import static util.Coords.getCoords;
 
 public class ChainTest {
 
-    @Test
-    public void contains() {
-        Chain chain = new Chain(getCoords("D3"));
+	@Test
+	public void contains() {
+		Chain chain = new Chain(getCoords("D3"));
 
-        assertThat(chain.contains(getCoords("D3")), is(true));
-    }
+		assertThat(chain.contains(getCoords("D3")), is(true));
+	}
 
-    @Test
-    public void adjacency() {
-        Chain chain = new Chain(getCoords("D4"));
-        Chain adjacent = new Chain(getCoords("D3"));
-        Chain nonadjacent = new Chain(getCoords("C3"));
+	@Test
+	public void adjacency() {
+		Chain chain = new Chain(getCoords("D4"));
+		Chain adjacent = new Chain(getCoords("D3"));
+		Chain nonadjacent = new Chain(getCoords("C3"));
 
-        assertThat(chain.isAdjacentTo(getCoords("D3")), is(true));
-        assertThat(chain.isAdjacentTo(getCoords("C3")), is(false));
+		assertThat(chain.isAdjacentTo(getCoords("D3")), is(true));
+		assertThat(chain.isAdjacentTo(getCoords("C3")), is(false));
 
-        assertThat(chain.isAdjacentTo(adjacent), is(true));
-        assertThat(chain.isAdjacentTo(nonadjacent), is(false));
-    }
+		assertThat(chain.isAdjacentTo(adjacent), is(true));
+		assertThat(chain.isAdjacentTo(nonadjacent), is(false));
+	}
 
-    @Test
-    public void liberties() {
-        Chain chain = new Chain(getCoords("D4"));
+	@Test
+	public void liberties() {
+		Chain chain = new Chain(getCoords("D4"));
 
-        Set<Coords> liberties = chain.getLiberties();
+		Set<Coords> liberties = chain.getLiberties();
 
-        assertThat(liberties.size(), is(4));
-        assertThat(liberties, hasItems(getCoords("D3"),
-                getCoords("C4"),
-                getCoords("D5"),
-                getCoords("E4")));
+		assertThat(liberties.size(), is(4));
+		assertThat(liberties, hasItems(getCoords("D3"), getCoords("C4"), getCoords("D5"), getCoords("E4")));
 
-        chain = new Chain(getCoords("A1"));
-        liberties = chain.getLiberties();
+		chain = new Chain(getCoords("A1"));
+		liberties = chain.getLiberties();
 
-        assertThat(liberties.size(), is(2));
-    }
+		assertThat(liberties.size(), is(2));
+	}
 
-    @Test
-    public void size() {
-        Chain chain = new Chain(getCoords("A1"));
+	@Test
+	public void size() {
+		Chain chain = new Chain(getCoords("A1"));
 
-        assertThat(chain.size(), is(1));
-    }
+		assertThat(chain.size(), is(1));
+	}
 
-    @Test
-    public void merge() {
-        Chain main = new Chain(getCoords("D4"));
-        Chain other = new Chain(getCoords("D3"));
+	@Test
+	public void merge() {
+		Chain main = new Chain(getCoords("D4"));
+		Chain other = new Chain(getCoords("D3"));
 
-        main.mergeChain(other);
+		main.mergeChain(other);
 
-        assertThat(main.size(), is(2));
-        assertThat(other.size(), is(0));
+		assertThat(main.size(), is(2));
+		assertThat(other.size(), is(0));
 
-        assertThat(main.contains(getCoords("D4")), is(true));
-        assertThat(main.contains(getCoords("D3")), is(true));
+		assertThat(main.contains(getCoords("D4")), is(true));
+		assertThat(main.contains(getCoords("D3")), is(true));
 
-        assertThat(main.countLiberties(), is(6));
-        assertThat(other.countLiberties(), is(0));
-    }
+		assertThat(main.countLiberties(), is(6));
+		assertThat(other.countLiberties(), is(0));
+	}
 
-    @Test
-    public void throwOnBadMerge() {
-        Chain main = new Chain(getCoords("D4"));
-        Chain other = new Chain(getCoords("C3"));
+	@Test
+	public void throwOnBadMerge() {
+		Chain main = new Chain(getCoords("D4"));
+		Chain other = new Chain(getCoords("C3"));
 
-        try {
-            main.mergeChain(other);
-            fail("Chain did not throw an exception when trying to merge with a non-adjacent chain.");
-        } catch (Exception e) {
-            assertThat(e, instanceOf(IllegalArgumentException.class));
-        }
-    }
+		try {
+			main.mergeChain(other);
+			fail("Chain did not throw an exception when trying to merge with a non-adjacent chain.");
+		}
+		catch (Exception e) {
+			assertThat(e, instanceOf(IllegalArgumentException.class));
+		}
+	}
 
-    @Test
-    public void getOpenLiberties() {
-        Chain blackChain = new Chain(getCoords("D4"));
-        ChainSet whiteStones = new ChainSet();
+	@Test
+	public void getOpenLiberties() {
+		Chain blackChain = new Chain(getCoords("D4"));
+		ChainSet whiteStones = new ChainSet();
 
-        assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(4));
-        assertThat(blackChain.getOpenLiberties(whiteStones), hasItems(
-                getCoords("D3"),
-                getCoords("D5"),
-                getCoords("C4"),
-                getCoords("E4")));
+		assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(4));
+		assertThat(blackChain.getOpenLiberties(whiteStones),
+				   hasItems(getCoords("D3"), getCoords("D5"), getCoords("C4"), getCoords("E4")));
 
-        whiteStones.add(getCoords("C3"));
+		whiteStones.add(getCoords("C3"));
 
-        assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(4));
-        assertThat(blackChain.getOpenLiberties(whiteStones), hasItems(
-                getCoords("D3"),
-                getCoords("D5"),
-                getCoords("C4"),
-                getCoords("E4")));
+		assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(4));
+		assertThat(blackChain.getOpenLiberties(whiteStones),
+				   hasItems(getCoords("D3"), getCoords("D5"), getCoords("C4"), getCoords("E4")));
 
-        whiteStones.add(getCoords("D3"));
+		whiteStones.add(getCoords("D3"));
 
-        assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(3));
-        assertThat(blackChain.getOpenLiberties(whiteStones), hasItems(
-                getCoords("D5"),
-                getCoords("C4"),
-                getCoords("E4")));
-    }
+		assertThat(blackChain.getOpenLiberties(whiteStones).size(), is(3));
+		assertThat(blackChain.getOpenLiberties(whiteStones),
+				   hasItems(getCoords("D5"), getCoords("C4"), getCoords("E4")));
+	}
 }
