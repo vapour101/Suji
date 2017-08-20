@@ -97,6 +97,13 @@ public class BoardScorerTest {
 
 		assertThat(scorer.getContiguousEmptySection(emptyPoints, getCoords("F1")),
 				   hasItems(getCoords("D1"), getCoords("E1"), getCoords("F1"), getCoords("G1")));
+
+		board = buildTestBoard(testBoard1);
+		scorer = new BoardScorer(board);
+		emptyPoints = scorer.getEmptyIntersections();
+
+		assertThat(scorer.getContiguousEmptySection(emptyPoints, getCoords("S19")).size(), is(1));
+		assertThat(scorer.getContiguousEmptySection(emptyPoints, getCoords("S19")), hasItems(getCoords("S19")));
 	}
 
 	@Test
@@ -147,5 +154,40 @@ public class BoardScorerTest {
 
 		assertThat(scorer.getBlackScore(), is(152.0));
 		assertThat(scorer.getWhiteScore(), is(171.0));
+		assertThat(scorer.getScore(), is(-19.0));
+	}
+
+	@Test
+	public void complexScore() {
+		Board board = buildTestBoard(testBoard1);
+		BoardScorer scorer = new BoardScorer(board);
+
+		scorer.markGroupDead(getCoords("M18"));
+		scorer.markGroupDead(getCoords("T19"));
+
+		scorer.markGroupDead(getCoords("H16"));
+		scorer.markGroupDead(getCoords("O14"));
+		scorer.markGroupDead(getCoords("M15"));
+
+		scorer.unmarkGroupDead(getCoords("M15"));
+		scorer.unmarkGroupDead(getCoords("H16"));
+		scorer.unmarkGroupDead(getCoords("O14"));
+
+		assertThat(scorer.getScore(), is(-208.0));
+
+		scorer.unmarkGroupDead(getCoords("M18"));
+
+		assertThat(scorer.getScore(), is(-234.0));
+
+		scorer.unmarkGroupDead(getCoords("K10"));
+		scorer.unmarkGroupDead(getCoords("T19"));
+
+		assertThat(scorer.getDeadBlackStones().size(), is(0));
+		assertThat(scorer.getDeadWhiteStones().size(), is(0));
+
+		assertThat(scorer.getBlackScore(), is(18.0));
+		assertThat(scorer.getWhiteScore(), is(239.0));
+
+		assertThat(scorer.getScore(), is(-221.0));
 	}
 }

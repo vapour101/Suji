@@ -118,8 +118,8 @@ public class BoardScorer {
 		blackLiberties.retainAll(potentialTerritory);
 		whiteLiberties.retainAll(potentialTerritory);
 
-		blackLiberties.removeAll(whiteLiberties);
 		whiteLiberties.removeAll(blackLiberties);
+		blackLiberties.removeAll(whiteLiberties);
 
 		Set<Coords> whiteTerritory = new HashSet<>();
 
@@ -168,7 +168,7 @@ public class BoardScorer {
 			deadBlackChains.remove(undeadChain);
 	}
 
-	private Set<Coords> getEmptyIntersections() {
+	protected Set<Coords> getEmptyIntersections() {
 		Set<Coords> emptyIntersections = getAllIntersections();
 
 		emptyIntersections.removeAll(getLiveBlackStones());
