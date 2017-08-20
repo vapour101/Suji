@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package sample;
+package ui;
 
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
