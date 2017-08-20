@@ -41,12 +41,30 @@ public class BoardController implements Initializable {
 	public Canvas boardCanvas;
 	public Pane pane;
 	private Board board;
+	private boolean blackMove;
 
 	public BoardController() {
 		board = new Board();
+		blackMove = true;
 	}
 
 	public void canvasClicked(MouseEvent mouseEvent) {
+		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
+		double radius = getStoneRadius();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		Coords boardPos = projector.nearestCoords(mousePosition);
+		DrawCoords pos = projector.fromBoardCoords(boardPos);
+
+		if ( blackMove && board.isLegalBlackMove(boardPos) ) {
+			board.playBlackStone(boardPos);
+			blackMove = !blackMove;
+		}
+		else if ( !blackMove && board.isLegalWhiteMove(boardPos) ) {
+			board.playWhiteStone(boardPos);
+			blackMove = !blackMove;
+		}
+
 		drawBoard();
 	}
 
@@ -54,12 +72,22 @@ public class BoardController implements Initializable {
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
 		drawBoard();
 
-		double diameter = getStoneRadius();
+		double radius = getStoneRadius();
 		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		Coords boardPos = projector.nearestCoords(mousePosition);
+		DrawCoords pos = projector.fromBoardCoords(boardPos);
 
-		context.setFill(Paint.valueOf("#000000"));
-		drawCircle(context, projector.fromBoardCoords(projector.nearestCoords(mousePosition)), diameter);
+		context.setGlobalAlpha(0.5);
+
+		if ( blackMove && board.isLegalBlackMove(boardPos) ) {
+			drawBlackStone(context, pos, radius);
+		}
+		else if ( !blackMove && board.isLegalWhiteMove(boardPos) ) {
+			drawWhiteStone(context, pos, radius);
+		}
+
+		context.setGlobalAlpha(1);
 	}
 
 	private void drawBoard() {
@@ -135,14 +163,22 @@ public class BoardController implements Initializable {
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
 		for (Coords stone : board.getBlackStones()) {
-			context.setFill(Paint.valueOf("#000000"));
-			drawCircle(context, projector.fromBoardCoords(stone), radius);
+			drawBlackStone(context, projector.fromBoardCoords(stone), radius);
 		}
 
 		for (Coords stone : board.getWhiteStones()) {
-			context.setFill(Paint.valueOf("#FFFFFF"));
-			drawCircle(context, projector.fromBoardCoords(stone), radius);
+			drawWhiteStone(context, projector.fromBoardCoords(stone), radius);
 		}
+	}
+
+	private void drawBlackStone(GraphicsContext context, DrawCoords pos, double radius) {
+		context.setFill(Paint.valueOf("#000000"));
+		drawCircle(context, pos, radius);
+	}
+
+	private void drawWhiteStone(GraphicsContext context, DrawCoords pos, double radius) {
+		context.setFill(Paint.valueOf("#FFFFFF"));
+		drawCircle(context, pos, radius);
 	}
 
 	private void drawCircle(GraphicsContext context, DrawCoords pos, double radius) {
