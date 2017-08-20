@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Tshiwela Mulaudzi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,60 @@
 package ui;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+	Stage window;
+	BorderPane layout;
+	Parent localGame;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/board.fxml"));
+	public static void main(String[] args) {
+		launch(args);
+	}
 
-        primaryStage.setResizable(true);
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 500, 500));
-        primaryStage.show();
-    }
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		window = primaryStage;
+		window.setTitle("Suji");
+
+		localGame = FXMLLoader.load(getClass().getResource("/board.fxml"));
+
+		//file menu, creating the main tabs
+		Menu fileMenu = new Menu("New...");
+		Menu exitMenu = new Menu("Exit");
+
+		MenuItem newLocalGame = new MenuItem("Local Game");
+		newLocalGame.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				window.setScene(new Scene(localGame, 500, 500));
+				window.show();
+			}
+		});
+
+		//Home items
+		fileMenu.getItems().add(newLocalGame);
+
+		//main menu bar
+		MenuBar menuBar = new MenuBar();
+		menuBar.getMenus().addAll(fileMenu, exitMenu);
+
+		layout = new BorderPane();
+
+		layout.setTop(menuBar);
+		Scene scene = new Scene(layout, 400, 300);
+		window.setScene(scene);
+		window.show();
+	}
 }

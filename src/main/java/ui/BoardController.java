@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,126 +24,192 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
+import javafx.scene.paint.Paint;
 import logic.Board;
 import util.CoordProjector;
+import util.Coords;
+import util.DrawCoords;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static util.Coords.getCoords;
+import static util.HandicapHelper.getHandicapStones;
 
 public class BoardController implements Initializable {
-    public Canvas boardCanvas;
-    public Pane pane;
-    private Board board;
 
-    public BoardController() {
-        board = new Board();
-    }
+	public Canvas boardCanvas;
+	public Pane pane;
+	private Board board;
+	private boolean blackMove;
 
-    public void canvasClicked(MouseEvent mouseEvent) {
-        drawBoard();
-    }
+	public BoardController() {
+		board = new Board();
+		blackMove = true;
+	}
 
-    private void resizeCanvas() {
-        boardCanvas.setHeight(pane.getHeight());
-        boardCanvas.setWidth(pane.getWidth());
-    }
+	public void canvasClicked(MouseEvent mouseEvent) {
+		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
+		double radius = getStoneRadius();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		Coords boardPos = projector.nearestCoords(mousePosition);
+		DrawCoords pos = projector.fromBoardCoords(boardPos);
 
-    private void drawBoard() {
-        drawBackground();
-        drawBoardTexture(getTopLeftCorner());
-        drawBoardLines();
-        drawStones();
-    }
+		if ( blackMove && board.isLegalBlackMove(boardPos) ) {
+			board.playBlackStone(boardPos);
+			blackMove = !blackMove;
+		}
+		else if ( !blackMove && board.isLegalWhiteMove(boardPos) ) {
+			board.playWhiteStone(boardPos);
+			blackMove = !blackMove;
+		}
 
-    private void drawBoardTexture(Pair<Double, Double> topLeft) {
-        GraphicsContext context = boardCanvas.getGraphicsContext2D();
-        double length = getBoardLength();
+		drawBoard();
+	}
 
-        context.setFill(Color.web("0xB78600"));
-        context.fillRect(topLeft.getKey(), topLeft.getValue(), length, length);
-    }
+	public void canvasHover(MouseEvent mouseEvent) {
+		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
+		drawBoard();
 
-    private void drawBackground() {
-        GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		double radius = getStoneRadius();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		Coords boardPos = projector.nearestCoords(mousePosition);
+		DrawCoords pos = projector.fromBoardCoords(boardPos);
 
-        context.setFill(Color.GREEN);
-        context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
-    }
+		context.setGlobalAlpha(0.5);
 
-    private void drawBoardLines() {
-        double length = getBoardLength();
-        Pair<Double, Double> topLeft = getTopLeftCorner();
+		if ( blackMove && board.isLegalBlackMove(boardPos) ) {
+			drawBlackStone(context, pos, radius);
+		}
+		else if ( !blackMove && board.isLegalWhiteMove(boardPos) ) {
+			drawWhiteStone(context, pos, radius);
+		}
 
-        GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		context.setGlobalAlpha(1);
+	}
 
-        for (int i = 1; i < 20; i++) {
-            //Horizontal Lines
-            Pair<Double, Double> start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
-            Pair<Double, Double> end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
+	private void drawBoard() {
+		drawBackground();
+		drawBoardTexture();
+		drawBoardLines();
+		drawStones();
+	}
 
-            start = addCoords(start, topLeft);
-            end = addCoords(end, topLeft);
+	private void drawBackground() {
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-            context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
+		context.setFill(Color.GREEN);
+		context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
+	}
 
-            //Vertical Lines
-            start = CoordProjector.fromBoardCoords(getCoords(i, 1), length);
-            end = CoordProjector.fromBoardCoords(getCoords(i, 19), length);
+	private void drawBoardTexture() {
+		DrawCoords topLeft = getTopLeftCorner();
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+		double length = getBoardLength();
 
-            start = addCoords(start, topLeft);
-            end = addCoords(end, topLeft);
+		context.setFill(Color.web("0xB78600"));
+		context.fillRect(topLeft.getX(), topLeft.getY(), length, length);
+	}
 
-            context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
-        }
+	private DrawCoords getTopLeftCorner() {
+		double length = getBoardLength();
+		double canvasWidth = boardCanvas.getWidth();
+		double canvasHeight = boardCanvas.getHeight();
 
-    }
+		double x = 0;
+		double y = 0;
 
-    private void drawStones() {
+		if ( canvasWidth > length )
+			x = (canvasWidth - length) / 2;
+		else
+			y = (canvasHeight - length) / 2;
 
-    }
+		return new DrawCoords(x, y);
+	}
 
-    private double getBoardLength() {
-        double canvasWidth = boardCanvas.getWidth();
-        double canvasHeight = boardCanvas.getHeight();
+	private void drawBoardLines() {
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 
-        return Math.min(canvasHeight, canvasWidth);
-    }
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-    private Pair<Double, Double> getTopLeftCorner() {
-        double length = getBoardLength();
-        double canvasWidth = boardCanvas.getWidth();
-        double canvasHeight = boardCanvas.getHeight();
+		for (int i = 1; i < 20; i++) {
+			//Horizontal Lines
+			DrawCoords start = projector.fromBoardCoords(getCoords(1, i));
+			DrawCoords end = projector.fromBoardCoords(getCoords(19, i));
 
-        double x = 0;
-        double y = 0;
+			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 
-        if (canvasWidth > length)
-            x = (canvasWidth - length) / 2;
-        else
-            y = (canvasHeight - length) / 2;
+			//Vertical Lines
+			start = projector.fromBoardCoords(getCoords(i, 1));
+			end = projector.fromBoardCoords(getCoords(i, 19));
 
-        return new Pair<>(x, y);
-    }
+			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
+		}
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ChangeListener<Number> paneChangeListener = (observableValue, number, t1) -> {
-            resizeCanvas();
-            drawBoard();
-        };
-        pane.widthProperty().addListener(paneChangeListener);
-        pane.heightProperty().addListener(paneChangeListener);
+		for (Coords c : getHandicapStones(9)) {
+			DrawCoords star = projector.fromBoardCoords(c);
+			double radius = context.getLineWidth() * 4;
 
-        drawBoard();
-    }
+			context.setFill(Paint.valueOf("#000000"));
+			drawCircle(context, star, radius);
+		}
+	}
 
-    private Pair<Double, Double> addCoords(Pair<Double, Double> lhs, Pair<Double, Double> rhs) {
-        double x = lhs.getKey() + rhs.getKey();
-        double y = lhs.getValue() + rhs.getValue();
+	private void drawStones() {
+		double radius = getStoneRadius();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-        return new Pair<>(x, y);
-    }
+		for (Coords stone : board.getBlackStones()) {
+			drawBlackStone(context, projector.fromBoardCoords(stone), radius);
+		}
+
+		for (Coords stone : board.getWhiteStones()) {
+			drawWhiteStone(context, projector.fromBoardCoords(stone), radius);
+		}
+	}
+
+	private void drawBlackStone(GraphicsContext context, DrawCoords pos, double radius) {
+		context.setFill(Paint.valueOf("#000000"));
+		drawCircle(context, pos, radius);
+	}
+
+	private void drawWhiteStone(GraphicsContext context, DrawCoords pos, double radius) {
+		context.setFill(Paint.valueOf("#FFFFFF"));
+		drawCircle(context, pos, radius);
+	}
+
+	private void drawCircle(GraphicsContext context, DrawCoords pos, double radius) {
+		context.fillOval(pos.getX() - radius, pos.getY() - radius, 2 * radius, 2 * radius);
+	}
+
+	private double getBoardLength() {
+		double canvasWidth = boardCanvas.getWidth();
+		double canvasHeight = boardCanvas.getHeight();
+
+		return Math.min(canvasHeight, canvasWidth);
+	}
+
+	private double getStoneRadius() {
+		return getBoardLength() / (19 + 1) / 2;
+	}
+
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		ChangeListener<Number> paneChangeListener = (observableValue, number, t1) -> {
+			resizeCanvas();
+			drawBoard();
+		};
+		pane.widthProperty().addListener(paneChangeListener);
+		pane.heightProperty().addListener(paneChangeListener);
+
+		drawBoard();
+	}
+
+	private void resizeCanvas() {
+		boardCanvas.setHeight(pane.getHeight());
+		boardCanvas.setWidth(pane.getWidth());
+	}
 }

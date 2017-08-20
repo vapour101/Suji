@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,80 @@
 
 package util;
 
-import javafx.util.Pair;
+import static util.Coords.getCoords;
 
 public class CoordProjector {
-    private static final int BOARD_SIZE = 19;
 
-    static public Pair<Double, Double> fromBoardCoords(Coords boardCoords, double boardLength) {
-        double offset = (boardLength / (BOARD_SIZE + 1));
+	private static final int BOARD_SIZE = 19;
+	private double boardLength;
+	private DrawCoords topLeft;
 
-        double realX = boardCoords.x() * offset;
-        double realY = boardCoords.y() * offset;
+	public CoordProjector(double boardLength) {
+		this.boardLength = boardLength;
+		this.topLeft = new DrawCoords(0, 0);
+	}
 
-        return new Pair<>(realX, realY);
-    }
+	public CoordProjector(double boardLength, DrawCoords topLeft) {
+		this.boardLength = boardLength;
+		this.topLeft = topLeft;
+	}
+
+	public DrawCoords fromBoardCoords(Coords boardCoords) {
+		double spacing = boardLength / BOARD_SIZE;
+
+		double realX = (boardCoords.x() - 0.5) * spacing;
+		double realY = (boardCoords.y() - 0.5) * spacing;
+
+		DrawCoords result = new DrawCoords(realX, realY);
+		result.applyOffset(topLeft);
+
+		return result;
+	}
+
+	public Coords nearestCoords(DrawCoords point) {
+		point = snapToBounds(point);
+		point.removeOffset(topLeft);
+
+		double spacing = boardLength / BOARD_SIZE;
+
+		int boardX = (int) Math.round(point.getX() / spacing + 0.5);
+		int boardY = (int) Math.round(point.getY() / spacing + 0.5);
+
+		return getCoords(boardX, boardY);
+	}
+
+	private DrawCoords snapToBounds(DrawCoords point) {
+		double snapX = point.getX();
+		double snapY = point.getY();
+
+		if ( snapX < xLowerBound() )
+			snapX = xLowerBound();
+
+		if ( snapX > xUpperBound() )
+			snapX = xUpperBound();
+
+		if ( snapY < yLowerBound() )
+			snapY = yLowerBound();
+
+		if ( snapY > yUpperBound() )
+			snapY = yUpperBound();
+
+		return new DrawCoords(snapX, snapY);
+	}
+
+	private double xLowerBound() {
+		return topLeft.getX();
+	}
+
+	private double xUpperBound() {
+		return topLeft.getX() + boardLength - 1;
+	}
+
+	private double yLowerBound() {
+		return topLeft.getY();
+	}
+
+	private double yUpperBound() {
+		return topLeft.getY() + boardLength - 1;
+	}
 }

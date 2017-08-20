@@ -17,20 +17,38 @@
 
 package util;
 
-import javafx.util.Pair;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static util.CoordProjector.fromBoardCoords;
 import static util.Coords.getCoords;
 
 public class CoordProjectorTest {
-    @Test
-    public void conversion() {
-        CoordProjector proj = new CoordProjector();
-        Pair<Double, Double> projection = fromBoardCoords(getCoords("D4"), 20);
 
-        assertThat(projection, is(new Pair<Double, Double>(4.0, 4.0)));
-    }
+	@Test
+	public void toRealCoords() {
+		CoordProjector proj = new CoordProjector(19, new DrawCoords(3.4, 5.6));
+		DrawCoords projection = proj.fromBoardCoords(getCoords("D4"));
+
+		assertThat(projection, is(new DrawCoords(6.9, 9.1)));
+
+		proj = new CoordProjector(19);
+		projection = proj.fromBoardCoords(getCoords("D4"));
+
+		assertThat(projection, is(new DrawCoords(3.5, 3.5)));
+	}
+
+	@Test
+	public void toBoardCoords() {
+		CoordProjector proj = new CoordProjector(20, new DrawCoords(3.4, 5.6));
+		Coords projection = proj.nearestCoords(new DrawCoords(7.3, 9.5));
+
+		assertThat(projection, is(getCoords("D4")));
+
+		projection = proj.nearestCoords(new DrawCoords(2, 2));
+		assertThat(projection, is(getCoords("A1")));
+
+		projection = proj.nearestCoords(new DrawCoords(40, 40));
+		assertThat(projection, is(getCoords("T19")));
+	}
 }

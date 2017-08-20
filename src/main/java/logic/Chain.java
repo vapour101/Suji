@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,94 +23,95 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Chain {
-    private HashSet<Coords> stones;
-    private HashSet<Coords> liberties;
 
-    private Chain(Chain other) {
-        stones = new HashSet<>();
+	private HashSet<Coords> stones;
+	private HashSet<Coords> liberties;
 
-        stones.addAll(other.stones);
+	private Chain(Chain other) {
+		stones = new HashSet<>();
 
-        recalculateLiberties();
-    }
+		stones.addAll(other.stones);
 
-    Chain(Coords coords) {
-        stones = new HashSet<>();
+		recalculateLiberties();
+	}
 
-        stones.add(coords);
-        recalculateLiberties();
-    }
+	private void recalculateLiberties() {
+		liberties = new HashSet<>();
 
-    private void recalculateLiberties() {
-        liberties = new HashSet<>();
+		for (Coords stone : stones) {
+			Set<Coords> neighbours = stone.getNeighbours();
 
-        for (Coords stone : stones) {
-            Set<Coords> neighbours = stone.getNeighbours();
+			for (Coords c : neighbours)
+				if ( !this.contains(c) )
+					liberties.add(c);
+		}
+	}
 
-            for (Coords c : neighbours)
-                if (!this.contains(c))
-                    liberties.add(c);
-        }
-    }
+	protected boolean contains(Coords stone) {
+		return stones.contains(stone);
+	}
 
-    protected boolean contains(Coords stone) {
-        return stones.contains(stone);
-    }
+	Chain(Coords coords) {
+		stones = new HashSet<>();
 
-    protected HashSet<Coords> getLiberties() {
-        return liberties;
-    }
+		stones.add(coords);
+		recalculateLiberties();
+	}
 
-    protected boolean isAdjacentTo(Coords coords) {
-        return liberties.contains(coords);
-    }
+	protected boolean isAdjacentTo(Coords coords) {
+		return liberties.contains(coords);
+	}
 
-    protected boolean isAdjacentTo(Chain other) {
-        for (Coords lib : liberties)
-            if (other.contains(lib))
-                return true;
+	protected int size() {
+		return stones.size();
+	}
 
-        return false;
-    }
+	protected int countLiberties() {
+		return liberties.size();
+	}
 
-    protected int size() {
-        return stones.size();
-    }
+	protected void mergeChain(Chain other) {
+		if ( !isAdjacentTo(other) )
+			throw new IllegalArgumentException("Chains are not adjacent and cannot be merged.");
 
-    private void clear() {
-        stones.clear();
-        liberties.clear();
-    }
+		stones.addAll(other.stones);
 
-    protected int countLiberties() {
-        return liberties.size();
-    }
+		other.clear();
 
-    protected void mergeChain(Chain other) {
-        if (!isAdjacentTo(other))
-            throw new IllegalArgumentException("Chains are not adjacent and cannot be merged.");
+		recalculateLiberties();
+	}
 
-        stones.addAll(other.stones);
+	protected boolean isAdjacentTo(Chain other) {
+		for (Coords lib : liberties)
+			if ( other.contains(lib) )
+				return true;
 
-        other.clear();
+		return false;
+	}
 
-        recalculateLiberties();
-    }
+	private void clear() {
+		stones.clear();
+		liberties.clear();
+	}
 
-    protected Set<Coords> getStones() {
-        return stones;
-    }
+	protected Set<Coords> getStones() {
+		return stones;
+	}
 
-    protected Set<Coords> getOpenLiberties(ChainSet others) {
-        HashSet<Coords> openLiberties = new HashSet<>();
+	protected Set<Coords> getOpenLiberties(ChainSet others) {
+		HashSet<Coords> openLiberties = new HashSet<>();
 
-        openLiberties.addAll(getLiberties());
-        openLiberties.removeAll(others.getStones());
+		openLiberties.addAll(getLiberties());
+		openLiberties.removeAll(others.getStones());
 
-        return openLiberties;
-    }
+		return openLiberties;
+	}
 
-    protected Chain copy() {
-        return new Chain(this);
-    }
+	protected HashSet<Coords> getLiberties() {
+		return liberties;
+	}
+
+	protected Chain copy() {
+		return new Chain(this);
+	}
 }
