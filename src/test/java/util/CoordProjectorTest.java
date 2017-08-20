@@ -41,11 +41,14 @@ public class CoordProjectorTest {
 	@Test
 	public void toBoardCoords() {
 		CoordProjector proj = new CoordProjector(20, new DrawCoords(3.4, 5.6));
-		Coords projection = proj.nearestCoords(new DrawCoords(7.4, 9.6));
+		Coords projection = proj.nearestCoords(new DrawCoords(7.3, 9.5));
 
 		assertThat(projection, is(getCoords("D4")));
 
 		projection = proj.nearestCoords(new DrawCoords(2, 2));
 		assertThat(projection, is(getCoords("A1")));
+
+		projection = proj.nearestCoords(new DrawCoords(40,40));
+		assertThat(projection, is(getCoords("T19")));
 	}
 }

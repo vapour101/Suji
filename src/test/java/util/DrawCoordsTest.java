@@ -54,4 +54,9 @@ public class DrawCoordsTest {
 
 		assertThat(coords, is(result));
 	}
+
+	@Test
+	public void convertToString() {
+		assertThat(new DrawCoords(3, 4).toString(), is("(3.0, 4.0)"));
+	}
 }
