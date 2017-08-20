@@ -1,0 +1,11 @@
+<component name="CopyrightManager">
+  <settings default="GPL3">
+    <LanguageOptions name="JAVA">
+      <option name="fileTypeOverride" value="3" />
+    </LanguageOptions>
+    <LanguageOptions name="XML">
+      <option name="fileTypeOverride" value="3" />
+      <option name="fileLocation" value="2" />
+    </LanguageOptions>
+  </settings>
+</component>

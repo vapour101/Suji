@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,115 +23,115 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ChainSet {
-    private HashSet<Chain> chains;
 
-    public ChainSet() {
-        chains = new HashSet<>();
-    }
+	private HashSet<Chain> chains;
 
-    public boolean contains(Coords stone) {
-        for (Chain chain : chains)
-            if (chain.contains(stone))
-                return true;
+	public ChainSet() {
+		chains = new HashSet<>();
+	}
 
-        return false;
-    }
+	public boolean contains(Coords stone) {
+		for (Chain chain : chains)
+			if ( chain.contains(stone) )
+				return true;
 
-    public Set<Coords> getStones() {
-        Set<Coords> stones = new HashSet<>();
+		return false;
+	}
 
-        for (Chain chain : chains)
-            stones.addAll(chain.getStones());
+	public Set<Coords> getStones() {
+		Set<Coords> stones = new HashSet<>();
 
-        return stones;
-    }
+		for (Chain chain : chains)
+			stones.addAll(chain.getStones());
 
-    protected boolean chainIsCaptured(Coords stone, ChainSet other) {
-        for (Chain chain : chains)
-            if (chain.getLiberties().contains(stone)) {
-                Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+		return stones;
+	}
 
-                if (freeLiberties.size() == 1 && freeLiberties.contains(stone))
-                    return true;
-            }
+	protected boolean chainIsCaptured(Coords stone, ChainSet other) {
+		for (Chain chain : chains)
+			if ( chain.getLiberties().contains(stone) ) {
+				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
 
-        return false;
-    }
+				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
+					return true;
+			}
 
-    protected int captureStones(Coords stone, ChainSet other) {
-        Set<Chain> deadChains = new HashSet<>();
+		return false;
+	}
 
-        for (Chain chain : chains) {
-            if (chain.getLiberties().contains(stone)) {
-                Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+	protected int captureStones(Coords stone, ChainSet other) {
+		Set<Chain> deadChains = new HashSet<>();
 
-                if (freeLiberties.size() == 1 && freeLiberties.contains(stone))
-                    deadChains.add(chain);
-            }
-        }
+		for (Chain chain : chains) {
+			if ( chain.getLiberties().contains(stone) ) {
+				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
 
-        int deadStones = 0;
+				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
+					deadChains.add(chain);
+			}
+		}
 
-        for (Chain chain : deadChains)
-            deadStones += chain.size();
+		int deadStones = 0;
 
-        chains.removeAll(deadChains);
+		for (Chain chain : deadChains)
+			deadStones += chain.size();
 
-        return deadStones;
-    }
+		chains.removeAll(deadChains);
 
-    protected boolean isSuicide(Coords stone, ChainSet other) {
-        //Any play that results in a capture is never suicide
-        if (other.chainIsCaptured(stone, this))
-            return false;
+		return deadStones;
+	}
 
-        ChainSet futureChain = copy();
-        boolean suicide = false;
+	protected boolean isSuicide(Coords stone, ChainSet other) {
+		//Any play that results in a capture is never suicide
+		if ( other.chainIsCaptured(stone, this) )
+			return false;
 
-        futureChain.add(stone);
-        Chain stoneChain = futureChain.getChainFromStone(stone);
+		ChainSet futureChain = copy();
+		boolean suicide = false;
 
-        suicide = (stoneChain.getOpenLiberties(other).size() == 0);
+		futureChain.add(stone);
+		Chain stoneChain = futureChain.getChainFromStone(stone);
 
-        return suicide;
-    }
+		suicide = (stoneChain.getOpenLiberties(other).size() == 0);
 
-    public void add(Coords stone) {
-        addChain(new Chain(stone));
-    }
+		return suicide;
+	}
 
-    private void addChain(Chain chain) {
-        for (Chain existing : chains)
-            if (existing.isAdjacentTo(chain)) {
-                chains.remove(existing);
-                existing.mergeChain(chain);
-                addChain(existing);
-                return;
-            }
+	public void add(Coords stone) {
+		addChain(new Chain(stone));
+	}
 
-        chains.add(chain);
+	private void addChain(Chain chain) {
+		for (Chain existing : chains)
+			if ( existing.isAdjacentTo(chain) ) {
+				chains.remove(existing);
+				existing.mergeChain(chain);
+				addChain(existing);
+				return;
+			}
 
-    }
+		chains.add(chain);
+	}
 
-    private ChainSet copy() {
-        ChainSet result = new ChainSet();
+	private ChainSet copy() {
+		ChainSet result = new ChainSet();
 
-        for (Chain chain : chains)
-            result.chains.add(chain.copy());
+		for (Chain chain : chains)
+			result.chains.add(chain.copy());
 
-        return result;
-    }
+		return result;
+	}
 
-    protected int getChainCount() {
-        return chains.size();
-    }
+	protected int getChainCount() {
+		return chains.size();
+	}
 
-    protected Chain getChainFromStone(Coords stone) {
-        for (Chain chain : chains)
-            if (chain.contains(stone)) {
-                return chain;
-            }
+	protected Chain getChainFromStone(Coords stone) {
+		for (Chain chain : chains)
+			if ( chain.contains(stone) ) {
+				return chain;
+			}
 
-        return null;
-    }
+		return null;
+	}
 }

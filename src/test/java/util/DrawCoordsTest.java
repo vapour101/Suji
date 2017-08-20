@@ -17,16 +17,34 @@
 
 package util;
 
-public class CoordProjector {
+import javafx.util.Pair;
+import org.junit.Test;
 
-	private static final int BOARD_SIZE = 19;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+import static util.DrawCoords.sum;
 
-	static public DrawCoords fromBoardCoords(Coords boardCoords, double boardLength) {
-		double offset = (boardLength / (BOARD_SIZE + 1));
+public class DrawCoordsTest {
 
-		double realX = boardCoords.x() * offset;
-		double realY = boardCoords.y() * offset;
+	@Test
+	public void coordsTest() {
+		DrawCoords coords = new DrawCoords(0.5, 0.7);
+		DrawCoords offset = new DrawCoords(0.5, 0.3);
+		DrawCoords result = new DrawCoords(0, 0);
 
-		return new DrawCoords(realX, realY);
+		assertThat(coords, is(coords));
+
+		result.setX(1);
+		result.setY(1);
+
+		assertThat(result, is(new DrawCoords(1.0, 1.0)));
+		assertThat(sum(coords, offset), is(result));
+
+		coords.applyOffset(offset);
+
+		assertThat(coords, is(result));
+
+		assertThat(coords, is(not(new Pair<>(1.0, 1.0))));
 	}
 }

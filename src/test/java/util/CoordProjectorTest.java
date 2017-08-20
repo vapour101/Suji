@@ -17,7 +17,6 @@
 
 package util;
 
-import javafx.util.Pair;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,11 +25,12 @@ import static util.CoordProjector.fromBoardCoords;
 import static util.Coords.getCoords;
 
 public class CoordProjectorTest {
-    @Test
-    public void conversion() {
-        CoordProjector proj = new CoordProjector();
-        Pair<Double, Double> projection = fromBoardCoords(getCoords("D4"), 20);
 
-        assertThat(projection, is(new Pair<Double, Double>(4.0, 4.0)));
-    }
+	@Test
+	public void conversion() {
+		CoordProjector proj = new CoordProjector();
+		DrawCoords projection = fromBoardCoords(getCoords("D4"), 20);
+
+		assertThat(projection, is(new DrawCoords(4.0, 4.0)));
+	}
 }

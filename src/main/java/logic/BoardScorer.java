@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,116 +19,226 @@ package logic;
 
 import util.Coords;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
+import static util.Coords.getCoords;
+
 public class BoardScorer {
-    private Board board;
-    private double komi;
-    private Set<Chain> deadBlackChains;
-    private Set<Chain> deadWhiteChains;
 
-    public BoardScorer(Board board) {
-        this(board, 0);
-    }
+	private Board board;
+	private double komi;
+	private Set<Chain> deadBlackChains;
+	private Set<Chain> deadWhiteChains;
 
-    public BoardScorer(Board board, double komi) {
-        this.board = board;
-        this.komi = komi;
-        deadBlackChains = new HashSet<>();
-        deadWhiteChains = new HashSet<>();
-    }
+	public BoardScorer(Board board) {
+		this(board, 0);
+	}
 
-    public double getScore() {
-        return getBlackScore() - getWhiteScore();
-    }
+	public BoardScorer(Board board, double komi) {
+		this.board = board;
+		this.komi = komi;
+		deadBlackChains = new HashSet<>();
+		deadWhiteChains = new HashSet<>();
+	}
 
-    public double getBlackScore() {
-        double blackScore = countBlackTerritory();
-        blackScore += board.getBlackCaptures();
+	public double getScore() {
+		return getBlackScore() - getWhiteScore();
+	}
 
-        for (Chain chain : deadWhiteChains)
-            blackScore += chain.size();
+	public double getBlackScore() {
+		double blackScore = countBlackTerritory();
+		blackScore += board.getBlackCaptures();
 
-        if (komi < 0)
-            blackScore -= komi;
+		for (Chain chain : deadWhiteChains)
+			blackScore += chain.size();
 
-        return blackScore;
-    }
+		if ( komi < 0 )
+			blackScore -= komi;
 
-    public double getWhiteScore() {
-        double whiteScore = countWhiteTerritory();
-        whiteScore += board.getWhiteCaptures();
+		return blackScore;
+	}
 
-        for (Chain chain : deadBlackChains)
-            whiteScore += chain.size();
+	public double getWhiteScore() {
+		double whiteScore = countWhiteTerritory();
+		whiteScore += board.getWhiteCaptures();
 
-        if (komi > 0)
-            whiteScore += komi;
+		for (Chain chain : deadBlackChains)
+			whiteScore += chain.size();
 
-        return whiteScore;
-    }
+		if ( komi > 0 )
+			whiteScore += komi;
 
-    private int countWhiteTerritory() {
-        return 0;
-    }
+		return whiteScore;
+	}
 
-    private int countBlackTerritory() {
-        return 0;
-    }
+	private int countBlackTerritory() {
+		Set<Coords> potentialTerritory = getEmptyIntersections();
 
-    public void markGroupDead(Coords coords) {
-        Chain deadChain = board.getChainAtCoords(coords);
+		Set<Coords> blackLiberties = new HashSet<>();
+		Set<Coords> whiteLiberties = new HashSet<>();
 
-        if (deadChain == null)
-            return;
+		for (Coords c : getLiveBlackStones())
+			blackLiberties.addAll(c.getNeighbours());
 
-        if (board.getBlackStones().contains(coords))
-            deadBlackChains.add(deadChain);
-        else
-            deadWhiteChains.add(deadChain);
-    }
+		for (Coords c : getLiveWhiteStones())
+			whiteLiberties.addAll(c.getNeighbours());
 
-    public void unmarkGroupDead(Coords coords) {
-        Chain undeadChain = null;
+		blackLiberties.retainAll(potentialTerritory);
+		whiteLiberties.retainAll(potentialTerritory);
 
-        for (Chain deadChain : deadWhiteChains)
-            if (deadChain.contains(coords)) {
-                undeadChain = deadChain;
-                break;
-            }
+		blackLiberties.removeAll(whiteLiberties);
+		whiteLiberties.removeAll(blackLiberties);
 
-        if (undeadChain != null) {
-            deadWhiteChains.remove(undeadChain);
-            return;
-        }
+		Set<Coords> blackTerritory = new HashSet<>();
 
-        for (Chain deadChain : deadBlackChains)
-            if (deadChain.contains(coords)) {
-                undeadChain = deadChain;
-                break;
-            }
+		for (Coords c : blackLiberties)
+			blackTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
 
-        if (undeadChain != null)
-            deadBlackChains.remove(undeadChain);
+		for (Coords c : whiteLiberties)
+			blackTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
 
-    }
+		return blackTerritory.size();
+	}
 
-    public Set<Coords> getDeadBlackStones() {
-        Set<Coords> deadBlackStones = new HashSet<>();
+	private int countWhiteTerritory() {
+		Set<Coords> potentialTerritory = getEmptyIntersections();
 
-        for (Chain chain : deadBlackChains)
-            deadBlackStones.addAll(chain.getStones());
+		Set<Coords> blackLiberties = new HashSet<>();
+		Set<Coords> whiteLiberties = new HashSet<>();
 
-        return deadBlackStones;
-    }
+		for (Coords c : getLiveBlackStones())
+			blackLiberties.addAll(c.getNeighbours());
 
-    public Set<Coords> getDeadWhiteStones() {
-        Set<Coords> deadWhiteStones = new HashSet<>();
+		for (Coords c : getLiveWhiteStones())
+			whiteLiberties.addAll(c.getNeighbours());
 
-        for (Chain chain : deadWhiteChains)
-            deadWhiteStones.addAll(chain.getStones());
+		blackLiberties.retainAll(potentialTerritory);
+		whiteLiberties.retainAll(potentialTerritory);
 
-        return deadWhiteStones;
-    }
+		whiteLiberties.removeAll(blackLiberties);
+		blackLiberties.removeAll(whiteLiberties);
+
+		Set<Coords> whiteTerritory = new HashSet<>();
+
+		for (Coords c : whiteLiberties)
+			whiteTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
+
+		for (Coords c : blackLiberties)
+			whiteTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+
+		return whiteTerritory.size();
+	}
+
+	public void markGroupDead(Coords coords) {
+		Chain deadChain = board.getChainAtCoords(coords);
+
+		if ( deadChain == null )
+			return;
+
+		if ( board.getBlackStones().contains(coords) )
+			deadBlackChains.add(deadChain);
+		else
+			deadWhiteChains.add(deadChain);
+	}
+
+	public void unmarkGroupDead(Coords coords) {
+		Chain undeadChain = null;
+
+		for (Chain deadChain : deadWhiteChains)
+			if ( deadChain.contains(coords) ) {
+				undeadChain = deadChain;
+				break;
+			}
+
+		if ( undeadChain != null ) {
+			deadWhiteChains.remove(undeadChain);
+			return;
+		}
+
+		for (Chain deadChain : deadBlackChains)
+			if ( deadChain.contains(coords) ) {
+				undeadChain = deadChain;
+				break;
+			}
+
+		if ( undeadChain != null )
+			deadBlackChains.remove(undeadChain);
+	}
+
+	protected Set<Coords> getEmptyIntersections() {
+		Set<Coords> emptyIntersections = getAllIntersections();
+
+		emptyIntersections.removeAll(getLiveBlackStones());
+		emptyIntersections.removeAll(getLiveWhiteStones());
+
+		return emptyIntersections;
+	}
+
+	private Set<Coords> getAllIntersections() {
+		Set<Coords> coords = new HashSet<>();
+
+		for (int i = 1; i < 20; i++)
+			for (int j = 1; j < 20; j++)
+				coords.add(getCoords(i, j));
+
+		return coords;
+	}
+
+	private Set<Coords> getLiveBlackStones() {
+		Set<Coords> liveBlackStones = board.getBlackStones();
+		liveBlackStones.removeAll(getDeadBlackStones());
+
+		return liveBlackStones;
+	}
+
+	private Set<Coords> getLiveWhiteStones() {
+		Set<Coords> liveWhiteStones = board.getWhiteStones();
+		liveWhiteStones.removeAll(getDeadWhiteStones());
+
+		return liveWhiteStones;
+	}
+
+	public Set<Coords> getDeadBlackStones() {
+		Set<Coords> deadBlackStones = new HashSet<>();
+
+		for (Chain chain : deadBlackChains)
+			deadBlackStones.addAll(chain.getStones());
+
+		return deadBlackStones;
+	}
+
+	public Set<Coords> getDeadWhiteStones() {
+		Set<Coords> deadWhiteStones = new HashSet<>();
+
+		for (Chain chain : deadWhiteChains)
+			deadWhiteStones.addAll(chain.getStones());
+
+		return deadWhiteStones;
+	}
+
+	protected Set<Coords> getContiguousEmptySection(Set<Coords> emptyBoard, Coords startingPoint) {
+		Set<Coords> contiguousEmpty = new HashSet<>();
+		Queue<Coords> searchQueue = new ArrayDeque<>();
+
+		searchQueue.add(startingPoint);
+
+		while (!searchQueue.isEmpty()) {
+			Coords cur = searchQueue.remove();
+
+			if ( contiguousEmpty.contains(cur) || !emptyBoard.contains(cur) )
+				continue;
+
+			Set<Coords> unsearchedNeighbours = cur.getNeighbours();
+			unsearchedNeighbours.removeAll(contiguousEmpty);
+
+			searchQueue.addAll(unsearchedNeighbours);
+
+			contiguousEmpty.add(cur);
+		}
+
+		return contiguousEmpty;
+	}
 }

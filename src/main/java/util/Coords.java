@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,103 +23,104 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Coords {
-    private Pair<Integer, Integer> coordinates;
 
-    Coords(int x, int y) {
-        coordinates = new Pair<>(x, y);
-    }
+	private Pair<Integer, Integer> coordinates;
 
-    public static Coords getCoords(int x, int y) {
-        return new Coords(x, y);
-    }
+	Coords(int x, int y) {
+		coordinates = new Pair<>(x, y);
+	}
 
-    public static Coords getCoords(String coords) {
-        if (!coords.matches("[a-hj-tA-HJ-T]((1?[1-9])|(10))"))
-            throw new IllegalArgumentException("String: '" + coords + "' is not recognizable as Go coordinates.");
+	public static Coords getCoords(int x, int y) {
+		return new Coords(x, y);
+	}
 
-        int x = coords.toUpperCase().charAt(0) - 'A';
-        if (x < 9)
-            x++;
-        int y = Integer.parseInt(coords.replaceAll("[a-tA-T]", ""));
+	public static Coords getCoords(String coords) {
+		if ( !coords.matches("[a-hj-tA-HJ-T]((1?[1-9])|(10))") )
+			throw new IllegalArgumentException("String: '" + coords + "' is not recognizable as Go coordinates.");
 
-        return new Coords(x, y);
-    }
+		int x = coords.toUpperCase().charAt(0) - 'A';
+		if ( x < 9 )
+			x++;
+		int y = Integer.parseInt(coords.replaceAll("[a-tA-T]", ""));
 
-    public boolean equals(Object other) {
-        if (this == other)
-            return true;
-        else if (!(other instanceof Coords))
-            return false;
-        else {
-            Coords compare = (Coords) other;
-            return this.coordinates.equals(compare.coordinates);
-        }
-    }
+		return new Coords(x, y);
+	}
 
-    public String toString() {
-        String result = "(";
-        result += coordinates.getKey().toString();
-        result += ", ";
-        result += coordinates.getValue().toString();
-        result += ")";
-        return result;
-    }
+	public Set<Coords> getNeighbours() {
+		HashSet<Coords> neighbours = new HashSet<>();
 
-    private Coords north() {
-        if (y() == 19)
-            return null;
+		if ( north() != null )
+			neighbours.add(north());
 
-        return new Coords(x(), y() + 1);
-    }
+		if ( south() != null )
+			neighbours.add(south());
 
-    private Coords south() {
-        if (y() == 1)
-            return null;
+		if ( west() != null )
+			neighbours.add(west());
 
-        return new Coords(x(), y() - 1);
-    }
+		if ( east() != null )
+			neighbours.add(east());
 
-    private Coords west() {
-        if (x() == 1)
-            return null;
+		return neighbours;
+	}
 
-        return new Coords(x() - 1, y());
-    }
+	private Coords north() {
+		if ( y() == 19 )
+			return null;
 
-    private Coords east() {
-        if (x() == 19)
-            return null;
+		return new Coords(x(), y() + 1);
+	}
 
-        return new Coords(x() + 1, y());
-    }
+	private Coords south() {
+		if ( y() == 1 )
+			return null;
 
-    public Set<Coords> getNeighbours() {
-        HashSet<Coords> neighbours = new HashSet<>();
+		return new Coords(x(), y() - 1);
+	}
 
-        if (north() != null)
-            neighbours.add(north());
+	private Coords west() {
+		if ( x() == 1 )
+			return null;
 
-        if (south() != null)
-            neighbours.add(south());
+		return new Coords(x() - 1, y());
+	}
 
-        if (west() != null)
-            neighbours.add(west());
+	private Coords east() {
+		if ( x() == 19 )
+			return null;
 
-        if (east() != null)
-            neighbours.add(east());
+		return new Coords(x() + 1, y());
+	}
 
-        return neighbours;
-    }
+	public final int y() {
+		return coordinates.getValue();
+	}
 
-    public final int x() {
-        return coordinates.getKey();
-    }
+	public final int x() {
+		return coordinates.getKey();
+	}
 
-    public final int y() {
-        return coordinates.getValue();
-    }
+	public int hashCode() {
+		return this.coordinates.hashCode();
+	}
 
-    public int hashCode() {
-        return this.coordinates.hashCode();
-    }
+	public boolean equals(Object other) {
+		if ( this == other )
+			return true;
+		else if ( !(other instanceof Coords) )
+			return false;
+		else {
+			Coords compare = (Coords) other;
+			return this.coordinates.equals(compare.coordinates);
+		}
+	}
+
+	public String toString() {
+		String result = "(";
+		result += coordinates.getKey().toString();
+		result += ", ";
+		result += coordinates.getValue().toString();
+		result += ")";
+		return result;
+	}
 }

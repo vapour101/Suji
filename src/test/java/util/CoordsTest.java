@@ -27,101 +27,99 @@ import static util.Coords.getCoords;
 
 public class CoordsTest {
 
-    @Test
-    public void equalTo() {
-        Coords c1 = new Coords(4, 3);
-        Coords c2 = new Coords(4, 3);
-        Pair<Integer, Integer> notCoords = new Pair<>(4, 3);
+	@Test
+	public void equalTo() {
+		Coords c1 = new Coords(4, 3);
+		Coords c2 = new Coords(4, 3);
+		Pair<Integer, Integer> notCoords = new Pair<>(4, 3);
 
-        assertThat(c1, is(c2));
-        assertThat(c2, is(c1));
-        assertThat(c1, is(c1));
-        assertThat(c1, not(notCoords));
-    }
+		assertThat(c1, is(c2));
+		assertThat(c2, is(c1));
+		assertThat(c1, is(c1));
+		assertThat(c1, not(notCoords));
+	}
 
-    @Test
-    public void coordsGetter() {
-        Coords coords = new Coords(4, 3);
+	@Test
+	public void coordsGetter() {
+		Coords coords = new Coords(4, 3);
 
-        assertThat(getCoords(4, 3), is(coords));
-    }
+		assertThat(getCoords(4, 3), is(coords));
+	}
 
-    @Test
-    public void convertToString() {
-        assertThat(getCoords(3, 4).toString(), is("(3, 4)"));
-    }
+	@Test
+	public void convertToString() {
+		assertThat(getCoords(3, 4).toString(), is("(3, 4)"));
+	}
 
-    @Test
-    public void neighbours() {
-        Coords center = getCoords(10, 10);
-        Coords topLeft = getCoords(1, 1);
-        Coords bottomRight = getCoords(19, 19);
+	@Test
+	public void neighbours() {
+		Coords center = getCoords(10, 10);
+		Coords topLeft = getCoords(1, 1);
+		Coords bottomRight = getCoords(19, 19);
 
-        assertThat(center.getNeighbours().size(), is(4));
-        assertThat(center.getNeighbours(), hasItems(
-                getCoords(10, 9),
-                getCoords(9, 10),
-                getCoords(10, 11),
-                getCoords(11, 10)));
+		assertThat(center.getNeighbours().size(), is(4));
+		assertThat(center.getNeighbours(),
+				   hasItems(getCoords(10, 9), getCoords(9, 10), getCoords(10, 11), getCoords(11, 10)));
 
-        assertThat(topLeft.getNeighbours().size(), is(2));
-        assertThat(topLeft.getNeighbours(), hasItems(
-                getCoords(1, 2),
-                getCoords(2, 1)));
+		assertThat(topLeft.getNeighbours().size(), is(2));
+		assertThat(topLeft.getNeighbours(), hasItems(getCoords(1, 2), getCoords(2, 1)));
 
-        assertThat(bottomRight.getNeighbours().size(), is(2));
-        assertThat(bottomRight.getNeighbours(), hasItems(
-                getCoords(19, 18),
-                getCoords(18, 19)));
-    }
+		assertThat(bottomRight.getNeighbours().size(), is(2));
+		assertThat(bottomRight.getNeighbours(), hasItems(getCoords(19, 18), getCoords(18, 19)));
+	}
 
-    @Test
-    public void symbolicCoordinates() {
-        assertThat(getCoords("K10"), is(getCoords(10, 10)));
-        assertThat(getCoords("k19"), is(getCoords(10, 19)));
-        assertThat(getCoords("a1"), is(getCoords(1, 1)));
-        assertThat(getCoords("T19"), is(getCoords(19, 19)));
-        assertThat(getCoords("A10"), is(getCoords(1, 10)));
-        assertThat(getCoords("t10"), is(getCoords(19, 10)));
+	@Test
+	public void symbolicCoordinates() {
+		assertThat(getCoords("K10"), is(getCoords(10, 10)));
+		assertThat(getCoords("k19"), is(getCoords(10, 19)));
+		assertThat(getCoords("a1"), is(getCoords(1, 1)));
+		assertThat(getCoords("T19"), is(getCoords(19, 19)));
+		assertThat(getCoords("A10"), is(getCoords(1, 10)));
+		assertThat(getCoords("t10"), is(getCoords(19, 10)));
 
-        assertThat(getCoords("h14"), is(getCoords(8, 14)));
-        assertThat(getCoords("j8"), is(getCoords(9, 8)));
-        assertThat(getCoords("H9"), is(getCoords(8, 9)));
-        assertThat(getCoords("J1"), is(getCoords(9, 1)));
+		assertThat(getCoords("h14"), is(getCoords(8, 14)));
+		assertThat(getCoords("j8"), is(getCoords(9, 8)));
+		assertThat(getCoords("H9"), is(getCoords(8, 9)));
+		assertThat(getCoords("J1"), is(getCoords(9, 1)));
 
-        try {
-            getCoords("I1");
-            fail("Coords did not throw an exception when given bad symbolic coordinates.");
-        } catch (Exception e) {
-            assertThat(e, instanceOf(IllegalArgumentException.class));
-        }
+		try {
+			getCoords("I1");
+			fail("Coords did not throw an exception when given bad symbolic coordinates.");
+		}
+		catch (Exception e) {
+			assertThat(e, instanceOf(IllegalArgumentException.class));
+		}
 
-        try {
-            getCoords("i10");
-            fail("Coords did not throw an exception when given bad symbolic coordinates.");
-        } catch (Exception e) {
-            assertThat(e, instanceOf(IllegalArgumentException.class));
-        }
+		try {
+			getCoords("i10");
+			fail("Coords did not throw an exception when given bad symbolic coordinates.");
+		}
+		catch (Exception e) {
+			assertThat(e, instanceOf(IllegalArgumentException.class));
+		}
 
-        try {
-            getCoords("A0");
-            fail("Coords did not throw an exception when given bad symbolic coordinates.");
-        } catch (Exception e) {
-            assertThat(e, instanceOf(IllegalArgumentException.class));
-        }
+		try {
+			getCoords("A0");
+			fail("Coords did not throw an exception when given bad symbolic coordinates.");
+		}
+		catch (Exception e) {
+			assertThat(e, instanceOf(IllegalArgumentException.class));
+		}
 
-        try {
-            getCoords("k20");
-            fail("Coords did not throw an exception when given bad symbolic coordinates.");
-        } catch (Exception e) {
-            assertThat(e, instanceOf(IllegalArgumentException.class));
-        }
+		try {
+			getCoords("k20");
+			fail("Coords did not throw an exception when given bad symbolic coordinates.");
+		}
+		catch (Exception e) {
+			assertThat(e, instanceOf(IllegalArgumentException.class));
+		}
 
-        try {
-            getCoords("Z5");
-            fail("Coords did not throw an exception when given bad symbolic coordinates.");
-        } catch (Exception e) {
-            assertThat(e, instanceOf(IllegalArgumentException.class));
-        }
-    }
+		try {
+			getCoords("Z5");
+			fail("Coords did not throw an exception when given bad symbolic coordinates.");
+		}
+		catch (Exception e) {
+			assertThat(e, instanceOf(IllegalArgumentException.class));
+		}
+	}
 }
