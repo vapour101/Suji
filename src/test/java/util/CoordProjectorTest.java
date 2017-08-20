@@ -48,7 +48,7 @@ public class CoordProjectorTest {
 		projection = proj.nearestCoords(new DrawCoords(2, 2));
 		assertThat(projection, is(getCoords("A1")));
 
-		projection = proj.nearestCoords(new DrawCoords(40,40));
+		projection = proj.nearestCoords(new DrawCoords(40, 40));
 		assertThat(projection, is(getCoords("T19")));
 	}
 }
