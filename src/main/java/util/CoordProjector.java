@@ -20,13 +20,28 @@ package util;
 public class CoordProjector {
 
 	private static final int BOARD_SIZE = 19;
+	private double boardLength;
+	private DrawCoords topLeft;
 
-	static public DrawCoords fromBoardCoords(Coords boardCoords, double boardLength) {
+	public CoordProjector(double boardLength) {
+		this.boardLength = boardLength;
+		this.topLeft = new DrawCoords(0, 0);
+	}
+
+	public CoordProjector(double boardLength, DrawCoords topLeft) {
+		this.boardLength = boardLength;
+		this.topLeft = topLeft;
+	}
+
+	public DrawCoords fromBoardCoords(Coords boardCoords) {
 		double offset = (boardLength / (BOARD_SIZE + 1));
 
 		double realX = boardCoords.x() * offset;
 		double realY = boardCoords.y() * offset;
 
-		return new DrawCoords(realX, realY);
+		DrawCoords result = new DrawCoords(realX, realY);
+		result.applyOffset(topLeft);
+
+		return result;
 	}
 }

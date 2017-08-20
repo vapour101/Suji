@@ -21,16 +21,20 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static util.CoordProjector.fromBoardCoords;
 import static util.Coords.getCoords;
 
 public class CoordProjectorTest {
 
 	@Test
 	public void conversion() {
-		CoordProjector proj = new CoordProjector();
-		DrawCoords projection = fromBoardCoords(getCoords("D4"), 20);
+		CoordProjector proj = new CoordProjector(20, new DrawCoords(3.4, 5.6));
+		DrawCoords projection = proj.fromBoardCoords(getCoords("D4"));
 
-		assertThat(projection, is(new DrawCoords(4.0, 4.0)));
+		assertThat(projection, is(new DrawCoords(7.4, 9.6)));
+
+		proj = new CoordProjector(20);
+		projection = proj.fromBoardCoords(getCoords("D4"));
+
+		assertThat(projection, is(new DrawCoords(4, 4)));
 	}
 }

@@ -24,9 +24,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
+import javafx.scene.paint.Paint;
 import logic.Board;
 import util.CoordProjector;
+import util.Coords;
 import util.DrawCoords;
 
 import java.net.URL;
@@ -88,34 +89,43 @@ public class BoardController implements Initializable {
 	}
 
 	private void drawBoardLines() {
-		double length = getBoardLength();
-		DrawCoords topLeft = getTopLeftCorner();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
 		for (int i = 1; i < 20; i++) {
 			//Horizontal Lines
-			DrawCoords start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
-			DrawCoords end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
-
-			start.applyOffset(topLeft);
-			end.applyOffset(topLeft);
+			DrawCoords start = projector.fromBoardCoords(getCoords(1, i));
+			DrawCoords end = projector.fromBoardCoords(getCoords(19, i));
 
 			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 
 			//Vertical Lines
-			start = CoordProjector.fromBoardCoords(getCoords(i, 1), length);
-			end = CoordProjector.fromBoardCoords(getCoords(i, 19), length);
-
-			start.applyOffset(topLeft);
-			end.applyOffset(topLeft);
+			start = projector.fromBoardCoords(getCoords(i, 1));
+			end = projector.fromBoardCoords(getCoords(i, 19));
 
 			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 		}
 	}
 
 	private void drawStones() {
+		double diameter = getStoneDiameter();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
+		for (Coords stone : board.getBlackStones()) {
+			context.setFill(Paint.valueOf("#000000"));
+			drawStone(context, projector.fromBoardCoords(stone), diameter);
+		}
+
+		for (Coords stone : board.getWhiteStones()) {
+			context.setFill(Paint.valueOf("#FFFFFF"));
+			drawStone(context, projector.fromBoardCoords(stone), diameter);
+		}
+	}
+
+	private void drawStone(GraphicsContext context, DrawCoords pos, double diameter) {
+		context.fillOval(pos.getX() - (diameter / 2), pos.getY() - (diameter / 2), diameter, diameter);
 	}
 
 	private double getBoardLength() {
@@ -125,11 +135,8 @@ public class BoardController implements Initializable {
 		return Math.min(canvasHeight, canvasWidth);
 	}
 
-	private Pair<Double, Double> addCoords(Pair<Double, Double> lhs, Pair<Double, Double> rhs) {
-		double x = lhs.getKey() + rhs.getKey();
-		double y = lhs.getValue() + rhs.getValue();
-
-		return new Pair<>(x, y);
+	private double getStoneDiameter() {
+		return getBoardLength() / (19 + 1);
 	}
 
 	@Override
