@@ -18,6 +18,10 @@
 package ui;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -29,6 +33,7 @@ public class Main extends Application {
 
 	Stage window;
 	BorderPane layout;
+	Parent localGame;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -40,16 +45,23 @@ public class Main extends Application {
 		window = primaryStage;
 		window.setTitle("Suji");
 
+		localGame = FXMLLoader.load(getClass().getResource("/board.fxml"));
+
 		//file menu, creating the main tabs
-		Menu fileMenu = new Menu("New local game");
+		Menu fileMenu = new Menu("New...");
 		Menu exitMenu = new Menu("Exit");
-		Menu helpMenu = new Menu("Help");
+
+		MenuItem newLocalGame = new MenuItem("Local Game");
+		newLocalGame.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				window.setScene(new Scene(localGame, 500, 500));
+				window.show();
+			}
+		});
 
 		//Home items
-		fileMenu.getItems().add(new MenuItem("Black's Name"));
-		fileMenu.getItems().add(new MenuItem("White's Name"));
-		fileMenu.getItems().add(new MenuItem("Handicap"));
-		fileMenu.getItems().add(new MenuItem("Komi"));
+		fileMenu.getItems().add(newLocalGame);
 
 		//main menu bar
 		MenuBar menuBar = new MenuBar();
