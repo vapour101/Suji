@@ -19,8 +19,12 @@ package logic;
 
 import util.Coords;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
+
+import static util.Coords.getCoords;
 
 public class BoardScorer {
 
@@ -71,11 +75,61 @@ public class BoardScorer {
 	}
 
 	private int countBlackTerritory() {
-		return 0;
+		Set<Coords> potentialTerritory = getEmptyIntersections();
+
+		Set<Coords> blackLiberties = new HashSet<>();
+		Set<Coords> whiteLiberties = new HashSet<>();
+
+		for (Coords c : getLiveBlackStones())
+			blackLiberties.addAll(c.getNeighbours());
+
+		for (Coords c : getLiveWhiteStones())
+			whiteLiberties.addAll(c.getNeighbours());
+
+		blackLiberties.retainAll(potentialTerritory);
+		whiteLiberties.retainAll(potentialTerritory);
+
+		blackLiberties.removeAll(whiteLiberties);
+		whiteLiberties.removeAll(blackLiberties);
+
+		Set<Coords> blackTerritory = new HashSet<>();
+
+		for (Coords c : blackLiberties)
+			blackTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
+
+		for (Coords c : whiteLiberties)
+			blackTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+
+		return blackTerritory.size();
 	}
 
 	private int countWhiteTerritory() {
-		return 0;
+		Set<Coords> potentialTerritory = getEmptyIntersections();
+
+		Set<Coords> blackLiberties = new HashSet<>();
+		Set<Coords> whiteLiberties = new HashSet<>();
+
+		for (Coords c : getLiveBlackStones())
+			blackLiberties.addAll(c.getNeighbours());
+
+		for (Coords c : getLiveWhiteStones())
+			whiteLiberties.addAll(c.getNeighbours());
+
+		blackLiberties.retainAll(potentialTerritory);
+		whiteLiberties.retainAll(potentialTerritory);
+
+		whiteLiberties.removeAll(blackLiberties);
+		blackLiberties.removeAll(whiteLiberties);
+
+		Set<Coords> whiteTerritory = new HashSet<>();
+
+		for (Coords c : whiteLiberties)
+			whiteTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
+
+		for (Coords c : blackLiberties)
+			whiteTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+
+		return whiteTerritory.size();
 	}
 
 	public void markGroupDead(Coords coords) {
@@ -114,6 +168,39 @@ public class BoardScorer {
 			deadBlackChains.remove(undeadChain);
 	}
 
+	protected Set<Coords> getEmptyIntersections() {
+		Set<Coords> emptyIntersections = getAllIntersections();
+
+		emptyIntersections.removeAll(getLiveBlackStones());
+		emptyIntersections.removeAll(getLiveWhiteStones());
+
+		return emptyIntersections;
+	}
+
+	private Set<Coords> getAllIntersections() {
+		Set<Coords> coords = new HashSet<>();
+
+		for (int i = 1; i < 20; i++)
+			for (int j = 1; j < 20; j++)
+				coords.add(getCoords(i, j));
+
+		return coords;
+	}
+
+	private Set<Coords> getLiveBlackStones() {
+		Set<Coords> liveBlackStones = board.getBlackStones();
+		liveBlackStones.removeAll(getDeadBlackStones());
+
+		return liveBlackStones;
+	}
+
+	private Set<Coords> getLiveWhiteStones() {
+		Set<Coords> liveWhiteStones = board.getWhiteStones();
+		liveWhiteStones.removeAll(getDeadWhiteStones());
+
+		return liveWhiteStones;
+	}
+
 	public Set<Coords> getDeadBlackStones() {
 		Set<Coords> deadBlackStones = new HashSet<>();
 
@@ -130,5 +217,28 @@ public class BoardScorer {
 			deadWhiteStones.addAll(chain.getStones());
 
 		return deadWhiteStones;
+	}
+
+	protected Set<Coords> getContiguousEmptySection(Set<Coords> emptyBoard, Coords startingPoint) {
+		Set<Coords> contiguousEmpty = new HashSet<>();
+		Queue<Coords> searchQueue = new ArrayDeque<>();
+
+		searchQueue.add(startingPoint);
+
+		while (!searchQueue.isEmpty()) {
+			Coords cur = searchQueue.remove();
+
+			if ( contiguousEmpty.contains(cur) || !emptyBoard.contains(cur) )
+				continue;
+
+			Set<Coords> unsearchedNeighbours = cur.getNeighbours();
+			unsearchedNeighbours.removeAll(contiguousEmpty);
+
+			searchQueue.addAll(unsearchedNeighbours);
+
+			contiguousEmpty.add(cur);
+		}
+
+		return contiguousEmpty;
 	}
 }
