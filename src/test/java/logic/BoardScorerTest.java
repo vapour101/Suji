@@ -27,6 +27,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
+import static util.HandicapHelper.getHandicapStones;
 
 public class BoardScorerTest {
 
@@ -40,6 +41,22 @@ public class BoardScorerTest {
 	private static final String[] testBoard2 = {"J1", "K1", "J2", "K2", "J3", "K3", "J4", "K4", "J5", "K5", "J6",
 			"K6", "J7", "K7", "J8", "K8", "J9", "K9", "J10", "K10", "J11", "K11", "J12", "K12", "J13", "K13", "J14",
 			"K14", "J15", "K15", "J16", "K16", "J17", "K17", "J18", "K18", "J19", "K19"};
+
+	private static final String[] testBoard3 = {"R4", "D16", "F3", "C6", "L3", "Q10", "O17", "Q14", "K17", "M17",
+			"M18", "F17", "C11", "C15", "C8", "D2", "G6", "R7", "R17", "Q17", "S16", "S15", "Q18", "R16", "S18",
+			"O16", "N17", "N16", "P4", "L18", "L17", "M16", "N18", "J17", "K18", "L5", "J4", "N5", "M4", "O6", "M11",
+			"O11", "T15", "T14", "T16", "S14", "N10", "M12", "L12", "M13", "N11", "O12", "O9", "P8", "S6", "R6", "S5",
+			"S7", "M7", "M5", "K6", "D10", "C9", "E7", "D6", "C7", "D7", "D5", "E6", "C10", "B10", "B11", "B12", "B9",
+			"A11", "B8", "E8", "E12", "F10", "G12", "H11", "H12", "J11", "Q3", "P3", "Q4", "Q5", "R5", "R3", "Q2",
+			"P6", "O7", "J16", "H17", "K15", "H15", "D13", "D12", "C12", "D14", "C13", "E13", "B14", "B15", "G19",
+			"G18", "J19", "F19", "A15", "A16", "A14", "B17", "E2", "E3", "F2", "F4", "G4", "F5", "G5", "F6", "F7",
+			"T6", "S4", "L13", "K12", "E1", "O8", "P7", "P9", "Q9", "P10", "P11", "N12", "N13", "H16", "G16", "J13",
+			"H14", "D11", "E11", "E10", "G11", "G10", "J15", "K16", "P17", "P18", "L4", "N3", "L7", "L6", "N7", "N8",
+			"M6", "M8", "O4", "P5", "O3", "P2", "O2", "O1", "M2", "M3", "N2", "K2", "L2", "K4", "N4", "K3", "N1",
+			"P1", "O5", "R2", "Q6", "Q1", "F1", "E5", "E4", "C3", "D3", "C5", "B5", "C4", "C2", "B6", "B7", "B4",
+			"A6", "B2", "A4", "B3", "G2", "G3", "B1", "A2", "A5", "C1", "D1", "H2", "A3", "G1", "A1", "T5", "T7",
+			"L15", "M15", "H13", "G13", "H19", "J18", "F11", "J12", "K13", "K5", "J5", "F12", "L14", "M14", "J14",
+			"A9", "L1", "M1", "K1", "A10", "D9", "H18", "K19", "C14", "O10", "L16"};
 
 	@Test
 	public void emptyBoardIsZeroPoints() {
@@ -110,6 +127,38 @@ public class BoardScorerTest {
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 0 )
+				testBoard.playBlackStone(getCoords(sequence[i]));
+			else
+				testBoard.playWhiteStone(getCoords(sequence[i]));
+		}
+
+		return testBoard;
+	}
+
+	@Test
+	public void realGameScore() {
+		Board board = buildTestBoard(testBoard3, 2);
+		BoardScorer scorer = new BoardScorer(board, 0.5);
+
+		scorer.markGroupDead(getCoords("L7"));
+		scorer.markGroupDead(getCoords("L18"));
+
+		assertThat(scorer.getWhiteScore(), is(82.5));
+		assertThat(scorer.getBlackScore(), is(85.0));
+		assertThat(scorer.getScore(), is(2.5));
+	}
+
+	private Board buildTestBoard(String[] sequence, int handicap) {
+		if ( handicap < 2 || handicap > 9 )
+			return buildTestBoard(sequence);
+
+		Board testBoard = new Board();
+
+		for (Coords stone : getHandicapStones(handicap))
+			testBoard.playBlackStone(stone);
+
+		for (int i = 0; i < sequence.length; i++) {
+			if ( i % 2 == 1 )
 				testBoard.playBlackStone(getCoords(sequence[i]));
 			else
 				testBoard.playWhiteStone(getCoords(sequence[i]));
