@@ -58,6 +58,20 @@ public class BoardScorerTest {
 			"L15", "M15", "H13", "G13", "H19", "J18", "F11", "J12", "K13", "K5", "J5", "F12", "L14", "M14", "J14",
 			"A9", "L1", "M1", "K1", "A10", "D9", "H18", "K19", "C14", "O10", "L16"};
 
+	private static final String[] testBoard4 = {"E17", "Q10", "O17", "R14", "L16", "K4", "R6", "O3", "S4", "R3", "Q8",
+			"R10", "H3", "F3", "K3", "L3", "L2", "M2", "J2", "M4", "J4", "C3", "Q18", "R17", "C9", "D15", "C16",
+			"C15", "D16", "C12", "E15", "B11", "E14", "B16", "B17", "B15", "C6", "O16", "N16", "O15", "N15", "N14",
+			"M14", "N13", "M13", "N11", "M12", "P9", "S3", "O7", "S9", "S10", "R2", "Q2", "R4", "Q3", "S1", "J5",
+			"H5", "J6", "K5", "L4", "H6", "K6", "H7", "K9", "L10", "M8", "K10", "E12", "F12", "E11", "F11", "E10",
+			"F10", "E9", "B4", "B3", "C5", "E7", "D8", "E8", "B10", "C10", "B8", "D9", "R18", "Q6", "Q7", "Q5", "S17",
+			"S16", "Q17", "R16", "T18", "H9", "J10", "J9", "M1", "N1", "L1", "N2", "G2", "F2", "F1", "E1", "G1", "D2",
+			"A3", "A2", "A4", "B1", "M9", "N9", "N10", "O10", "M10", "N8", "N12", "O12", "D14", "C14", "T10", "T11",
+			"T9", "S12", "R9", "A17", "A18", "A16", "C18", "D7", "C7", "C8", "B9", "D8", "P7", "P6", "L9", "L8", "J7",
+			"K7", "D13", "C13", "D12", "D11", "M11", "G4", "H4", "G5", "O11", "P11", "O13", "P12", "O14", "P14",
+			"P13", "Q13", "P15", "P16", "Q14", "Q15", "P14", "D5", "R13", "S13", "Q12", "R12", "Q13", "Q11", "S14",
+			"S15", "R15", "T14", "R14", "H10", "H11", "G6", "D6", "E6", "P17", "T13", "T17", "T15", "A10", "A11",
+			"E13", "C4", "B6", "G7", "F9", "F8", "J8", "K8", "P8", "O8", "R5", "Q9", "R7", "Q1", "R1", "G10", "G11"};
+
 	@Test
 	public void emptyBoardIsZeroPoints() {
 		Board board = new Board();
@@ -165,6 +179,20 @@ public class BoardScorerTest {
 		}
 
 		return testBoard;
+	}
+
+	@Test
+	public void realGameScore2() {
+		Board board = buildTestBoard(testBoard4, 3);
+		board.playWhiteStone(getCoords("N11"));
+
+		BoardScorer scorer = new BoardScorer(board, -4.5);
+		scorer.markGroupDead(getCoords("K5"));
+
+		assertThat(scorer.getWhiteScore(), is(112.0));
+		assertThat(scorer.getBlackScore(), is(57.5));
+
+		assertThat(scorer.getScore(), is(-54.5));
 	}
 
 	@Test
