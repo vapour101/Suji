@@ -49,6 +49,18 @@ public class BoardController implements Initializable {
 		drawBoard();
 	}
 
+	public void canvasHover(MouseEvent mouseEvent) {
+		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
+		drawBoard();
+
+		double diameter = getStoneDiameter();
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+
+		context.setFill(Paint.valueOf("#000000"));
+		drawStone(context, projector.fromBoardCoords(projector.nearestCoords(mousePosition)), diameter);
+	}
+
 	private void drawBoard() {
 		drawBackground();
 		drawBoardTexture();

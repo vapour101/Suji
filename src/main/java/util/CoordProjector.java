@@ -17,6 +17,8 @@
 
 package util;
 
+import static util.Coords.getCoords;
+
 public class CoordProjector {
 
 	private static final int BOARD_SIZE = 19;
@@ -34,10 +36,10 @@ public class CoordProjector {
 	}
 
 	public DrawCoords fromBoardCoords(Coords boardCoords) {
-		double offset = (boardLength / (BOARD_SIZE + 1));
+		double spacing = (boardLength / (BOARD_SIZE + 1));
 
-		double realX = boardCoords.x() * offset;
-		double realY = boardCoords.y() * offset;
+		double realX = boardCoords.x() * spacing;
+		double realY = boardCoords.y() * spacing;
 
 		DrawCoords result = new DrawCoords(realX, realY);
 		result.applyOffset(topLeft);
@@ -49,7 +51,12 @@ public class CoordProjector {
 		point = snapToBounds(point);
 		point.removeOffset(topLeft);
 
-		return null;
+		double spacing = (boardLength / (BOARD_SIZE + 1));
+
+		int boardX = (int) (point.getX() / spacing);
+		int boardY = (int) (point.getY() / spacing);
+
+		return getCoords(boardX, boardY);
 	}
 
 	private DrawCoords snapToBounds(DrawCoords point) {

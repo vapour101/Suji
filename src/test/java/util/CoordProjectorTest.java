@@ -26,7 +26,7 @@ import static util.Coords.getCoords;
 public class CoordProjectorTest {
 
 	@Test
-	public void conversion() {
+	public void toRealCoords() {
 		CoordProjector proj = new CoordProjector(20, new DrawCoords(3.4, 5.6));
 		DrawCoords projection = proj.fromBoardCoords(getCoords("D4"));
 
@@ -36,5 +36,16 @@ public class CoordProjectorTest {
 		projection = proj.fromBoardCoords(getCoords("D4"));
 
 		assertThat(projection, is(new DrawCoords(4, 4)));
+	}
+
+	@Test
+	public void toBoardCoords() {
+		CoordProjector proj = new CoordProjector(20, new DrawCoords(3.4, 5.6));
+		Coords projection = proj.nearestCoords(new DrawCoords(7.4, 9.6));
+
+		assertThat(projection, is(getCoords("D4")));
+
+		projection = proj.nearestCoords(new DrawCoords(2, 2));
+		assertThat(projection, is(getCoords("A1")));
 	}
 }
