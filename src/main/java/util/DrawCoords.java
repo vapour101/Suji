@@ -71,4 +71,13 @@ public class DrawCoords {
 			return this.coordinates.equals(compare.coordinates);
 		}
 	}
+
+	public String toString() {
+		String result = "(";
+		result += coordinates.getKey().toString();
+		result += ", ";
+		result += coordinates.getValue().toString();
+		result += ")";
+		return result;
+	}
 }
