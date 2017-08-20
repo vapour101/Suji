@@ -17,8 +17,6 @@
 
 package util;
 
-import javafx.util.Pair;
-
 public class CoordProjector {
 
 	private static final int BOARD_SIZE = 19;
