@@ -56,38 +56,34 @@ public class CoordProjector {
 		double snapX = point.getX();
 		double snapY = point.getY();
 
-		if (snapX < xLowerBound())
+		if ( snapX < xLowerBound() )
 			snapX = xLowerBound();
 
-		if (snapX > xUpperBound())
+		if ( snapX > xUpperBound() )
 			snapX = xUpperBound();
 
-		if (snapY < yLowerBound())
+		if ( snapY < yLowerBound() )
 			snapY = yLowerBound();
 
-		if (snapY > yUpperBound())
+		if ( snapY > yUpperBound() )
 			snapY = yUpperBound();
 
 		return new DrawCoords(snapX, snapY);
 	}
 
-	private double xLowerBound()
-	{
+	private double xLowerBound() {
 		return topLeft.getX();
 	}
 
-	private double yLowerBound()
-	{
-		return topLeft.getY();
-	}
-
-	private double xUpperBound()
-	{
+	private double xUpperBound() {
 		return topLeft.getX() + boardLength;
 	}
 
-	private double yUpperBound()
-	{
+	private double yLowerBound() {
+		return topLeft.getY();
+	}
+
+	private double yUpperBound() {
 		return topLeft.getY() + boardLength;
 	}
 }
