@@ -36,10 +36,10 @@ public class CoordProjector {
 	}
 
 	public DrawCoords fromBoardCoords(Coords boardCoords) {
-		double spacing = (boardLength / (BOARD_SIZE + 1));
+		double spacing = boardLength / BOARD_SIZE;
 
-		double realX = boardCoords.x() * spacing;
-		double realY = boardCoords.y() * spacing;
+		double realX = (boardCoords.x() - 0.5) * spacing;
+		double realY = (boardCoords.y() - 0.5) * spacing;
 
 		DrawCoords result = new DrawCoords(realX, realY);
 		result.applyOffset(topLeft);
@@ -51,10 +51,10 @@ public class CoordProjector {
 		point = snapToBounds(point);
 		point.removeOffset(topLeft);
 
-		double spacing = (boardLength / (BOARD_SIZE + 1));
+		double spacing = boardLength / BOARD_SIZE;
 
-		int boardX = (int) (point.getX() / spacing);
-		int boardY = (int) (point.getY() / spacing);
+		int boardX = (int) Math.round(point.getX() / spacing + 0.5);
+		int boardY = (int) Math.round(point.getY() / spacing + 0.5);
 
 		return getCoords(boardX, boardY);
 	}
@@ -83,7 +83,7 @@ public class CoordProjector {
 	}
 
 	private double xUpperBound() {
-		return topLeft.getX() + boardLength;
+		return topLeft.getX() + boardLength - 1;
 	}
 
 	private double yLowerBound() {
@@ -91,6 +91,6 @@ public class CoordProjector {
 	}
 
 	private double yUpperBound() {
-		return topLeft.getY() + boardLength;
+		return topLeft.getY() + boardLength - 1;
 	}
 }

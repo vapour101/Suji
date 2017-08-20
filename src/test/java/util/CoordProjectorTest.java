@@ -27,15 +27,15 @@ public class CoordProjectorTest {
 
 	@Test
 	public void toRealCoords() {
-		CoordProjector proj = new CoordProjector(20, new DrawCoords(3.4, 5.6));
+		CoordProjector proj = new CoordProjector(19, new DrawCoords(3.4, 5.6));
 		DrawCoords projection = proj.fromBoardCoords(getCoords("D4"));
 
-		assertThat(projection, is(new DrawCoords(7.4, 9.6)));
+		assertThat(projection, is(new DrawCoords(6.9, 9.1)));
 
-		proj = new CoordProjector(20);
+		proj = new CoordProjector(19);
 		projection = proj.fromBoardCoords(getCoords("D4"));
 
-		assertThat(projection, is(new DrawCoords(4, 4)));
+		assertThat(projection, is(new DrawCoords(3.5, 3.5)));
 	}
 
 	@Test
