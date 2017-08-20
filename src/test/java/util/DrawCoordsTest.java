@@ -46,5 +46,12 @@ public class DrawCoordsTest {
 		assertThat(coords, is(result));
 
 		assertThat(coords, is(not(new Pair<>(1.0, 1.0))));
+
+		result.setX(0.5);
+		result.setY(0.7);
+
+		coords.removeOffset(offset);
+
+		assertThat(coords, is(result));
 	}
 }

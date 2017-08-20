@@ -54,6 +54,13 @@ public class DrawCoords {
 		coordinates = new Pair<>(x, y);
 	}
 
+	public void removeOffset(DrawCoords offset) {
+		double x = getX() - offset.getX();
+		double y = getY() - offset.getY();
+
+		coordinates = new Pair<>(x, y);
+	}
+
 	public boolean equals(Object other) {
 		if ( this == other )
 			return true;
