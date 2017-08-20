@@ -44,4 +44,50 @@ public class CoordProjector {
 
 		return result;
 	}
+
+	public Coords nearestCoords(DrawCoords point) {
+		point = snapToBounds(point);
+		point.removeOffset(topLeft);
+
+		return null;
+	}
+
+	private DrawCoords snapToBounds(DrawCoords point) {
+		double snapX = point.getX();
+		double snapY = point.getY();
+
+		if (snapX < xLowerBound())
+			snapX = xLowerBound();
+
+		if (snapX > xUpperBound())
+			snapX = xUpperBound();
+
+		if (snapY < yLowerBound())
+			snapY = yLowerBound();
+
+		if (snapY > yUpperBound())
+			snapY = yUpperBound();
+
+		return new DrawCoords(snapX, snapY);
+	}
+
+	private double xLowerBound()
+	{
+		return topLeft.getX();
+	}
+
+	private double yLowerBound()
+	{
+		return topLeft.getY();
+	}
+
+	private double xUpperBound()
+	{
+		return topLeft.getX() + boardLength;
+	}
+
+	private double yUpperBound()
+	{
+		return topLeft.getY() + boardLength;
+	}
 }
