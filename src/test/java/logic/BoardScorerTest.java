@@ -140,12 +140,12 @@ public class BoardScorerTest {
 		return testBoard;
 	}
 
-	@Ignore
 	@Test
 	public void simpleScore() {
 		Board board = buildTestBoard(testBoard2);
 		BoardScorer scorer = new BoardScorer(board);
 
-		assertThat(scorer.getBlackScore(), is(152));
+		assertThat(scorer.getBlackScore(), is(152.0));
+		assertThat(scorer.getWhiteScore(), is(171.0));
 	}
 }

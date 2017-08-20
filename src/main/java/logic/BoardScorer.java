@@ -75,11 +75,61 @@ public class BoardScorer {
 	}
 
 	private int countBlackTerritory() {
-		return 0;
+		Set<Coords> potentialTerritory = getEmptyIntersections();
+
+		Set<Coords> blackLiberties = new HashSet<>();
+		Set<Coords> whiteLiberties = new HashSet<>();
+
+		for (Coords c : getLiveBlackStones())
+			blackLiberties.addAll(c.getNeighbours());
+
+		for (Coords c : getLiveWhiteStones())
+			whiteLiberties.addAll(c.getNeighbours());
+
+		blackLiberties.retainAll(potentialTerritory);
+		whiteLiberties.retainAll(potentialTerritory);
+
+		blackLiberties.removeAll(whiteLiberties);
+		whiteLiberties.removeAll(blackLiberties);
+
+		Set<Coords> blackTerritory = new HashSet<>();
+
+		for (Coords c : blackLiberties)
+			blackTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
+
+		for (Coords c : whiteLiberties)
+			blackTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+
+		return blackTerritory.size();
 	}
 
 	private int countWhiteTerritory() {
-		return 0;
+		Set<Coords> potentialTerritory = getEmptyIntersections();
+
+		Set<Coords> blackLiberties = new HashSet<>();
+		Set<Coords> whiteLiberties = new HashSet<>();
+
+		for (Coords c : getLiveBlackStones())
+			blackLiberties.addAll(c.getNeighbours());
+
+		for (Coords c : getLiveWhiteStones())
+			whiteLiberties.addAll(c.getNeighbours());
+
+		blackLiberties.retainAll(potentialTerritory);
+		whiteLiberties.retainAll(potentialTerritory);
+
+		blackLiberties.removeAll(whiteLiberties);
+		whiteLiberties.removeAll(blackLiberties);
+
+		Set<Coords> whiteTerritory = new HashSet<>();
+
+		for (Coords c : whiteLiberties)
+			whiteTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
+
+		for (Coords c : blackLiberties)
+			whiteTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+
+		return whiteTerritory.size();
 	}
 
 	public void markGroupDead(Coords coords) {
