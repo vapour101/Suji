@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import logic.Board;
 import util.CoordProjector;
+import util.DrawCoords;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,7 +50,7 @@ public class BoardController implements Initializable {
 
 	private void drawBoard() {
 		drawBackground();
-		drawBoardTexture(getTopLeftCorner());
+		drawBoardTexture();
 		drawBoardLines();
 		drawStones();
 	}
@@ -61,15 +62,16 @@ public class BoardController implements Initializable {
 		context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
 	}
 
-	private void drawBoardTexture(Pair<Double, Double> topLeft) {
+	private void drawBoardTexture() {
+		DrawCoords topLeft = getTopLeftCorner();
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 		double length = getBoardLength();
 
 		context.setFill(Color.web("0xB78600"));
-		context.fillRect(topLeft.getKey(), topLeft.getValue(), length, length);
+		context.fillRect(topLeft.getX(), topLeft.getY(), length, length);
 	}
 
-	private Pair<Double, Double> getTopLeftCorner() {
+	private DrawCoords getTopLeftCorner() {
 		double length = getBoardLength();
 		double canvasWidth = boardCanvas.getWidth();
 		double canvasHeight = boardCanvas.getHeight();
@@ -82,33 +84,33 @@ public class BoardController implements Initializable {
 		else
 			y = (canvasHeight - length) / 2;
 
-		return new Pair<>(x, y);
+		return new DrawCoords(x, y);
 	}
 
 	private void drawBoardLines() {
 		double length = getBoardLength();
-		Pair<Double, Double> topLeft = getTopLeftCorner();
+		DrawCoords topLeft = getTopLeftCorner();
 
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
 		for (int i = 1; i < 20; i++) {
 			//Horizontal Lines
-			Pair<Double, Double> start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
-			Pair<Double, Double> end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
+			DrawCoords start = CoordProjector.fromBoardCoords(getCoords(1, i), length);
+			DrawCoords end = CoordProjector.fromBoardCoords(getCoords(19, i), length);
 
-			start = addCoords(start, topLeft);
-			end = addCoords(end, topLeft);
+			start.applyOffset(topLeft);
+			end.applyOffset(topLeft);
 
-			context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
+			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 
 			//Vertical Lines
 			start = CoordProjector.fromBoardCoords(getCoords(i, 1), length);
 			end = CoordProjector.fromBoardCoords(getCoords(i, 19), length);
 
-			start = addCoords(start, topLeft);
-			end = addCoords(end, topLeft);
+			start.applyOffset(topLeft);
+			end.applyOffset(topLeft);
 
-			context.strokeLine(start.getKey(), start.getValue(), end.getKey(), end.getValue());
+			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Vincent Varkevisser
+ * Copyright (c) 2017 Vincent Varkevisser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,17 +21,30 @@ import javafx.util.Pair;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static util.CoordProjector.fromBoardCoords;
-import static util.Coords.getCoords;
+import static util.DrawCoords.sum;
 
-public class CoordProjectorTest {
+public class DrawCoordsTest {
 
 	@Test
-	public void conversion() {
-		CoordProjector proj = new CoordProjector();
-		DrawCoords projection = fromBoardCoords(getCoords("D4"), 20);
+	public void coordsTest() {
+		DrawCoords coords = new DrawCoords(0.5, 0.7);
+		DrawCoords offset = new DrawCoords(0.5, 0.3);
+		DrawCoords result = new DrawCoords(0, 0);
 
-		assertThat(projection, is(new DrawCoords(4.0, 4.0)));
+		assertThat(coords, is(coords));
+
+		result.setX(1);
+		result.setY(1);
+
+		assertThat(result, is(new DrawCoords(1.0, 1.0)));
+		assertThat(sum(coords, offset), is(result));
+
+		coords.applyOffset(offset);
+
+		assertThat(coords, is(result));
+
+		assertThat(coords, is(not(new Pair<>(1.0, 1.0))));
 	}
 }

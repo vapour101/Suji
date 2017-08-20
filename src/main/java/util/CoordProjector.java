@@ -23,12 +23,12 @@ public class CoordProjector {
 
 	private static final int BOARD_SIZE = 19;
 
-	static public Pair<Double, Double> fromBoardCoords(Coords boardCoords, double boardLength) {
+	static public DrawCoords fromBoardCoords(Coords boardCoords, double boardLength) {
 		double offset = (boardLength / (BOARD_SIZE + 1));
 
 		double realX = boardCoords.x() * offset;
 		double realY = boardCoords.y() * offset;
 
-		return new Pair<>(realX, realY);
+		return new DrawCoords(realX, realY);
 	}
 }
