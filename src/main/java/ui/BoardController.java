@@ -18,6 +18,7 @@
 package ui;
 
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -46,6 +47,13 @@ public class BoardController implements Initializable {
 	public BoardController() {
 		board = new Board();
 		blackMove = true;
+	}
+
+	private void constructCanvas() {
+		boardCanvas = new Canvas();
+		boardCanvas.setOnMouseMoved(this::canvasHover);
+		boardCanvas.setOnMouseClicked(this::canvasClicked);
+		pane.getChildren().add(boardCanvas);
 	}
 
 	public void canvasClicked(MouseEvent mouseEvent) {
@@ -204,6 +212,7 @@ public class BoardController implements Initializable {
 		};
 		pane.widthProperty().addListener(paneChangeListener);
 		pane.heightProperty().addListener(paneChangeListener);
+		constructCanvas();
 
 		drawBoard();
 	}
@@ -211,5 +220,9 @@ public class BoardController implements Initializable {
 	private void resizeCanvas() {
 		boardCanvas.setHeight(pane.getHeight());
 		boardCanvas.setWidth(pane.getWidth());
+	}
+
+	public void pass(ActionEvent event) {
+
 	}
 }

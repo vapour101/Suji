@@ -45,7 +45,7 @@ public class Main extends Application {
 		window = primaryStage;
 		window.setTitle("Suji");
 
-		localGame = FXMLLoader.load(getClass().getResource("/board.fxml"));
+		localGame = FXMLLoader.load(getClass().getResource("/localGame.fxml"));
 
 		//file menu, creating the main tabs
 		Menu fileMenu = new Menu("New...");
