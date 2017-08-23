@@ -18,6 +18,7 @@
 package ui;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,13 +33,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class newLocalGameController implements Initializable {
 
 	public Spinner<Integer> handicapSpinner;
 	public Button startButton;
+	public Spinner<Double> komiSpinner;
 
 	private Stage window;
 
@@ -48,16 +49,24 @@ public class newLocalGameController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		List<Integer> values = new ArrayList<>();
-		values.add(0);
-		for (int i = 2; i < 10; i++)
-			values.add(i);
-
-		SpinnerValueFactory<Integer> factory = new ListSpinnerValueFactory<>(FXCollections.observableList(values));
-
-		handicapSpinner.setValueFactory(factory);
+		setupHandicapSpinner();
+		setupKomiSpinner();
 
 		startButton.setOnAction(this::start);
+	}
+
+	private void setupHandicapSpinner() {
+		ObservableList<Integer> handicaps = FXCollections.observableArrayList(new ArrayList<>());
+		handicaps.add(0);
+		for (int i = 2; i < 10; i++)
+			handicaps.add(i);
+
+		SpinnerValueFactory<Integer> handicapFactory = new ListSpinnerValueFactory<>(handicaps);
+		handicapSpinner.setValueFactory(handicapFactory);
+	}
+
+	private void setupKomiSpinner() {
+
 	}
 
 	private void start(ActionEvent event) {
