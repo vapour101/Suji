@@ -29,6 +29,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -62,11 +63,17 @@ public class newLocalGameController implements Initializable {
 			handicaps.add(i);
 
 		SpinnerValueFactory<Integer> handicapFactory = new ListSpinnerValueFactory<>(handicaps);
+		handicapFactory.setWrapAround(true);
+		handicapFactory.setConverter(new HandicapConverter());
+
 		handicapSpinner.setValueFactory(handicapFactory);
+		handicapSpinner.setEditable(true);
 	}
 
-	private void setupKomiSpinner() {
 
+	private void setupKomiSpinner() {
+		komiSpinner.setValueFactory(new KomiFactory());
+		komiSpinner.setEditable(true);
 	}
 
 	private void start(ActionEvent event) {
@@ -91,5 +98,91 @@ public class newLocalGameController implements Initializable {
 
 		window.setScene(new Scene(scene));
 		window.show();
+	}
+
+	private class HandicapConverter extends StringConverter<Integer> {
+
+		@Override
+		public String toString(Integer object) {
+			return object.toString();
+		}
+
+		@Override
+		public Integer fromString(String string) {
+			Integer result = Integer.parseInt(string);
+			if ( result == 0 || (result > 1 && result < 10) )
+				return result;
+			else
+				return 0;
+		}
+	}
+
+	private class KomiFactory extends SpinnerValueFactory<Double> {
+
+		KomiFactory() {
+			setValue(6.5);
+			setConverter(new StringConverter<Double>() {
+				@Override
+				public String toString(Double object) {
+					return object.toString();
+				}
+
+				@Override
+				public Double fromString(String string) {
+					return Double.parseDouble(string);
+				}
+			});
+		}
+
+		@Override
+		public void decrement(int steps) {
+			double value = komiClamp(getValue());
+
+			if ( value == getValue() ) {
+				if ( value == 0.5 )
+					value = -0.5;
+				else
+					value -= 6;
+			}
+			else if ( value < 0 )
+				value -= 6;
+
+			setValue(value);
+		}
+
+		@Override
+		public void increment(int steps) {
+			double value = komiClamp(getValue());
+
+			if ( value == getValue() ) {
+				if ( value == -0.5 )
+					value = 0.5;
+				else
+					value += 6;
+			}
+			else if ( value > 0 )
+				value += 6;
+
+			setValue(value);
+		}
+
+		private double komiClamp(double value) {
+			boolean negative = value < 0;
+			value = Math.abs(value);
+			boolean wholeNumber = value - Math.floor(value) == 0;
+			value = Math.floor(value);
+
+			if ( value % 6 != 0 ) {
+				value -= value % 6;
+			}
+
+			if ( !wholeNumber )
+				value += 0.5;
+
+			if ( negative )
+				value = -value;
+
+			return value;
+		}
 	}
 }
