@@ -30,6 +30,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import util.KomiSpinnerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -72,7 +73,7 @@ public class newLocalGameController implements Initializable {
 
 
 	private void setupKomiSpinner() {
-		komiSpinner.setValueFactory(new KomiFactory());
+		komiSpinner.setValueFactory(new KomiSpinnerFactory());
 		komiSpinner.setEditable(true);
 	}
 
@@ -114,75 +115,6 @@ public class newLocalGameController implements Initializable {
 				return result;
 			else
 				return 0;
-		}
-	}
-
-	private class KomiFactory extends SpinnerValueFactory<Double> {
-
-		KomiFactory() {
-			setValue(6.5);
-			setConverter(new StringConverter<Double>() {
-				@Override
-				public String toString(Double object) {
-					return object.toString();
-				}
-
-				@Override
-				public Double fromString(String string) {
-					return Double.parseDouble(string);
-				}
-			});
-		}
-
-		@Override
-		public void decrement(int steps) {
-			double value = komiClamp(getValue());
-
-			if ( value == getValue() ) {
-				if ( value == 0.5 )
-					value = -0.5;
-				else
-					value -= 6;
-			}
-			else if ( value < 0 )
-				value -= 6;
-
-			setValue(value);
-		}
-
-		@Override
-		public void increment(int steps) {
-			double value = komiClamp(getValue());
-
-			if ( value == getValue() ) {
-				if ( value == -0.5 )
-					value = 0.5;
-				else
-					value += 6;
-			}
-			else if ( value > 0 )
-				value += 6;
-
-			setValue(value);
-		}
-
-		private double komiClamp(double value) {
-			boolean negative = value < 0;
-			value = Math.abs(value);
-			boolean wholeNumber = value - Math.floor(value) == 0;
-			value = Math.floor(value);
-
-			if ( value % 6 != 0 ) {
-				value -= value % 6;
-			}
-
-			if ( !wholeNumber )
-				value += 0.5;
-
-			if ( negative )
-				value = -value;
-
-			return value;
 		}
 	}
 }
