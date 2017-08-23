@@ -24,8 +24,8 @@ import java.util.Set;
 
 public class Chain {
 
-	private HashSet<Coords> stones;
-	private HashSet<Coords> liberties;
+	private Set<Coords> stones;
+	private Set<Coords> liberties;
 
 	private Chain(Chain other) {
 		stones = new HashSet<>();
@@ -107,7 +107,7 @@ public class Chain {
 		return openLiberties;
 	}
 
-	protected HashSet<Coords> getLiberties() {
+	protected Set<Coords> getLiberties() {
 		return liberties;
 	}
 
