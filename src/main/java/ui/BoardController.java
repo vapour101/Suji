@@ -280,14 +280,19 @@ public class BoardController implements Initializable {
 		Separator separator = null;
 
 		for (Node node : scorePane.getChildren()) {
-			if ( node.getId().equals("blackScoreBox") )
-				blackScoreBox = (VBox) node;
-
-			if ( node.getId().equals("scoreSeparator") )
+			if ( node instanceof Separator )
 				separator = (Separator) node;
 		}
 
-		if ( blackScoreBox == null || separator == null )
+		if ( separator == null )
+			return;
+
+		for (Node node : scorePane.getChildren()) {
+			if ( node instanceof VBox && node.getLayoutX() < separator.getLayoutX() )
+				blackScoreBox = (VBox) node;
+		}
+
+		if ( blackScoreBox == null )
 			return;
 
 		double width = (scorePane.getWidth() - separator.getWidth()) / 2;
