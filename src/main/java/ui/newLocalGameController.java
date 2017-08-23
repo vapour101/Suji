@@ -17,6 +17,30 @@
 
 package ui;
 
-public class newLocalGameController {
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class newLocalGameController implements Initializable{
+
+	@FXML
+	public Spinner handicapSpinner;
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		List<Integer> values = new ArrayList<>();
+		values.add(0);
+		for (int i = 2; i < 10; i++)
+			values.add(i);
+
+		SpinnerValueFactory<Integer> factory = new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableList(values));
+		handicapSpinner.setValueFactory(factory);
+	}
 }
