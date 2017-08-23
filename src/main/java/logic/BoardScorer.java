@@ -74,7 +74,7 @@ public class BoardScorer {
 		return whiteScore;
 	}
 
-	private int countBlackTerritory() {
+	public Set<Coords> getBlackTerritory() {
 		Set<Coords> potentialTerritory = getEmptyIntersections();
 
 		Set<Coords> blackLiberties = new HashSet<>();
@@ -100,10 +100,14 @@ public class BoardScorer {
 		for (Coords c : whiteLiberties)
 			blackTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
 
-		return blackTerritory.size();
+		return blackTerritory;
 	}
 
-	private int countWhiteTerritory() {
+	private int countBlackTerritory() {
+		return getBlackTerritory().size();
+	}
+
+	public Set<Coords> getWhiteTerritory() {
 		Set<Coords> potentialTerritory = getEmptyIntersections();
 
 		Set<Coords> blackLiberties = new HashSet<>();
@@ -129,7 +133,11 @@ public class BoardScorer {
 		for (Coords c : blackLiberties)
 			whiteTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
 
-		return whiteTerritory.size();
+		return whiteTerritory;
+	}
+
+	private int countWhiteTerritory() {
+		return getWhiteTerritory().size();
 	}
 
 	public void markGroupDead(Coords coords) {
