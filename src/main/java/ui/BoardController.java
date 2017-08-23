@@ -159,6 +159,7 @@ public class BoardController implements Initializable {
 		drawStones();
 
 		if ( scoring ) {
+			drawTerritory();
 			blackScore.setText(Double.toString(scorer.getBlackScore()));
 			whiteScore.setText(Double.toString(scorer.getWhiteScore()));
 		}
@@ -221,6 +222,24 @@ public class BoardController implements Initializable {
 
 			context.setFill(Paint.valueOf("#000000"));
 			drawCircle(context, star, radius);
+		}
+	}
+
+	private void drawTerritory() {
+		double radius = getStoneRadius() / 2;
+		DrawCoords offset = new DrawCoords(0, 0);
+		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		GraphicsContext context = boardCanvas.getGraphicsContext2D();
+
+		for (Coords stone : scorer.getBlackTerritory()) {
+			DrawCoords pos = projector.fromBoardCoords(stone);
+			pos.applyOffset(offset);
+			drawBlackStone(context, pos, radius);
+		}
+		for (Coords stone : scorer.getWhiteTerritory()) {
+			DrawCoords pos = projector.fromBoardCoords(stone);
+			pos.applyOffset(offset);
+			drawWhiteStone(context, pos, radius);
 		}
 	}
 
