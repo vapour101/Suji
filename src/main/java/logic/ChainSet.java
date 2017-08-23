@@ -47,7 +47,7 @@ public class ChainSet {
 		return stones;
 	}
 
-	protected boolean chainIsCaptured(Coords stone, ChainSet other) {
+	boolean chainIsCaptured(Coords stone, ChainSet other) {
 		for (Chain chain : chains)
 			if ( chain.getLiberties().contains(stone) ) {
 				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
@@ -59,7 +59,7 @@ public class ChainSet {
 		return false;
 	}
 
-	protected int captureStones(Coords stone, ChainSet other) {
+	int captureStones(Coords stone, ChainSet other) {
 		Set<Chain> deadChains = new HashSet<>();
 
 		for (Chain chain : chains) {
@@ -81,7 +81,7 @@ public class ChainSet {
 		return deadStones;
 	}
 
-	protected boolean isSuicide(Coords stone, ChainSet other) {
+	boolean isSuicide(Coords stone, ChainSet other) {
 		//Any play that results in a capture is never suicide
 		if ( other.chainIsCaptured(stone, this) )
 			return false;
@@ -122,11 +122,11 @@ public class ChainSet {
 		return result;
 	}
 
-	protected int getChainCount() {
+	int getChainCount() {
 		return chains.size();
 	}
 
-	protected Chain getChainFromStone(Coords stone) {
+	Chain getChainFromStone(Coords stone) {
 		for (Chain chain : chains)
 			if ( chain.contains(stone) ) {
 				return chain;
