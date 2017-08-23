@@ -27,6 +27,13 @@ public class Coords {
 	private Pair<Integer, Integer> coordinates;
 
 	private Coords(int x, int y) {
+		if ( x < 1 || y < 1 || x > 19 || y > 19 ) {
+			String errorMessage = "One or more of the Coordinates (" + Integer.toString(x) + ", ";
+			errorMessage += Integer.toString(y) + ") are outside of the acceptable range for the Coords class. ";
+			errorMessage += "Coordinates must lie" + "in the " + "" + "range: 1 <= x,y <= 19.";
+			throw new IllegalArgumentException(errorMessage);
+		}
+
 		coordinates = new Pair<>(x, y);
 	}
 
