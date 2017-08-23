@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Tshiwela Mulaudzi
+ * Copyright (c) 2017
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Stage window;
-	BorderPane layout;
-	Parent localGame;
+	private Stage window;
+	private BorderPane layout;
+	private Parent localGame;
+	private Parent newLocalGameMenu;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -42,10 +43,14 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/newLocalGame.fxml"));
+
 		window = primaryStage;
 		window.setTitle("Suji");
 
-		localGame = FXMLLoader.load(getClass().getResource("/board.fxml"));
+		newLocalGameMenu = loader.load();
+		loader.<NewLocalGameController>getController().setWindow(window);
+		//localGame = FXMLLoader.load(getClass().getResource("/localGame.fxml"));
 
 		//file menu, creating the main tabs
 		Menu fileMenu = new Menu("New...");
@@ -55,7 +60,7 @@ public class Main extends Application {
 		newLocalGame.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				window.setScene(new Scene(localGame, 500, 500));
+				window.setScene(new Scene(newLocalGameMenu));
 				window.show();
 			}
 		});
