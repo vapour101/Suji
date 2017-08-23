@@ -66,7 +66,7 @@ public class BoardScorer {
 	}
 
 	public Set<Coords> getTerritory(StoneColour colour) {
-		Set<Coords> potentialTerritory = getEmptyIntersections();
+		Collection<Coords> potentialTerritory = getEmptyIntersections();
 
 		Set<Coords> liberties = new HashSet<>();
 		Set<Coords> otherLiberties = new HashSet<>();
@@ -141,15 +141,15 @@ public class BoardScorer {
 		return liveStones;
 	}
 
-	protected Set<Coords> getEmptyIntersections() {
-		Set<Coords> emptyIntersections = getAllIntersections();
+	protected Collection<Coords> getEmptyIntersections() {
+		Collection<Coords> emptyIntersections = getAllIntersections();
 
 		emptyIntersections.removeAll(getLiveStones());
 
 		return emptyIntersections;
 	}
 
-	private Set<Coords> getAllIntersections() {
+	private Collection<Coords> getAllIntersections() {
 		Set<Coords> coords = new HashSet<>();
 
 		for (int i = 1; i < 20; i++)
@@ -181,7 +181,7 @@ public class BoardScorer {
 		return deadStones;
 	}
 
-	protected Set<Coords> getContiguousEmptySection(Set<Coords> emptyBoard, Coords startingPoint) {
+	protected Collection<Coords> getContiguousEmptySection(Collection<Coords> emptyBoard, Coords startingPoint) {
 		Set<Coords> contiguousEmpty = new HashSet<>();
 		Queue<Coords> searchQueue = new ArrayDeque<>();
 

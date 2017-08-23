@@ -21,6 +21,7 @@ import org.junit.Test;
 import util.Coords;
 import util.StoneColour;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -108,7 +109,7 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board);
 
-		Set<Coords> emptyPoints = new HashSet<>();
+		Collection<Coords> emptyPoints = new HashSet<>();
 
 		emptyPoints.add(getCoords("A1"));
 		emptyPoints.add(getCoords("A2"));
