@@ -17,12 +17,12 @@
 
 package logic;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import util.Coords;
+import util.StoneColour;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 import static util.Coords.getCoords;
 
@@ -30,8 +30,7 @@ public class BoardScorer {
 
 	private Board board;
 	private double komi;
-	private Set<Chain> deadBlackChains;
-	private Set<Chain> deadWhiteChains;
+	private Multimap<StoneColour, Chain> deadChains;
 
 	public BoardScorer(Board board) {
 		this(board, 0);
@@ -40,104 +39,63 @@ public class BoardScorer {
 	public BoardScorer(Board board, double komi) {
 		this.board = board;
 		this.komi = komi;
-		deadBlackChains = new HashSet<>();
-		deadWhiteChains = new HashSet<>();
+		deadChains = HashMultimap.create();
+	}
+
+	private Collection<Chain> getDeadChains(StoneColour colour) {
+		return deadChains.get(colour);
 	}
 
 	public double getScore() {
-		return getBlackScore() - getWhiteScore();
+		return getScore(StoneColour.BLACK) - getScore(StoneColour.WHITE);
 	}
 
-	public double getBlackScore() {
-		double blackScore = countBlackTerritory();
-		blackScore += board.getBlackCaptures();
+	public double getScore(StoneColour colour) {
+		double score = countTerritory(colour);
+		score += (colour == StoneColour.BLACK) ? board.getBlackCaptures() : board.getWhiteCaptures();
 
-		for (Chain chain : deadWhiteChains)
-			blackScore += chain.size();
+		for (Chain chain : getDeadChains(colour.other()))
+			score += chain.size();
 
-		if ( komi < 0 )
-			blackScore -= komi;
+		if ( komi < 0 && colour == StoneColour.BLACK )
+			score -= komi;
+		else if ( komi > 0 && colour == StoneColour.WHITE )
+			score += komi;
 
-		return blackScore;
+		return score;
 	}
 
-	public double getWhiteScore() {
-		double whiteScore = countWhiteTerritory();
-		whiteScore += board.getWhiteCaptures();
-
-		for (Chain chain : deadBlackChains)
-			whiteScore += chain.size();
-
-		if ( komi > 0 )
-			whiteScore += komi;
-
-		return whiteScore;
-	}
-
-	public Set<Coords> getBlackTerritory() {
+	public Set<Coords> getTerritory(StoneColour colour) {
 		Set<Coords> potentialTerritory = getEmptyIntersections();
 
-		Set<Coords> blackLiberties = new HashSet<>();
-		Set<Coords> whiteLiberties = new HashSet<>();
+		Set<Coords> liberties = new HashSet<>();
+		Set<Coords> otherLiberties = new HashSet<>();
 
-		for (Coords c : getLiveBlackStones())
-			blackLiberties.addAll(c.getNeighbours());
+		for (Coords c : getLiveStones(colour))
+			liberties.addAll(c.getNeighbours());
 
-		for (Coords c : getLiveWhiteStones())
-			whiteLiberties.addAll(c.getNeighbours());
+		for (Coords c : getLiveStones(colour.other()))
+			otherLiberties.addAll(c.getNeighbours());
 
-		blackLiberties.retainAll(potentialTerritory);
-		whiteLiberties.retainAll(potentialTerritory);
+		liberties.retainAll(potentialTerritory);
+		otherLiberties.retainAll(potentialTerritory);
 
-		blackLiberties.removeAll(whiteLiberties);
-		whiteLiberties.removeAll(blackLiberties);
+		liberties.removeAll(otherLiberties);
+		otherLiberties.removeAll(liberties);
 
-		Set<Coords> blackTerritory = new HashSet<>();
+		Set<Coords> territory = new HashSet<>();
 
-		for (Coords c : blackLiberties)
-			blackTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
+		for (Coords c : liberties)
+			territory.addAll(getContiguousEmptySection(potentialTerritory, c));
 
-		for (Coords c : whiteLiberties)
-			blackTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+		for (Coords c : otherLiberties)
+			territory.removeAll(getContiguousEmptySection(potentialTerritory, c));
 
-		return blackTerritory;
+		return territory;
 	}
 
-	private int countBlackTerritory() {
-		return getBlackTerritory().size();
-	}
-
-	public Set<Coords> getWhiteTerritory() {
-		Set<Coords> potentialTerritory = getEmptyIntersections();
-
-		Set<Coords> blackLiberties = new HashSet<>();
-		Set<Coords> whiteLiberties = new HashSet<>();
-
-		for (Coords c : getLiveBlackStones())
-			blackLiberties.addAll(c.getNeighbours());
-
-		for (Coords c : getLiveWhiteStones())
-			whiteLiberties.addAll(c.getNeighbours());
-
-		blackLiberties.retainAll(potentialTerritory);
-		whiteLiberties.retainAll(potentialTerritory);
-
-		whiteLiberties.removeAll(blackLiberties);
-		blackLiberties.removeAll(whiteLiberties);
-
-		Set<Coords> whiteTerritory = new HashSet<>();
-
-		for (Coords c : whiteLiberties)
-			whiteTerritory.addAll(getContiguousEmptySection(potentialTerritory, c));
-
-		for (Coords c : blackLiberties)
-			whiteTerritory.removeAll(getContiguousEmptySection(potentialTerritory, c));
-
-		return whiteTerritory;
-	}
-
-	private int countWhiteTerritory() {
-		return getWhiteTerritory().size();
+	private int countTerritory(StoneColour colour) {
+		return getTerritory(colour).size();
 	}
 
 	public void markGroupDead(Coords coords) {
@@ -147,40 +105,46 @@ public class BoardScorer {
 			return;
 
 		if ( board.getBlackStones().contains(coords) )
-			deadBlackChains.add(deadChain);
+			getDeadChains(StoneColour.BLACK).add(deadChain);
 		else
-			deadWhiteChains.add(deadChain);
+			getDeadChains(StoneColour.WHITE).add(deadChain);
 	}
 
 	public void unmarkGroupDead(Coords coords) {
 		Chain undeadChain = null;
 
-		for (Chain deadChain : deadWhiteChains)
+		for (Chain deadChain : getDeadChains(StoneColour.WHITE))
 			if ( deadChain.contains(coords) ) {
 				undeadChain = deadChain;
 				break;
 			}
 
 		if ( undeadChain != null ) {
-			deadWhiteChains.remove(undeadChain);
+			getDeadChains(StoneColour.WHITE).remove(undeadChain);
 			return;
 		}
 
-		for (Chain deadChain : deadBlackChains)
+		for (Chain deadChain : getDeadChains(StoneColour.BLACK))
 			if ( deadChain.contains(coords) ) {
 				undeadChain = deadChain;
 				break;
 			}
 
 		if ( undeadChain != null )
-			deadBlackChains.remove(undeadChain);
+			getDeadChains(StoneColour.BLACK).remove(undeadChain);
+	}
+
+	private Collection<Coords> getLiveStones() {
+		Collection<Coords> liveStones = getLiveStones(StoneColour.BLACK);
+		liveStones.addAll(getLiveStones(StoneColour.WHITE));
+
+		return liveStones;
 	}
 
 	protected Set<Coords> getEmptyIntersections() {
 		Set<Coords> emptyIntersections = getAllIntersections();
 
-		emptyIntersections.removeAll(getLiveBlackStones());
-		emptyIntersections.removeAll(getLiveWhiteStones());
+		emptyIntersections.removeAll(getLiveStones());
 
 		return emptyIntersections;
 	}
@@ -195,36 +159,26 @@ public class BoardScorer {
 		return coords;
 	}
 
-	private Set<Coords> getLiveBlackStones() {
-		Set<Coords> liveBlackStones = board.getBlackStones();
-		liveBlackStones.removeAll(getDeadBlackStones());
+	private Set<Coords> getLiveStones(StoneColour colour) {
+		Set<Coords> liveStones;
 
-		return liveBlackStones;
+		if ( colour == StoneColour.BLACK )
+			liveStones = board.getBlackStones();
+		else
+			liveStones = board.getWhiteStones();
+
+		liveStones.removeAll(getDeadStones(colour));
+
+		return liveStones;
 	}
 
-	private Set<Coords> getLiveWhiteStones() {
-		Set<Coords> liveWhiteStones = board.getWhiteStones();
-		liveWhiteStones.removeAll(getDeadWhiteStones());
+	public Set<Coords> getDeadStones(StoneColour colour) {
+		Set<Coords> deadStones = new HashSet<>();
 
-		return liveWhiteStones;
-	}
+		for (Chain chain : getDeadChains(colour))
+			deadStones.addAll(chain.getStones());
 
-	public Set<Coords> getDeadBlackStones() {
-		Set<Coords> deadBlackStones = new HashSet<>();
-
-		for (Chain chain : deadBlackChains)
-			deadBlackStones.addAll(chain.getStones());
-
-		return deadBlackStones;
-	}
-
-	public Set<Coords> getDeadWhiteStones() {
-		Set<Coords> deadWhiteStones = new HashSet<>();
-
-		for (Chain chain : deadWhiteChains)
-			deadWhiteStones.addAll(chain.getStones());
-
-		return deadWhiteStones;
+		return deadStones;
 	}
 
 	protected Set<Coords> getContiguousEmptySection(Set<Coords> emptyBoard, Coords startingPoint) {
