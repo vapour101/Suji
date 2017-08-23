@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ui.BoardController">
+    <center>
+        <SplitPane dividerPositions="0.7" prefHeight="400" prefWidth="600.0">
+            <items>
+                <Pane fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"/>
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <AnchorPane>
+                            <children>
+                                <Button fx:id="passButton" mnemonicParsing="false" text="Pass" AnchorPane.leftAnchor="0"
+                                        AnchorPane.rightAnchor="0"/>
+                            </children>
+                        </AnchorPane>
+                        <HBox fx:id="scorePane" prefHeight="46.0" prefWidth="175.0">
+                            <VBox id="blackScoreBox" prefHeight="46.0" prefWidth="100.0">
+                                <Label text="Black Score"/>
+                                <Label fx:id="blackScore" text="0"/>
+                            </VBox>
+                            <Separator id="scoreSeparator" orientation="VERTICAL" prefHeight="46.0"/>
+                            <VBox prefHeight="46.0" prefWidth="100.0">
+                                <Label text="White Score"/>
+                                <Label fx:id="whiteScore" text="0"/>
+                            </VBox>
+                        </HBox>
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>
