@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -53,6 +54,8 @@ public class BoardController implements Initializable {
 	public Label whiteScore;
 	public Pane pane;
 	public Pane scorePane;
+	public Button blackDone;
+	public Button whiteDone;
 
 	private Canvas boardCanvas;
 	private Board board;
@@ -61,6 +64,7 @@ public class BoardController implements Initializable {
 	private boolean blackMove;
 	private boolean pass;
 	private boolean scoring;
+	private boolean playing;
 	private double komi;
 
 	public BoardController() {
@@ -68,6 +72,7 @@ public class BoardController implements Initializable {
 		blackMove = true;
 		pass = false;
 		scoring = false;
+		playing = true;
 		komi = 0;
 	}
 
@@ -99,12 +104,14 @@ public class BoardController implements Initializable {
 		Coords boardPos = projector.nearestCoords(mousePosition);
 
 		if ( scoring ) {
+			blackDone.setDisable(false);
+			whiteDone.setDisable(false);
 			if ( mouseEvent.getButton() == MouseButton.PRIMARY )
 				scorer.markGroupDead(boardPos);
 			else if ( mouseEvent.getButton() == MouseButton.SECONDARY )
 				scorer.unmarkGroupDead(boardPos);
 		}
-		else {
+		else if ( playing ) {
 			if ( blackMove && board.isLegalBlackMove(boardPos) ) {
 				board.playBlackStone(boardPos);
 				blackMove = !blackMove;
@@ -121,7 +128,7 @@ public class BoardController implements Initializable {
 	}
 
 	private void canvasHover(MouseEvent mouseEvent) {
-		if ( scoring )
+		if ( scoring || !playing )
 			return;
 
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
@@ -288,6 +295,18 @@ public class BoardController implements Initializable {
 		scorePane.setVisible(false);
 		passButton.setOnAction(this::pass);
 
+		blackDone.setOnAction(event -> {
+			blackDone.setDisable(true);
+			if ( whiteDone.isDisabled() )
+				doneScoring();
+		});
+
+		whiteDone.setOnAction(event -> {
+			whiteDone.setDisable(true);
+			if ( blackDone.isDisabled() )
+				doneScoring();
+		});
+
 		scorePane.widthProperty().addListener(this::resizeScore);
 
 		drawBoard();
@@ -324,10 +343,41 @@ public class BoardController implements Initializable {
 		drawBoard();
 	}
 
+	private void doneScoring() {
+		scoring = false;
+		playing = false;
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Game Over");
+
+		double finalScore = scorer.getScore();
+
+		if ( finalScore == 0 ) {
+			alert.setContentText("Game ends in a draw.");
+			alert.showAndWait();
+			return;
+		}
+
+		String message;
+
+		if ( finalScore > 0 )
+			message = "Black";
+		else
+			message = "White";
+
+		finalScore = Math.abs(finalScore);
+
+		message += " wins by " + Double.toString(finalScore) + " points.";
+
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
 	private void pass(ActionEvent event) {
 		blackMove = !blackMove;
 
 		if ( pass ) {
+			playing = false;
 			scoring = true;
 			scorer = new BoardScorer(board, komi);
 			passButton.setVisible(false);

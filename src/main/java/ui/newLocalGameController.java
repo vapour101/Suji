@@ -89,7 +89,7 @@ public class newLocalGameController implements Initializable {
 		}
 		if ( scene == null )
 			return;
-		
+
 		BoardController controller = loader.getController();
 
 		controller.setHandicap(handicapSpinner.getValue());
