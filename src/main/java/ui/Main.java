@@ -49,7 +49,7 @@ public class Main extends Application {
 		window.setTitle("Suji");
 
 		newLocalGameMenu = loader.load();
-		loader.<newLocalGameController>getController().setWindow(window);
+		loader.<NewLocalGameController>getController().setWindow(window);
 		//localGame = FXMLLoader.load(getClass().getResource("/localGame.fxml"));
 
 		//file menu, creating the main tabs
