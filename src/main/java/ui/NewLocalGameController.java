@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class newLocalGameController implements Initializable {
+public class NewLocalGameController implements Initializable {
 
 	public Spinner<Integer> handicapSpinner;
 	public Button startButton;
