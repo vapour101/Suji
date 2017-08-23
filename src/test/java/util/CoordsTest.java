@@ -29,8 +29,8 @@ public class CoordsTest {
 
 	@Test
 	public void equalTo() {
-		Coords c1 = new Coords(4, 3);
-		Coords c2 = new Coords(4, 3);
+		Coords c1 = getCoords(4, 3);
+		Coords c2 = getCoords(4, 3);
 		Pair<Integer, Integer> notCoords = new Pair<>(4, 3);
 
 		assertThat(c1, is(c2));
@@ -41,9 +41,10 @@ public class CoordsTest {
 
 	@Test
 	public void coordsGetter() {
-		Coords coords = new Coords(4, 3);
+		Coords coords = getCoords(4, 3);
 
-		assertThat(getCoords(4, 3), is(coords));
+		assertThat(coords.getX(), is(4));
+		assertThat(coords.getY(), is(3));
 	}
 
 	@Test
