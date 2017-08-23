@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class ChainSet {
 
-	private HashSet<Chain> chains;
+	private Set<Chain> chains;
 
 	public ChainSet() {
 		chains = new HashSet<>();
