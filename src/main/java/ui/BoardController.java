@@ -20,14 +20,16 @@ package ui;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import logic.Board;
@@ -46,10 +48,10 @@ import static util.HandicapHelper.getHandicapStones;
 public class BoardController implements Initializable {
 
 	public Button passButton;
-	public Pane pane;
 	public Label blackScore;
 	public Label whiteScore;
-	public GridPane scorePane;
+	public Pane pane;
+	public Pane scorePane;
 
 	private Canvas boardCanvas;
 	private Board board;
@@ -266,8 +268,31 @@ public class BoardController implements Initializable {
 		pane.heightProperty().addListener(this::resizeCanvas);
 		constructCanvas();
 		scorePane.setVisible(false);
+		passButton.setOnAction(this::pass);
+
+		scorePane.widthProperty().addListener(this::resizeScore);
 
 		drawBoard();
+	}
+
+	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+		VBox blackScoreBox = null;
+		Separator separator = null;
+
+		for (Node node : scorePane.getChildren()) {
+			if ( node.getId().equals("blackScoreBox") )
+				blackScoreBox = (VBox) node;
+
+			if ( node.getId().equals("scoreSeparator") )
+				separator = (Separator) node;
+		}
+
+		if ( blackScoreBox == null || separator == null )
+			return;
+
+		double width = (scorePane.getWidth() - separator.getWidth()) / 2;
+
+		blackScoreBox.setMinWidth(width);
 	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -276,7 +301,7 @@ public class BoardController implements Initializable {
 		drawBoard();
 	}
 
-	public void pass(ActionEvent event) {
+	private void pass(ActionEvent event) {
 		blackMove = !blackMove;
 
 		if ( pass ) {
