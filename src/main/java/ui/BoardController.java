@@ -37,6 +37,7 @@ import logic.BoardScorer;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
+import util.HandicapHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -66,6 +67,17 @@ public class BoardController implements Initializable {
 		blackMove = true;
 		pass = false;
 		scoring = false;
+	}
+
+	protected void setHandicap(int handicap) {
+		if ( board.getBlackStones().size() > 0 || board.getWhiteStones().size() > 0 )
+			board = new Board();
+
+		blackMove = (handicap == 0);
+
+		if ( handicap > 0 )
+			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
+				board.playBlackStone(stone);
 	}
 
 	private void constructCanvas() {

@@ -18,20 +18,34 @@
 package ui;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class newLocalGameController implements Initializable{
+public class newLocalGameController implements Initializable {
 
 	@FXML
 	public Spinner handicapSpinner;
+	public Button startButton;
+
+	private Stage window;
+
+	protected void setWindow(Stage window) {
+		this.window = window;
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -40,7 +54,33 @@ public class newLocalGameController implements Initializable{
 		for (int i = 2; i < 10; i++)
 			values.add(i);
 
-		SpinnerValueFactory<Integer> factory = new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableList(values));
+		SpinnerValueFactory<Integer> factory = new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections
+																												.observableList(
+				values));
 		handicapSpinner.setValueFactory(factory);
+
+		startButton.setOnAction(this::start);
+	}
+
+	private void start(ActionEvent event) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/localGame.fxml"));
+
+		Parent scene = null;
+		try {
+			scene = loader.load();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		BoardController controller = loader.getController();
+
+		int handicap = (Integer) handicapSpinner.getValue();
+
+		controller.setHandicap(handicap);
+
+		window.setScene(new Scene(scene));
+		window.show();
 	}
 }
