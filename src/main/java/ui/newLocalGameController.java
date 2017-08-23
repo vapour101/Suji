@@ -89,13 +89,11 @@ public class newLocalGameController implements Initializable {
 		}
 		if ( scene == null )
 			return;
-
-
+		
 		BoardController controller = loader.getController();
 
-		int handicap = handicapSpinner.getValue();
-
-		controller.setHandicap(handicap);
+		controller.setHandicap(handicapSpinner.getValue());
+		controller.setKomi(komiSpinner.getValue());
 
 		window.setScene(new Scene(scene));
 		window.show();

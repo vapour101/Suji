@@ -61,15 +61,17 @@ public class BoardController implements Initializable {
 	private boolean blackMove;
 	private boolean pass;
 	private boolean scoring;
+	private double komi;
 
 	public BoardController() {
 		board = new Board();
 		blackMove = true;
 		pass = false;
 		scoring = false;
+		komi = 0;
 	}
 
-	protected void setHandicap(int handicap) {
+	void setHandicap(int handicap) {
 		if ( board.getBlackStones().size() > 0 || board.getWhiteStones().size() > 0 )
 			board = new Board();
 
@@ -78,6 +80,10 @@ public class BoardController implements Initializable {
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
 				board.playBlackStone(stone);
+	}
+
+	void setKomi(double komi) {
+		this.komi = komi;
 	}
 
 	private void constructCanvas() {
@@ -323,7 +329,7 @@ public class BoardController implements Initializable {
 
 		if ( pass ) {
 			scoring = true;
-			scorer = new BoardScorer(board);
+			scorer = new BoardScorer(board, komi);
 			passButton.setVisible(false);
 			scorePane.setVisible(true);
 
