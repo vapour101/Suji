@@ -19,7 +19,9 @@ package logic;
 
 import org.junit.Test;
 import util.Coords;
+import util.StoneColour;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,8 +79,8 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board);
 
-		assertThat(scorer.getBlackScore(), is(0.0));
-		assertThat(scorer.getWhiteScore(), is(0.0));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(0.0));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(0.0));
 		assertThat(scorer.getScore(), is(0.0));
 	}
 
@@ -87,8 +89,8 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board, 6.5);
 
-		assertThat(scorer.getBlackScore(), is(0.0));
-		assertThat(scorer.getWhiteScore(), is(6.5));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(0.0));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(6.5));
 		assertThat(scorer.getScore(), is(-6.5));
 	}
 
@@ -97,8 +99,8 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board, -6.5);
 
-		assertThat(scorer.getBlackScore(), is(6.5));
-		assertThat(scorer.getWhiteScore(), is(0.0));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(6.5));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(0.0));
 		assertThat(scorer.getScore(), is(6.5));
 	}
 
@@ -107,7 +109,7 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board);
 
-		Set<Coords> emptyPoints = new HashSet<>();
+		Collection<Coords> emptyPoints = new HashSet<>();
 
 		emptyPoints.add(getCoords("A1"));
 		emptyPoints.add(getCoords("A2"));
@@ -157,8 +159,8 @@ public class BoardScorerTest {
 		scorer.markGroupDead(getCoords("L7"));
 		scorer.markGroupDead(getCoords("L18"));
 
-		assertThat(scorer.getWhiteScore(), is(82.5));
-		assertThat(scorer.getBlackScore(), is(85.0));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(82.5));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(85.0));
 		assertThat(scorer.getScore(), is(2.5));
 	}
 
@@ -189,8 +191,8 @@ public class BoardScorerTest {
 		BoardScorer scorer = new BoardScorer(board, -4.5);
 		scorer.markGroupDead(getCoords("K5"));
 
-		assertThat(scorer.getWhiteScore(), is(112.0));
-		assertThat(scorer.getBlackScore(), is(57.5));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(112.0));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(57.5));
 
 		assertThat(scorer.getScore(), is(-54.5));
 	}
@@ -201,8 +203,8 @@ public class BoardScorerTest {
 		BoardScorer scorer = new BoardScorer(board);
 
 		scorer.markGroupDead(getCoords("K10"));
-		assertThat(scorer.getDeadWhiteStones().size(), is(0));
-		assertThat(scorer.getDeadBlackStones().size(), is(0));
+		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(0));
+		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(0));
 
 		assertThat(board.getBlackCaptures(), is(3));
 		assertThat(board.getWhiteCaptures(), is(0));
@@ -210,17 +212,17 @@ public class BoardScorerTest {
 		scorer.markGroupDead(getCoords("M18"));
 		scorer.markGroupDead(getCoords("T19"));
 
-		assertThat(scorer.getDeadBlackStones(),
+		assertThat(scorer.getDeadStones(StoneColour.BLACK),
 				   hasItems(getCoords("S16"),
 							getCoords("T15"),
 							getCoords("T16"),
 							getCoords("T17"),
 							getCoords("T18"),
 							getCoords("T19")));
-		assertThat(scorer.getDeadBlackStones().size(), is(6));
+		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(6));
 
-		assertThat(scorer.getDeadWhiteStones(), hasItems(getCoords("M18")));
-		assertThat(scorer.getDeadWhiteStones().size(), is(1));
+		assertThat(scorer.getDeadStones(StoneColour.WHITE), hasItems(getCoords("M18")));
+		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(1));
 	}
 
 	@Test
@@ -228,8 +230,8 @@ public class BoardScorerTest {
 		Board board = buildTestBoard(testBoard2);
 		BoardScorer scorer = new BoardScorer(board);
 
-		assertThat(scorer.getBlackScore(), is(152.0));
-		assertThat(scorer.getWhiteScore(), is(171.0));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(152.0));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(171.0));
 		assertThat(scorer.getScore(), is(-19.0));
 	}
 
@@ -258,11 +260,11 @@ public class BoardScorerTest {
 		scorer.unmarkGroupDead(getCoords("K10"));
 		scorer.unmarkGroupDead(getCoords("T19"));
 
-		assertThat(scorer.getDeadBlackStones().size(), is(0));
-		assertThat(scorer.getDeadWhiteStones().size(), is(0));
+		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(0));
+		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(0));
 
-		assertThat(scorer.getBlackScore(), is(18.0));
-		assertThat(scorer.getWhiteScore(), is(239.0));
+		assertThat(scorer.getScore(StoneColour.BLACK), is(18.0));
+		assertThat(scorer.getScore(StoneColour.WHITE), is(239.0));
 
 		assertThat(scorer.getScore(), is(-221.0));
 	}

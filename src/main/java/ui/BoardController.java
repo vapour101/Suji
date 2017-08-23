@@ -35,10 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import logic.Board;
 import logic.BoardScorer;
-import util.CoordProjector;
-import util.Coords;
-import util.DrawCoords;
-import util.HandicapHelper;
+import util.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -160,8 +157,8 @@ public class BoardController implements Initializable {
 
 		if ( scoring ) {
 			drawTerritory();
-			blackScore.setText(Double.toString(scorer.getBlackScore()));
-			whiteScore.setText(Double.toString(scorer.getWhiteScore()));
+			blackScore.setText(Double.toString(scorer.getScore(StoneColour.BLACK)));
+			whiteScore.setText(Double.toString(scorer.getScore(StoneColour.WHITE)));
 		}
 	}
 
@@ -231,12 +228,12 @@ public class BoardController implements Initializable {
 		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 		GraphicsContext context = boardCanvas.getGraphicsContext2D();
 
-		for (Coords stone : scorer.getBlackTerritory()) {
+		for (Coords stone : scorer.getTerritory(StoneColour.BLACK)) {
 			DrawCoords pos = projector.fromBoardCoords(stone);
 			pos.applyOffset(offset);
 			drawBlackStone(context, pos, radius);
 		}
-		for (Coords stone : scorer.getWhiteTerritory()) {
+		for (Coords stone : scorer.getTerritory(StoneColour.WHITE)) {
 			DrawCoords pos = projector.fromBoardCoords(stone);
 			pos.applyOffset(offset);
 			drawWhiteStone(context, pos, radius);
@@ -252,13 +249,13 @@ public class BoardController implements Initializable {
 		Set<Coords> whiteStones = board.getWhiteStones();
 
 		if ( scoring ) {
-			blackStones.removeAll(scorer.getDeadBlackStones());
-			whiteStones.removeAll(scorer.getDeadWhiteStones());
+			blackStones.removeAll(scorer.getDeadStones(StoneColour.BLACK));
+			whiteStones.removeAll(scorer.getDeadStones(StoneColour.WHITE));
 
 			context.setGlobalAlpha(0.5);
 
-			drawBlackStones(context, projector, scorer.getDeadBlackStones(), radius);
-			drawWhiteStones(context, projector, scorer.getDeadWhiteStones(), radius);
+			drawBlackStones(context, projector, scorer.getDeadStones(StoneColour.BLACK), radius);
+			drawWhiteStones(context, projector, scorer.getDeadStones(StoneColour.WHITE), radius);
 
 			context.setGlobalAlpha(1);
 		}

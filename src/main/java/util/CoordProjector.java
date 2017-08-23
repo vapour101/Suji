@@ -38,8 +38,8 @@ public class CoordProjector {
 	public DrawCoords fromBoardCoords(Coords boardCoords) {
 		double spacing = boardLength / BOARD_SIZE;
 
-		double realX = (boardCoords.x() - 0.5) * spacing;
-		double realY = (boardCoords.y() - 0.5) * spacing;
+		double realX = (boardCoords.getX() - 0.5) * spacing;
+		double realY = (boardCoords.getY() - 0.5) * spacing;
 
 		DrawCoords result = new DrawCoords(realX, realY);
 		result.applyOffset(topLeft);

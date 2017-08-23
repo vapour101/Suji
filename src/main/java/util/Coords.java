@@ -26,7 +26,14 @@ public class Coords {
 
 	private Pair<Integer, Integer> coordinates;
 
-	Coords(int x, int y) {
+	private Coords(int x, int y) {
+		if ( x < 1 || y < 1 || x > 19 || y > 19 ) {
+			String errorMessage = "One or more of the Coordinates (" + Integer.toString(x) + ", ";
+			errorMessage += Integer.toString(y) + ") are outside of the acceptable range for the Coords class. ";
+			errorMessage += "Coordinates must lie" + "in the " + "" + "range: 1 <= x,y <= 19.";
+			throw new IllegalArgumentException(errorMessage);
+		}
+
 		coordinates = new Pair<>(x, y);
 	}
 
@@ -65,38 +72,38 @@ public class Coords {
 	}
 
 	private Coords north() {
-		if ( y() == 19 )
+		if ( getY() == 19 )
 			return null;
 
-		return new Coords(x(), y() + 1);
+		return new Coords(getX(), getY() + 1);
 	}
 
 	private Coords south() {
-		if ( y() == 1 )
+		if ( getY() == 1 )
 			return null;
 
-		return new Coords(x(), y() - 1);
+		return new Coords(getX(), getY() - 1);
 	}
 
 	private Coords west() {
-		if ( x() == 1 )
+		if ( getX() == 1 )
 			return null;
 
-		return new Coords(x() - 1, y());
+		return new Coords(getX() - 1, getY());
 	}
 
 	private Coords east() {
-		if ( x() == 19 )
+		if ( getX() == 19 )
 			return null;
 
-		return new Coords(x() + 1, y());
+		return new Coords(getX() + 1, getY());
 	}
 
-	public final int y() {
+	public final int getY() {
 		return coordinates.getValue();
 	}
 
-	public final int x() {
+	public final int getX() {
 		return coordinates.getKey();
 	}
 
