@@ -10,6 +10,7 @@ cache:
   - "$HOME/.gradle/wrapper/"
 git:
   depth: 3
+before_deploy: "./gradlew jfxJar"
 deploy:
   provider: releases
   api_key:
