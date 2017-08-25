@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.suji.iml" filepath="$PROJECT_DIR$/.idea/modules/org.suji.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.suji_main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.suji_main.iml" group="org.suji" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.suji_test.iml" filepath="$PROJECT_DIR$/.idea/modules/org.suji_test.iml" group="org.suji" />
+    </modules>
+  </component>
+</project>
