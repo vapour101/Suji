@@ -32,10 +32,6 @@ public class BoardScorer {
 	private double komi;
 	private Multimap<StoneColour, Chain> deadChains;
 
-	public BoardScorer(Board board) {
-		this(board, 0);
-	}
-
 	public BoardScorer(Board board, double komi) {
 		this.board = board;
 		this.komi = komi;
@@ -139,7 +135,7 @@ public class BoardScorer {
 		return deadStones;
 	}
 
-	protected Collection<Coords> getEmptyIntersections() {
+	Collection<Coords> getEmptyIntersections() {
 		Collection<Coords> emptyIntersections = getAllIntersections();
 
 		emptyIntersections.removeAll(getLiveStones());
@@ -147,7 +143,7 @@ public class BoardScorer {
 		return emptyIntersections;
 	}
 
-	protected Collection<Coords> getContiguousEmptySection(Collection<Coords> emptyBoard, Coords startingPoint) {
+	Collection<Coords> getContiguousEmptySection(Collection<Coords> emptyBoard, Coords startingPoint) {
 		Set<Coords> contiguousEmpty = new HashSet<>();
 		Queue<Coords> searchQueue = new ArrayDeque<>();
 
