@@ -19,6 +19,7 @@ package logic;
 
 import org.junit.Test;
 import util.Coords;
+import util.StoneColour;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -141,20 +142,20 @@ public class BoardTest {
 
 		board.playBlackStone(getCoords("D4"));
 
-		assertThat(board.isLegalBlackMove(getCoords("D4")), is(false));
-		assertThat(board.isLegalWhiteMove(getCoords("D4")), is(false));
+		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
+		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
 
-		assertThat(board.isLegalBlackMove(getCoords("D3")), is(true));
-		assertThat(board.isLegalWhiteMove(getCoords("D3")), is(true));
+		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.BLACK), is(true));
+		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.WHITE), is(true));
 
 		board = new Board();
 		board.playWhiteStone(getCoords("D4"));
 
-		assertThat(board.isLegalBlackMove(getCoords("D4")), is(false));
-		assertThat(board.isLegalWhiteMove(getCoords("D4")), is(false));
+		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
+		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
 
-		assertThat(board.isLegalBlackMove(getCoords("D3")), is(true));
-		assertThat(board.isLegalWhiteMove(getCoords("D3")), is(true));
+		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.BLACK), is(true));
+		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.WHITE), is(true));
 	}
 
 	@Test
@@ -166,7 +167,7 @@ public class BoardTest {
 		board.playBlackStone(getCoords("E4"));
 		board.playBlackStone(getCoords("C4"));
 
-		assertThat(board.isLegalWhiteMove(getCoords("D4")), is(false));
+		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
 
 		board = new Board();
 		board.playWhiteStone(getCoords("D5"));
@@ -174,7 +175,7 @@ public class BoardTest {
 		board.playWhiteStone(getCoords("E4"));
 		board.playWhiteStone(getCoords("C4"));
 
-		assertThat(board.isLegalBlackMove(getCoords("D4")), is(false));
+		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
 	}
 
 	@Test

@@ -17,9 +17,12 @@
 
 package logic;
 
-import util.Coords;
 
-import java.util.Set;
+import util.Coords;
+import util.StoneColour;
+
+import java.util.Collection;
+
 
 public class Board {
 
@@ -36,11 +39,11 @@ public class Board {
 		whiteStones = new ChainSet();
 	}
 
-	public final Set<Coords> getBlackStones() {
+	public final Collection<Coords> getBlackStones() {
 		return blackStones.getStones();
 	}
 
-	public final Set<Coords> getWhiteStones() {
+	public final Collection<Coords> getWhiteStones() {
 		return whiteStones.getStones();
 	}
 
@@ -54,7 +57,7 @@ public class Board {
 		blackStones.add(coords);
 	}
 
-	public boolean isLegalBlackMove(Coords coords) {
+	private boolean isLegalBlackMove(Coords coords) {
 		boolean isLegal;
 
 		isLegal = !isOccupied(coords);
@@ -85,7 +88,7 @@ public class Board {
 		whiteStones.add(coords);
 	}
 
-	public boolean isLegalWhiteMove(Coords coords) {
+	private boolean isLegalWhiteMove(Coords coords) {
 		boolean isLegal;
 
 		isLegal = !isOccupied(coords);
@@ -96,6 +99,13 @@ public class Board {
 
 	private boolean isWhiteSuicide(Coords coords) {
 		return whiteStones.isSuicide(coords, blackStones);
+	}
+
+	public boolean isLegalMove(Coords coords, StoneColour colour) {
+		if ( colour == StoneColour.BLACK )
+			return isLegalBlackMove(coords);
+		else
+			return isLegalWhiteMove(coords);
 	}
 
 	public int getBlackCaptures() {

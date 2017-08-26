@@ -191,8 +191,8 @@ public class BoardScorer {
 		return coords;
 	}
 
-	private Set<Coords> getLiveStones(StoneColour colour) {
-		Set<Coords> liveStones;
+	private Collection<Coords> getLiveStones(StoneColour colour) {
+		Collection<Coords> liveStones;
 
 		if ( colour == StoneColour.BLACK )
 			liveStones = board.getBlackStones();

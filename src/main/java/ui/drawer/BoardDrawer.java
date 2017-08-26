@@ -28,7 +28,6 @@ import util.DrawCoords;
 import util.StoneColour;
 
 import java.util.Collection;
-import java.util.Set;
 
 import static util.Coords.getCoords;
 import static util.HandicapHelper.getHandicapStones;
@@ -57,10 +56,7 @@ public class BoardDrawer {
 
 		context.setGlobalAlpha(0.5);
 
-		boolean blackLegalMove = colour == StoneColour.BLACK && board.isLegalBlackMove(boardPos);
-		boolean whiteLegalMove = colour == StoneColour.WHITE && board.isLegalWhiteMove(boardPos);
-
-		if ( blackLegalMove || whiteLegalMove ) {
+		if ( board.isLegalMove(boardPos, colour) ) {
 			drawStone(pos, radius, colour);
 		}
 
@@ -120,8 +116,8 @@ public class BoardDrawer {
 	void drawStones(Board board) {
 		double radius = getStoneRadius();
 
-		Set<Coords> blackStones = board.getBlackStones();
-		Set<Coords> whiteStones = board.getWhiteStones();
+		Collection<Coords> blackStones = board.getBlackStones();
+		Collection<Coords> whiteStones = board.getWhiteStones();
 
 		drawStones(blackStones, radius, StoneColour.BLACK);
 		drawStones(whiteStones, radius, StoneColour.WHITE);

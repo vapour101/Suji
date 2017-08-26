@@ -180,12 +180,12 @@ public class BoardController implements Initializable {
 				boardScorer.unmarkGroupDead(boardPos);
 		}
 		else if ( gameState == GameState.PLAYING ) {
-			if ( blackMove && board.isLegalBlackMove(boardPos) ) {
+			if ( blackMove && board.isLegalMove(boardPos, StoneColour.BLACK) ) {
 				board.playBlackStone(boardPos);
 				blackMove = !blackMove;
 				pass = false;
 			}
-			else if ( !blackMove && board.isLegalWhiteMove(boardPos) ) {
+			else if ( !blackMove && board.isLegalMove(boardPos, StoneColour.WHITE) ) {
 				board.playWhiteStone(boardPos);
 				blackMove = !blackMove;
 				pass = false;
