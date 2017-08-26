@@ -156,14 +156,14 @@ public class BoardController implements Initializable {
 	}
 
 	void setHandicap(int handicap) {
-		if ( board.getBlackStones().size() > 0 || board.getWhiteStones().size() > 0 )
+		if ( board.getStones(StoneColour.BLACK).size() > 0 || board.getStones(StoneColour.WHITE).size() > 0 )
 			board = new Board();
 
 		blackMove = (handicap == 0);
 
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
-				board.playBlackStone(stone);
+				board.playStone(stone, StoneColour.BLACK);
 	}
 
 	private void canvasClicked(MouseEvent mouseEvent) {
@@ -180,19 +180,21 @@ public class BoardController implements Initializable {
 				boardScorer.unmarkGroupDead(boardPos);
 		}
 		else if ( gameState == GameState.PLAYING ) {
-			if ( blackMove && board.isLegalMove(boardPos, StoneColour.BLACK) ) {
-				board.playBlackStone(boardPos);
-				blackMove = !blackMove;
-				pass = false;
-			}
-			else if ( !blackMove && board.isLegalMove(boardPos, StoneColour.WHITE) ) {
-				board.playWhiteStone(boardPos);
+			if ( board.isLegalMove(boardPos, getTurnPlayer()) ) {
+				board.playStone(boardPos, getTurnPlayer());
 				blackMove = !blackMove;
 				pass = false;
 			}
 		}
 
 		drawBoard();
+	}
+
+	private StoneColour getTurnPlayer() {
+		if ( blackMove )
+			return StoneColour.BLACK;
+		else
+			return StoneColour.WHITE;
 	}
 
 	private double getBoardLength() {

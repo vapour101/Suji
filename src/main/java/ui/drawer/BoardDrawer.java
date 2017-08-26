@@ -116,8 +116,8 @@ public class BoardDrawer {
 	void drawStones(Board board) {
 		double radius = getStoneRadius();
 
-		Collection<Coords> blackStones = board.getBlackStones();
-		Collection<Coords> whiteStones = board.getWhiteStones();
+		Collection<Coords> blackStones = board.getStones(StoneColour.BLACK);
+		Collection<Coords> whiteStones = board.getStones(StoneColour.WHITE);
 
 		drawStones(blackStones, radius, StoneColour.BLACK);
 		drawStones(whiteStones, radius, StoneColour.WHITE);

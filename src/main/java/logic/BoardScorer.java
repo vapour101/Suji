@@ -44,7 +44,7 @@ public class BoardScorer {
 
 	public double getScore(StoneColour colour) {
 		double score = countTerritory(colour);
-		score += (colour == StoneColour.BLACK) ? board.getBlackCaptures() : board.getWhiteCaptures();
+		score += board.getCaptures(colour);
 
 		for (Chain chain : getDeadChains(colour.other()))
 			score += chain.size();
@@ -92,10 +92,11 @@ public class BoardScorer {
 		if ( deadChain == null )
 			return;
 
-		if ( board.getBlackStones().contains(coords) )
-			getDeadChains(StoneColour.BLACK).add(deadChain);
-		else
-			getDeadChains(StoneColour.WHITE).add(deadChain);
+		for (StoneColour colour : StoneColour.values())
+			if ( board.getStones(colour).contains(coords) ) {
+				getDeadChains(colour).add(deadChain);
+				break;
+			}
 	}
 
 	private Collection<Chain> getDeadChains(StoneColour colour) {
@@ -190,10 +191,8 @@ public class BoardScorer {
 	private Collection<Coords> getLiveStones(StoneColour colour) {
 		Collection<Coords> liveStones;
 
-		if ( colour == StoneColour.BLACK )
-			liveStones = board.getBlackStones();
-		else
-			liveStones = board.getWhiteStones();
+		liveStones = board.getStones(colour);
+
 
 		liveStones.removeAll(getDeadStones(colour));
 

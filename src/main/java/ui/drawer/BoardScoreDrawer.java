@@ -49,8 +49,8 @@ public class BoardScoreDrawer extends BoardDrawer {
 		double radius = getStoneRadius();
 		GraphicsContext context = getGraphicsContext();
 
-		Collection<Coords> blackStones = board.getBlackStones();
-		Collection<Coords> whiteStones = board.getWhiteStones();
+		Collection<Coords> blackStones = board.getStones(StoneColour.BLACK);
+		Collection<Coords> whiteStones = board.getStones(StoneColour.WHITE);
 
 		blackStones.removeAll(scorer.getDeadStones(StoneColour.BLACK));
 		whiteStones.removeAll(scorer.getDeadStones(StoneColour.WHITE));

@@ -33,12 +33,12 @@ public class BoardTest {
 		Board board = new Board();
 
 		Coords coords = getCoords("D4");
-		board.playBlackStone(coords);
-		assertThat(board.getBlackStones(), hasItems(coords));
+		board.playStone(coords, StoneColour.BLACK);
+		assertThat(board.getStones(StoneColour.BLACK), hasItems(coords));
 
 		coords = getCoords("E5");
-		board.playWhiteStone(coords);
-		assertThat(board.getWhiteStones(), hasItems(coords));
+		board.playStone(coords, StoneColour.WHITE);
+		assertThat(board.getStones(StoneColour.WHITE), hasItems(coords));
 	}
 
 	@Test
@@ -48,11 +48,11 @@ public class BoardTest {
 		String[] stones = {"D3", "D4", "D5", "E6"};
 
 		for (String stone : stones)
-			board.playBlackStone(getCoords(stone));
+			board.playStone(getCoords(stone), StoneColour.BLACK);
 
 		stones = new String[]{"F5", "F6"};
 		for (String stone : stones)
-			board.playWhiteStone(getCoords(stone));
+			board.playStone(getCoords(stone), StoneColour.WHITE);
 
 		assertThat(board.getChainAtCoords(getCoords("D4")).getStones(),
 				   hasItems(getCoords("D3"), getCoords("D4"), getCoords("D5")));
@@ -76,10 +76,10 @@ public class BoardTest {
 	public void blockOccupiedSameColourBlack() {
 		Board board = new Board();
 
-		board.playBlackStone(getCoords("C4"));
+		board.playStone(getCoords("C4"), StoneColour.BLACK);
 
 		try {
-			board.playBlackStone(getCoords("C4"));
+			board.playStone(getCoords("C4"), StoneColour.BLACK);
 			fail("Board did not throw exception when playing on top of an existing stone with a stone of the same " +
 						 "colour.");
 		}
@@ -92,10 +92,10 @@ public class BoardTest {
 	public void blockOccupiedDifferentColourBlack() {
 		Board board = new Board();
 
-		board.playBlackStone(getCoords("C4"));
+		board.playStone(getCoords("C4"), StoneColour.BLACK);
 
 		try {
-			board.playWhiteStone(getCoords("C4"));
+			board.playStone(getCoords("C4"), StoneColour.WHITE);
 			fail("Board did not throw exception when playing on top of an existing stone with a stone of a different "
 						 + "colour.");
 		}
@@ -108,10 +108,10 @@ public class BoardTest {
 	public void blockOccupiedSameColourWhite() {
 		Board board = new Board();
 
-		board.playWhiteStone(getCoords("C4"));
+		board.playStone(getCoords("C4"), StoneColour.WHITE);
 
 		try {
-			board.playWhiteStone(getCoords("C4"));
+			board.playStone(getCoords("C4"), StoneColour.WHITE);
 			fail("Board did not throw exception when playing on top of an existing stone with a stone of the same " +
 						 "colour.");
 		}
@@ -124,10 +124,10 @@ public class BoardTest {
 	public void blockOccupiedDifferentColourWhite() {
 		Board board = new Board();
 
-		board.playWhiteStone(getCoords("C4"));
+		board.playStone(getCoords("C4"), StoneColour.WHITE);
 
 		try {
-			board.playBlackStone(getCoords("C4"));
+			board.playStone(getCoords("C4"), StoneColour.BLACK);
 			fail("Board did not throw exception when playing on top of an existing stone with a stone of a different "
 						 + "colour.");
 		}
@@ -140,7 +140,7 @@ public class BoardTest {
 	public void playingOnOccupiedSpaceIsIllegal() {
 		Board board = new Board();
 
-		board.playBlackStone(getCoords("D4"));
+		board.playStone(getCoords("D4"), StoneColour.BLACK);
 
 		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
 		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
@@ -149,7 +149,7 @@ public class BoardTest {
 		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.WHITE), is(true));
 
 		board = new Board();
-		board.playWhiteStone(getCoords("D4"));
+		board.playStone(getCoords("D4"), StoneColour.WHITE);
 
 		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
 		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
@@ -162,18 +162,18 @@ public class BoardTest {
 	public void suicideIsIllegal() {
 		Board board = new Board();
 
-		board.playBlackStone(getCoords("D5"));
-		board.playBlackStone(getCoords("D3"));
-		board.playBlackStone(getCoords("E4"));
-		board.playBlackStone(getCoords("C4"));
+		board.playStone(getCoords("D5"), StoneColour.BLACK);
+		board.playStone(getCoords("D3"), StoneColour.BLACK);
+		board.playStone(getCoords("E4"), StoneColour.BLACK);
+		board.playStone(getCoords("C4"), StoneColour.BLACK);
 
 		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
 
 		board = new Board();
-		board.playWhiteStone(getCoords("D5"));
-		board.playWhiteStone(getCoords("D3"));
-		board.playWhiteStone(getCoords("E4"));
-		board.playWhiteStone(getCoords("C4"));
+		board.playStone(getCoords("D5"), StoneColour.WHITE);
+		board.playStone(getCoords("D3"), StoneColour.WHITE);
+		board.playStone(getCoords("E4"), StoneColour.WHITE);
+		board.playStone(getCoords("C4"), StoneColour.WHITE);
 
 		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
 	}
@@ -182,43 +182,43 @@ public class BoardTest {
 	public void simpleCapturing() {
 		Board board = new Board();
 
-		assertThat(board.getBlackCaptures(), is(0));
-		assertThat(board.getWhiteCaptures(), is(0));
+		assertThat(board.getCaptures(StoneColour.BLACK), is(0));
+		assertThat(board.getCaptures(StoneColour.WHITE), is(0));
 
-		board.playBlackStone(getCoords("D4"));
-		board.playWhiteStone(getCoords("D3"));
-		board.playWhiteStone(getCoords("D5"));
-		board.playWhiteStone(getCoords("C4"));
+		board.playStone(getCoords("D4"), StoneColour.BLACK);
+		board.playStone(getCoords("D3"), StoneColour.WHITE);
+		board.playStone(getCoords("D5"), StoneColour.WHITE);
+		board.playStone(getCoords("C4"), StoneColour.WHITE);
 
-		assertThat(board.getBlackStones().size(), is(1));
-		assertThat(board.getWhiteStones().size(), is(3));
-		assertThat(board.getBlackCaptures(), is(0));
-		assertThat(board.getWhiteCaptures(), is(0));
+		assertThat(board.getStones(StoneColour.BLACK).size(), is(1));
+		assertThat(board.getStones(StoneColour.WHITE).size(), is(3));
+		assertThat(board.getCaptures(StoneColour.BLACK), is(0));
+		assertThat(board.getCaptures(StoneColour.WHITE), is(0));
 
-		board.playWhiteStone(getCoords("E4"));
+		board.playStone(getCoords("E4"), StoneColour.WHITE);
 
-		assertThat(board.getWhiteCaptures(), is(1));
-		assertThat(board.getBlackStones().size(), is(0));
+		assertThat(board.getCaptures(StoneColour.WHITE), is(1));
+		assertThat(board.getStones(StoneColour.BLACK).size(), is(0));
 
 
 		board = new Board();
 
-		assertThat(board.getBlackCaptures(), is(0));
-		assertThat(board.getWhiteCaptures(), is(0));
+		assertThat(board.getCaptures(StoneColour.BLACK), is(0));
+		assertThat(board.getCaptures(StoneColour.WHITE), is(0));
 
-		board.playWhiteStone(getCoords("D4"));
-		board.playBlackStone(getCoords("D3"));
-		board.playBlackStone(getCoords("D5"));
-		board.playBlackStone(getCoords("C4"));
+		board.playStone(getCoords("D4"), StoneColour.WHITE);
+		board.playStone(getCoords("D3"), StoneColour.BLACK);
+		board.playStone(getCoords("D5"), StoneColour.BLACK);
+		board.playStone(getCoords("C4"), StoneColour.BLACK);
 
-		assertThat(board.getBlackStones().size(), is(3));
-		assertThat(board.getWhiteStones().size(), is(1));
-		assertThat(board.getBlackCaptures(), is(0));
-		assertThat(board.getWhiteCaptures(), is(0));
+		assertThat(board.getStones(StoneColour.BLACK).size(), is(3));
+		assertThat(board.getStones(StoneColour.WHITE).size(), is(1));
+		assertThat(board.getCaptures(StoneColour.BLACK), is(0));
+		assertThat(board.getCaptures(StoneColour.WHITE), is(0));
 
-		board.playBlackStone(getCoords("E4"));
+		board.playStone(getCoords("E4"), StoneColour.BLACK);
 
-		assertThat(board.getBlackCaptures(), is(1));
-		assertThat(board.getWhiteStones().size(), is(0));
+		assertThat(board.getCaptures(StoneColour.BLACK), is(1));
+		assertThat(board.getStones(StoneColour.WHITE).size(), is(0));
 	}
 }

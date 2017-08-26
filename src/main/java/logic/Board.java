@@ -39,84 +39,67 @@ public class Board {
 		whiteStones = new ChainSet();
 	}
 
-	public final Collection<Coords> getBlackStones() {
-		return blackStones.getStones();
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getChainSet(colour).getStones();
 	}
 
-	public final Collection<Coords> getWhiteStones() {
-		return whiteStones.getStones();
+	private ChainSet getChainSet(StoneColour colour) {
+		if ( colour == StoneColour.BLACK )
+			return blackStones;
+		else
+			return whiteStones;
 	}
 
-	public void playBlackStone(Coords coords) {
-		if ( !isLegalBlackMove(coords) )
+	public void playStone(Coords coords, StoneColour colour) {
+		if ( !isLegalMove(coords, colour) )
 			throwIllegalMove(coords);
 
-		if ( whiteStones.chainIsCaptured(coords, blackStones) )
-			blackCaptures += whiteStones.captureStones(coords, blackStones);
+		ChainSet stones = getChainSet(colour);
+		ChainSet otherStones = getChainSet(colour.other());
 
-		blackStones.add(coords);
+		if ( otherStones.chainIsCaptured(coords, stones) )
+			addCaptures(otherStones.captureStones(coords, stones), colour);
+
+		stones.add(coords);
 	}
 
-	private boolean isLegalBlackMove(Coords coords) {
+	private void addCaptures(int captures, StoneColour colour) {
+		if ( colour == StoneColour.BLACK )
+			blackCaptures += captures;
+		else
+			whiteCaptures += captures;
+	}
+
+	public boolean isLegalMove(Coords coords, StoneColour colour) {
 		boolean isLegal;
 
 		isLegal = !isOccupied(coords);
-		isLegal &= !isBlackSuicide(coords);
+		isLegal &= !isSuicide(colour, coords);
 
 		return isLegal;
 	}
+
 
 	private boolean isOccupied(Coords coords) {
 		return blackStones.contains(coords) || whiteStones.contains(coords);
 	}
 
-	private boolean isBlackSuicide(Coords coords) {
-		return blackStones.isSuicide(coords, whiteStones);
+	private boolean isSuicide(StoneColour colour, Coords coords) {
+		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
 	private void throwIllegalMove(Coords coords) {
 		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
-	public void playWhiteStone(Coords coords) {
-		if ( !isLegalWhiteMove(coords) )
-			throwIllegalMove(coords);
-
-		if ( blackStones.chainIsCaptured(coords, whiteStones) )
-			whiteCaptures += blackStones.captureStones(coords, whiteStones);
-
-		whiteStones.add(coords);
-	}
-
-	private boolean isLegalWhiteMove(Coords coords) {
-		boolean isLegal;
-
-		isLegal = !isOccupied(coords);
-		isLegal &= !isWhiteSuicide(coords);
-
-		return isLegal;
-	}
-
-	private boolean isWhiteSuicide(Coords coords) {
-		return whiteStones.isSuicide(coords, blackStones);
-	}
-
-	public boolean isLegalMove(Coords coords, StoneColour colour) {
+	public int getCaptures(StoneColour colour) {
 		if ( colour == StoneColour.BLACK )
-			return isLegalBlackMove(coords);
+			return blackCaptures;
 		else
-			return isLegalWhiteMove(coords);
+			return whiteCaptures;
 	}
 
-	public int getBlackCaptures() {
-		return blackCaptures;
-	}
-
-	public int getWhiteCaptures() {
-		return whiteCaptures;
-	}
-
-	protected Chain getChainAtCoords(Coords coords) {
+	Chain getChainAtCoords(Coords coords) {
 		if ( blackStones.contains(coords) )
 			return blackStones.getChainFromStone(coords);
 
