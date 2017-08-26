@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,18 +30,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import logic.Board;
 import logic.BoardScorer;
 import util.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Set;
-
-import static util.Coords.getCoords;
-import static util.HandicapHelper.getHandicapStones;
 
 public class BoardController implements Initializable {
 
@@ -57,6 +50,7 @@ public class BoardController implements Initializable {
 	private Canvas boardCanvas;
 	private Board board;
 	private BoardScorer scorer;
+	private BoardDrawer drawer;
 
 	private boolean blackMove;
 	private boolean pass;
@@ -73,6 +67,82 @@ public class BoardController implements Initializable {
 		komi = 0;
 	}
 
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		pane.widthProperty().addListener(this::resizeCanvas);
+		pane.heightProperty().addListener(this::resizeCanvas);
+		constructCanvas();
+		drawer = new BoardDrawer(boardCanvas);
+		scorePane.setVisible(false);
+		passButton.setOnAction(this::pass);
+
+		blackDone.setOnAction(event -> {
+			blackDone.setDisable(true);
+			if ( whiteDone.isDisabled() )
+				doneScoring();
+		});
+
+		whiteDone.setOnAction(event -> {
+			whiteDone.setDisable(true);
+			if ( blackDone.isDisabled() )
+				doneScoring();
+		});
+
+		scorePane.widthProperty().addListener(this::resizeScore);
+
+		drawBoard();
+	}
+
+	public void setKomi(double komi) {
+		this.komi = komi;
+	}
+
+	private void constructCanvas() {
+		boardCanvas = new Canvas();
+		boardCanvas.setOnMouseMoved(this::canvasHover);
+		boardCanvas.setOnMouseClicked(this::canvasClicked);
+		pane.getChildren().add(boardCanvas);
+	}
+
+	private void doneScoring() {
+		scoring = false;
+		playing = false;
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Game Over");
+
+		double finalScore = scorer.getScore();
+
+		if ( finalScore == 0 ) {
+			alert.setContentText("Game ends in a draw.");
+			alert.showAndWait();
+			return;
+		}
+
+		String message;
+
+		if ( finalScore > 0 )
+			message = "Black";
+		else
+			message = "White";
+
+		finalScore = Math.abs(finalScore);
+
+		message += " wins by " + Double.toString(finalScore) + " points.";
+
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+
+	private void drawBoard() {
+		drawer.draw(board);
+
+		if ( scoring ) {
+			blackScore.setText(Double.toString(scorer.getScore(StoneColour.BLACK)));
+			whiteScore.setText(Double.toString(scorer.getScore(StoneColour.WHITE)));
+		}
+	}
+
 	void setHandicap(int handicap) {
 		if ( board.getBlackStones().size() > 0 || board.getWhiteStones().size() > 0 )
 			board = new Board();
@@ -82,17 +152,6 @@ public class BoardController implements Initializable {
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
 				board.playBlackStone(stone);
-	}
-
-	void setKomi(double komi) {
-		this.komi = komi;
-	}
-
-	private void constructCanvas() {
-		boardCanvas = new Canvas();
-		boardCanvas.setOnMouseMoved(this::canvasHover);
-		boardCanvas.setOnMouseClicked(this::canvasClicked);
-		pane.getChildren().add(boardCanvas);
 	}
 
 	private void canvasClicked(MouseEvent mouseEvent) {
@@ -124,58 +183,11 @@ public class BoardController implements Initializable {
 		drawBoard();
 	}
 
-	private void canvasHover(MouseEvent mouseEvent) {
-		if ( scoring || !playing )
-			return;
+	private double getBoardLength() {
+		double canvasWidth = boardCanvas.getWidth();
+		double canvasHeight = boardCanvas.getHeight();
 
-		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		drawBoard();
-
-		double radius = getStoneRadius();
-		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
-		GraphicsContext context = boardCanvas.getGraphicsContext2D();
-		Coords boardPos = projector.nearestCoords(mousePosition);
-		DrawCoords pos = projector.fromBoardCoords(boardPos);
-
-		context.setGlobalAlpha(0.5);
-
-		if ( blackMove && board.isLegalBlackMove(boardPos) ) {
-			drawBlackStone(context, pos, radius);
-		}
-		else if ( !blackMove && board.isLegalWhiteMove(boardPos) ) {
-			drawWhiteStone(context, pos, radius);
-		}
-
-		context.setGlobalAlpha(1);
-	}
-
-	private void drawBoard() {
-		drawBackground();
-		drawBoardTexture();
-		drawBoardLines();
-		drawStones();
-
-		if ( scoring ) {
-			drawTerritory();
-			blackScore.setText(Double.toString(scorer.getScore(StoneColour.BLACK)));
-			whiteScore.setText(Double.toString(scorer.getScore(StoneColour.WHITE)));
-		}
-	}
-
-	private void drawBackground() {
-		GraphicsContext context = boardCanvas.getGraphicsContext2D();
-
-		context.setFill(Color.GREEN);
-		context.fillRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
-	}
-
-	private void drawBoardTexture() {
-		DrawCoords topLeft = getTopLeftCorner();
-		GraphicsContext context = boardCanvas.getGraphicsContext2D();
-		double length = getBoardLength();
-
-		context.setFill(Color.web("0xB78600"));
-		context.fillRect(topLeft.getX(), topLeft.getY(), length, length);
+		return Math.min(canvasHeight, canvasWidth);
 	}
 
 	private DrawCoords getTopLeftCorner() {
@@ -194,138 +206,16 @@ public class BoardController implements Initializable {
 		return new DrawCoords(x, y);
 	}
 
-	private void drawBoardLines() {
-		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+	private void canvasHover(MouseEvent mouseEvent) {
+		if ( scoring || !playing )
+			return;
 
-		GraphicsContext context = boardCanvas.getGraphicsContext2D();
-
-		for (int i = 1; i < 20; i++) {
-			//Horizontal Lines
-			DrawCoords start = projector.fromBoardCoords(getCoords(1, i));
-			DrawCoords end = projector.fromBoardCoords(getCoords(19, i));
-
-			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-
-			//Vertical Lines
-			start = projector.fromBoardCoords(getCoords(i, 1));
-			end = projector.fromBoardCoords(getCoords(i, 19));
-
-			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-		}
-
-		for (Coords c : getHandicapStones(9)) {
-			DrawCoords star = projector.fromBoardCoords(c);
-			double radius = context.getLineWidth() * 4;
-
-			context.setFill(Paint.valueOf("#000000"));
-			drawCircle(context, star, radius);
-		}
-	}
-
-	private void drawTerritory() {
-		double radius = getStoneRadius() / 2;
-		DrawCoords offset = new DrawCoords(0, 0);
-		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
-		GraphicsContext context = boardCanvas.getGraphicsContext2D();
-
-		for (Coords stone : scorer.getTerritory(StoneColour.BLACK)) {
-			DrawCoords pos = projector.fromBoardCoords(stone);
-			pos.applyOffset(offset);
-			drawBlackStone(context, pos, radius);
-		}
-		for (Coords stone : scorer.getTerritory(StoneColour.WHITE)) {
-			DrawCoords pos = projector.fromBoardCoords(stone);
-			pos.applyOffset(offset);
-			drawWhiteStone(context, pos, radius);
-		}
-	}
-
-	private void drawStones() {
-		double radius = getStoneRadius();
-		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
-		GraphicsContext context = boardCanvas.getGraphicsContext2D();
-
-		Set<Coords> blackStones = board.getBlackStones();
-		Set<Coords> whiteStones = board.getWhiteStones();
-
-		if ( scoring ) {
-			blackStones.removeAll(scorer.getDeadStones(StoneColour.BLACK));
-			whiteStones.removeAll(scorer.getDeadStones(StoneColour.WHITE));
-
-			context.setGlobalAlpha(0.5);
-
-			drawBlackStones(context, projector, scorer.getDeadStones(StoneColour.BLACK), radius);
-			drawWhiteStones(context, projector, scorer.getDeadStones(StoneColour.WHITE), radius);
-
-			context.setGlobalAlpha(1);
-		}
-
-		drawBlackStones(context, projector, blackStones, radius);
-		drawWhiteStones(context, projector, whiteStones, radius);
-	}
-
-	private void drawBlackStones(GraphicsContext context, CoordProjector projector, Set<Coords> stones, double
-																												radius) {
-		for (Coords stone : stones) {
-			drawBlackStone(context, projector.fromBoardCoords(stone), radius);
-		}
-	}
-
-	private void drawWhiteStones(GraphicsContext context, CoordProjector projector, Set<Coords> stones, double
-																												radius) {
-		for (Coords stone : stones) {
-			drawWhiteStone(context, projector.fromBoardCoords(stone), radius);
-		}
-	}
-
-	private void drawBlackStone(GraphicsContext context, DrawCoords pos, double radius) {
-		context.setFill(Paint.valueOf("#000000"));
-		drawCircle(context, pos, radius);
-	}
-
-	private void drawWhiteStone(GraphicsContext context, DrawCoords pos, double radius) {
-		context.setFill(Paint.valueOf("#FFFFFF"));
-		drawCircle(context, pos, radius);
-	}
-
-	private void drawCircle(GraphicsContext context, DrawCoords pos, double radius) {
-		context.fillOval(pos.getX() - radius, pos.getY() - radius, 2 * radius, 2 * radius);
-	}
-
-	private double getBoardLength() {
-		double canvasWidth = boardCanvas.getWidth();
-		double canvasHeight = boardCanvas.getHeight();
-
-		return Math.min(canvasHeight, canvasWidth);
-	}
-
-	private double getStoneRadius() {
-		return getBoardLength() / (19 + 1) / 2;
-	}
-
-	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle) {
-		pane.widthProperty().addListener(this::resizeCanvas);
-		pane.heightProperty().addListener(this::resizeCanvas);
-		constructCanvas();
-		scorePane.setVisible(false);
-		passButton.setOnAction(this::pass);
-
-		blackDone.setOnAction(event -> {
-			blackDone.setDisable(true);
-			if ( whiteDone.isDisabled() )
-				doneScoring();
-		});
-
-		whiteDone.setOnAction(event -> {
-			whiteDone.setDisable(true);
-			if ( blackDone.isDisabled() )
-				doneScoring();
-		});
-
-		scorePane.widthProperty().addListener(this::resizeScore);
-
+		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
 		drawBoard();
+
+		StoneColour turnPlayer = blackMove ? StoneColour.BLACK : StoneColour.WHITE;
+
+		drawer.drawGhostStone(board, mousePosition, turnPlayer);
 	}
 
 	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -359,36 +249,6 @@ public class BoardController implements Initializable {
 		drawBoard();
 	}
 
-	private void doneScoring() {
-		scoring = false;
-		playing = false;
-
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Game Over");
-
-		double finalScore = scorer.getScore();
-
-		if ( finalScore == 0 ) {
-			alert.setContentText("Game ends in a draw.");
-			alert.showAndWait();
-			return;
-		}
-
-		String message;
-
-		if ( finalScore > 0 )
-			message = "Black";
-		else
-			message = "White";
-
-		finalScore = Math.abs(finalScore);
-
-		message += " wins by " + Double.toString(finalScore) + " points.";
-
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
-
 	private void pass(ActionEvent event) {
 		blackMove = !blackMove;
 
@@ -398,6 +258,8 @@ public class BoardController implements Initializable {
 			scorer = new BoardScorer(board, komi);
 			passButton.setVisible(false);
 			scorePane.setVisible(true);
+
+			drawer = new BoardScoreDrawer(boardCanvas, scorer);
 
 			drawBoard();
 		}
