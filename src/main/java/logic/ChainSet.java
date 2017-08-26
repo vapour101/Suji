@@ -51,26 +51,28 @@ public class ChainSet {
 		return stones;
 	}
 
-	boolean chainIsCaptured(Coords stone, ChainSet other) {
+	//Returns true if the opponent's move would capture one of our chains
+	boolean chainIsCaptured(Coords opponentMove, ChainSet opponentStones) {
 		for (Chain chain : chains)
-			if ( chain.getLiberties().contains(stone) ) {
-				Collection<Coords> freeLiberties = chain.getOpenLiberties(other);
+			if ( chain.getLiberties().contains(opponentMove) ) {
+				Collection<Coords> freeLiberties = chain.getOpenLiberties(opponentStones);
 
-				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
+				if ( freeLiberties.size() == 1 && freeLiberties.contains(opponentMove) )
 					return true;
 			}
 
 		return false;
 	}
 
-	int captureStones(Coords stone, ChainSet other) {
+	//Remove any chains captured by the opponent's move and return the number of stones that were captured.
+	int captureStones(Coords opponentMove, ChainSet opponentStone) {
 		Collection<Chain> deadChains = new HashSet<>();
 
 		for (Chain chain : chains) {
-			if ( chain.getLiberties().contains(stone) ) {
-				Collection<Coords> freeLiberties = chain.getOpenLiberties(other);
+			if ( chain.getLiberties().contains(opponentMove) ) {
+				Collection<Coords> freeLiberties = chain.getOpenLiberties(opponentStone);
 
-				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
+				if ( freeLiberties.size() == 1 && freeLiberties.contains(opponentMove) )
 					deadChains.add(chain);
 			}
 		}

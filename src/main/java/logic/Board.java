@@ -25,6 +25,11 @@ import java.util.Collection;
 public class Board {
 
 	private ChainSet stones[];
+
+	/*
+	 * Contains the number of stones each player has captured. i.e. captures[BLACK] is the number of *white* stones
+	 * that have been captured by *black*
+	 */
 	private int captures[];
 
 	public Board() {
