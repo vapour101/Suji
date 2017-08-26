@@ -39,6 +39,8 @@ import util.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static util.DimensionHelper.getBoardLength;
+
 public class BoardController implements Initializable {
 
 	public Button passButton;
@@ -168,7 +170,8 @@ public class BoardController implements Initializable {
 
 	private void canvasClicked(MouseEvent mouseEvent) {
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		CoordProjector projector = new CoordProjector(getBoardLength(boardCanvas),
+													  DimensionHelper.getTopLeftCorner(boardCanvas));
 		Coords boardPos = projector.nearestCoords(mousePosition);
 
 		if ( gameState == GameState.SCORING ) {
@@ -195,29 +198,6 @@ public class BoardController implements Initializable {
 			return StoneColour.BLACK;
 		else
 			return StoneColour.WHITE;
-	}
-
-	private double getBoardLength() {
-		double canvasWidth = boardCanvas.getWidth();
-		double canvasHeight = boardCanvas.getHeight();
-
-		return Math.min(canvasHeight, canvasWidth);
-	}
-
-	private DrawCoords getTopLeftCorner() {
-		double length = getBoardLength();
-		double canvasWidth = boardCanvas.getWidth();
-		double canvasHeight = boardCanvas.getHeight();
-
-		double x = 0;
-		double y = 0;
-
-		if ( canvasWidth > length )
-			x = (canvasWidth - length) / 2;
-		else
-			y = (canvasHeight - length) / 2;
-
-		return new DrawCoords(x, y);
 	}
 
 	private void canvasHover(MouseEvent mouseEvent) {

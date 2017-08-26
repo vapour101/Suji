@@ -30,6 +30,8 @@ import util.StoneColour;
 import java.util.Collection;
 
 import static util.Coords.getCoords;
+import static util.DimensionHelper.getBoardLength;
+import static util.DimensionHelper.getTopLeftCorner;
 import static util.HandicapHelper.getHandicapStones;
 
 public class BoardDrawer {
@@ -49,7 +51,7 @@ public class BoardDrawer {
 
 	public void drawGhostStone(Board board, DrawCoords position, StoneColour colour) {
 		double radius = getStoneRadius();
-		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
+		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
 		GraphicsContext context = getGraphicsContext();
 		Coords boardPos = projector.nearestCoords(position);
 		DrawCoords pos = projector.fromBoardCoords(boardPos);
@@ -64,30 +66,7 @@ public class BoardDrawer {
 	}
 
 	double getStoneRadius() {
-		return getBoardLength() / (19 + 1) / 2;
-	}
-
-	private double getBoardLength() {
-		double canvasWidth = canvas.getWidth();
-		double canvasHeight = canvas.getHeight();
-
-		return Math.min(canvasHeight, canvasWidth);
-	}
-
-	private DrawCoords getTopLeftCorner() {
-		double length = getBoardLength();
-		double canvasWidth = canvas.getWidth();
-		double canvasHeight = canvas.getHeight();
-
-		double x = 0;
-		double y = 0;
-
-		if ( canvasWidth > length )
-			x = (canvasWidth - length) / 2;
-		else
-			y = (canvasHeight - length) / 2;
-
-		return new DrawCoords(x, y);
+		return getBoardLength(canvas) / (19 + 1) / 2;
 	}
 
 	GraphicsContext getGraphicsContext() {
@@ -126,7 +105,7 @@ public class BoardDrawer {
 	}
 
 	CoordProjector getProjector() {
-		return new CoordProjector(getBoardLength(), getTopLeftCorner());
+		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
 	}
 
 	void drawStonesToCanvas(Collection<Coords> stones, double radius, StoneColour colour) {
@@ -143,9 +122,9 @@ public class BoardDrawer {
 	}
 
 	private void drawBoardTexture() {
-		DrawCoords topLeft = getTopLeftCorner();
+		DrawCoords topLeft = getTopLeftCorner(canvas);
 		GraphicsContext context = getGraphicsContext();
-		double length = getBoardLength();
+		double length = getBoardLength(canvas);
 
 		context.setFill(Color.web("0xB78600"));
 		context.fillRect(topLeft.getX(), topLeft.getY(), length, length);
