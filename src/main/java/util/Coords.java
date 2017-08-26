@@ -78,6 +78,14 @@ public class Coords {
 		return new Coords(getX(), getY() + 1);
 	}
 
+	public final int getY() {
+		return coordinates.getValue();
+	}
+
+	public final int getX() {
+		return coordinates.getKey();
+	}
+
 	private Coords south() {
 		if ( getY() == 1 )
 			return null;
@@ -97,14 +105,6 @@ public class Coords {
 			return null;
 
 		return new Coords(getX() + 1, getY());
-	}
-
-	public final int getY() {
-		return coordinates.getValue();
-	}
-
-	public final int getX() {
-		return coordinates.getKey();
 	}
 
 	public int hashCode() {

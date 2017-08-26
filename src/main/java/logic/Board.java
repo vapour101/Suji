@@ -63,16 +63,16 @@ public class Board {
 		return isLegal;
 	}
 
-	private void throwIllegalMove(Coords coords) {
-		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
-	}
-
 	private boolean isOccupied(Coords coords) {
 		return blackStones.contains(coords) || whiteStones.contains(coords);
 	}
 
 	private boolean isBlackSuicide(Coords coords) {
 		return blackStones.isSuicide(coords, whiteStones);
+	}
+
+	private void throwIllegalMove(Coords coords) {
+		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
 	public void playWhiteStone(Coords coords) {
@@ -98,6 +98,14 @@ public class Board {
 		return whiteStones.isSuicide(coords, blackStones);
 	}
 
+	public int getBlackCaptures() {
+		return blackCaptures;
+	}
+
+	public int getWhiteCaptures() {
+		return whiteCaptures;
+	}
+
 	protected Chain getChainAtCoords(Coords coords) {
 		if ( blackStones.contains(coords) )
 			return blackStones.getChainFromStone(coords);
@@ -106,13 +114,5 @@ public class Board {
 			return whiteStones.getChainFromStone(coords);
 
 		return null;
-	}
-
-	public int getBlackCaptures() {
-		return blackCaptures;
-	}
-
-	public int getWhiteCaptures() {
-		return whiteCaptures;
 	}
 }

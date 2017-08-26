@@ -117,6 +117,26 @@ public class BoardDrawer {
 		getGraphicsContext().fillOval(left, top, diameter, diameter);
 	}
 
+	void drawStones(Board board) {
+		double radius = getStoneRadius();
+
+		Set<Coords> blackStones = board.getBlackStones();
+		Set<Coords> whiteStones = board.getWhiteStones();
+
+		drawStones(blackStones, radius, StoneColour.BLACK);
+		drawStones(whiteStones, radius, StoneColour.WHITE);
+	}
+
+	CoordProjector getProjector() {
+		return new CoordProjector(getBoardLength(), getTopLeftCorner());
+	}
+
+	void drawStones(Collection<Coords> stones, double radius, StoneColour colour) {
+		for (Coords stone : stones) {
+			drawStone(getProjector().fromBoardCoords(stone), radius, colour);
+		}
+	}
+
 	private void drawBackground() {
 		GraphicsContext context = getGraphicsContext();
 
@@ -158,26 +178,6 @@ public class BoardDrawer {
 
 			context.setFill(Paint.valueOf("#000000"));
 			drawCircle(star, radius);
-		}
-	}
-
-	void drawStones(Board board) {
-		double radius = getStoneRadius();
-
-		Set<Coords> blackStones = board.getBlackStones();
-		Set<Coords> whiteStones = board.getWhiteStones();
-
-		drawStones(blackStones, radius, StoneColour.BLACK);
-		drawStones(whiteStones, radius, StoneColour.WHITE);
-	}
-
-	CoordProjector getProjector() {
-		return new CoordProjector(getBoardLength(), getTopLeftCorner());
-	}
-
-	void drawStones(Collection<Coords> stones, double radius, StoneColour colour) {
-		for (Coords stone : stones) {
-			drawStone(getProjector().fromBoardCoords(stone), radius, colour);
 		}
 	}
 }

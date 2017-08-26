@@ -47,6 +47,10 @@ public class ChainSet {
 		return stones;
 	}
 
+	public void add(Coords stone) {
+		addChain(new Chain(stone));
+	}
+
 	boolean chainIsCaptured(Coords stone, ChainSet other) {
 		for (Chain chain : chains)
 			if ( chain.getLiberties().contains(stone) ) {
@@ -97,8 +101,17 @@ public class ChainSet {
 		return suicide;
 	}
 
-	public void add(Coords stone) {
-		addChain(new Chain(stone));
+	int getChainCount() {
+		return chains.size();
+	}
+
+	Chain getChainFromStone(Coords stone) {
+		for (Chain chain : chains)
+			if ( chain.contains(stone) ) {
+				return chain;
+			}
+
+		return null;
 	}
 
 	private void addChain(Chain chain) {
@@ -120,18 +133,5 @@ public class ChainSet {
 			result.chains.add(chain.copy());
 
 		return result;
-	}
-
-	int getChainCount() {
-		return chains.size();
-	}
-
-	Chain getChainFromStone(Coords stone) {
-		for (Chain chain : chains)
-			if ( chain.contains(stone) ) {
-				return chain;
-			}
-
-		return null;
 	}
 }

@@ -35,16 +35,16 @@ public class DrawCoords {
 		return coordinates.getKey();
 	}
 
+	public void setX(double x) {
+		coordinates = new Pair<>(x, coordinates.getValue());
+	}
+
 	public double getY() {
 		return coordinates.getValue();
 	}
 
 	public void setY(double y) {
 		coordinates = new Pair<>(coordinates.getKey(), y);
-	}
-
-	public void setX(double x) {
-		coordinates = new Pair<>(x, coordinates.getValue());
 	}
 
 	public void applyOffset(DrawCoords offset) {
