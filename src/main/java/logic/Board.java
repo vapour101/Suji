@@ -17,26 +17,24 @@
 
 package logic;
 
-
 import util.Coords;
 import util.StoneColour;
 
 import java.util.Collection;
 
-
 public class Board {
 
-	private ChainSet blackStones;
-	private ChainSet whiteStones;
-
-	private int blackCaptures;
-	private int whiteCaptures;
+	private ChainSet stones[];
+	private int captures[];
 
 	public Board() {
-		blackCaptures = 0;
-		whiteCaptures = 0;
-		blackStones = new ChainSet();
-		whiteStones = new ChainSet();
+		captures = new int[StoneColour.values().length];
+		stones = new ChainSet[StoneColour.values().length];
+
+		for (StoneColour colour : StoneColour.values()) {
+			captures[colour.ordinal()] = 0;
+			stones[colour.ordinal()] = new ChainSet();
+		}
 	}
 
 	public Collection<Coords> getStones(StoneColour colour) {
@@ -44,10 +42,7 @@ public class Board {
 	}
 
 	private ChainSet getChainSet(StoneColour colour) {
-		if ( colour == StoneColour.BLACK )
-			return blackStones;
-		else
-			return whiteStones;
+		return stones[colour.ordinal()];
 	}
 
 	public void playStone(Coords coords, StoneColour colour) {
@@ -63,11 +58,8 @@ public class Board {
 		stones.add(coords);
 	}
 
-	private void addCaptures(int captures, StoneColour colour) {
-		if ( colour == StoneColour.BLACK )
-			blackCaptures += captures;
-		else
-			whiteCaptures += captures;
+	private void addCaptures(int number, StoneColour colour) {
+		captures[colour.ordinal()] += number;
 	}
 
 	public boolean isLegalMove(Coords coords, StoneColour colour) {
@@ -79,9 +71,8 @@ public class Board {
 		return isLegal;
 	}
 
-
 	private boolean isOccupied(Coords coords) {
-		return blackStones.contains(coords) || whiteStones.contains(coords);
+		return getChainSet(StoneColour.BLACK).contains(coords) || getChainSet(StoneColour.WHITE).contains(coords);
 	}
 
 	private boolean isSuicide(StoneColour colour, Coords coords) {
@@ -93,18 +84,13 @@ public class Board {
 	}
 
 	public int getCaptures(StoneColour colour) {
-		if ( colour == StoneColour.BLACK )
-			return blackCaptures;
-		else
-			return whiteCaptures;
+		return captures[colour.ordinal()];
 	}
 
 	Chain getChainAtCoords(Coords coords) {
-		if ( blackStones.contains(coords) )
-			return blackStones.getChainFromStone(coords);
-
-		if ( whiteStones.contains(coords) )
-			return whiteStones.getChainFromStone(coords);
+		for (StoneColour colour : StoneColour.values())
+			if ( getChainSet(colour).contains(coords) )
+				return getChainSet(colour).getChainFromStone(coords);
 
 		return null;
 	}

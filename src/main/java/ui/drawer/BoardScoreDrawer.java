@@ -45,41 +45,32 @@ public class BoardScoreDrawer extends BoardDrawer {
 	}
 
 	@Override
-	void drawStones(Board board) {
+	void drawStones(Board board, StoneColour colour) {
 		double radius = getStoneRadius();
 		GraphicsContext context = getGraphicsContext();
 
-		Collection<Coords> blackStones = board.getStones(StoneColour.BLACK);
-		Collection<Coords> whiteStones = board.getStones(StoneColour.WHITE);
-
-		blackStones.removeAll(scorer.getDeadStones(StoneColour.BLACK));
-		whiteStones.removeAll(scorer.getDeadStones(StoneColour.WHITE));
+		Collection<Coords> stones = board.getStones(colour);
+		stones.removeAll(scorer.getDeadStones(colour));
 
 		context.setGlobalAlpha(0.5);
-
-		drawStones(scorer.getDeadStones(StoneColour.BLACK), radius, StoneColour.BLACK);
-		drawStones(scorer.getDeadStones(StoneColour.WHITE), radius, StoneColour.WHITE);
-
+		drawStonesToCanvas(scorer.getDeadStones(colour), radius, colour);
 		context.setGlobalAlpha(1);
 
-		drawStones(blackStones, radius, StoneColour.BLACK);
-		drawStones(whiteStones, radius, StoneColour.WHITE);
+		drawStonesToCanvas(stones, radius, colour);
 	}
 
 	private void drawTerritory() {
+		for (StoneColour colour : StoneColour.values())
+			drawTerritory(colour);
+	}
+
+	private void drawTerritory(StoneColour colour) {
 		double radius = getStoneRadius() / 2;
-		DrawCoords offset = new DrawCoords(0, 0);
 		CoordProjector projector = getProjector();
 
-		for (Coords stone : scorer.getTerritory(StoneColour.BLACK)) {
-			DrawCoords pos = projector.fromBoardCoords(stone);
-			pos.applyOffset(offset);
-			drawStone(pos, radius, StoneColour.BLACK);
-		}
-		for (Coords stone : scorer.getTerritory(StoneColour.WHITE)) {
-			DrawCoords pos = projector.fromBoardCoords(stone);
-			pos.applyOffset(offset);
-			drawStone(pos, radius, StoneColour.WHITE);
+		for (Coords stone : scorer.getTerritory(colour)) {
+			DrawCoords position = projector.fromBoardCoords(stone);
+			drawStoneToCanvas(position, radius, colour);
 		}
 	}
 }

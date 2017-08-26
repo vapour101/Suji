@@ -57,7 +57,7 @@ public class BoardDrawer {
 		context.setGlobalAlpha(0.5);
 
 		if ( board.isLegalMove(boardPos, colour) ) {
-			drawStone(pos, radius, colour);
+			drawStoneToCanvas(pos, radius, colour);
 		}
 
 		context.setGlobalAlpha(1);
@@ -94,7 +94,7 @@ public class BoardDrawer {
 		return canvas.getGraphicsContext2D();
 	}
 
-	void drawStone(DrawCoords position, double radius, StoneColour colour) {
+	void drawStoneToCanvas(DrawCoords position, double radius, StoneColour colour) {
 		GraphicsContext context = getGraphicsContext();
 
 		if ( colour == StoneColour.BLACK )
@@ -113,23 +113,25 @@ public class BoardDrawer {
 		getGraphicsContext().fillOval(left, top, diameter, diameter);
 	}
 
-	void drawStones(Board board) {
+	private void drawStones(Board board) {
+		for (StoneColour colour : StoneColour.values())
+			drawStones(board, colour);
+	}
+
+	void drawStones(Board board, StoneColour colour) {
 		double radius = getStoneRadius();
 
-		Collection<Coords> blackStones = board.getStones(StoneColour.BLACK);
-		Collection<Coords> whiteStones = board.getStones(StoneColour.WHITE);
-
-		drawStones(blackStones, radius, StoneColour.BLACK);
-		drawStones(whiteStones, radius, StoneColour.WHITE);
+		Collection<Coords> stones = board.getStones(colour);
+		drawStonesToCanvas(stones, radius, colour);
 	}
 
 	CoordProjector getProjector() {
 		return new CoordProjector(getBoardLength(), getTopLeftCorner());
 	}
 
-	void drawStones(Collection<Coords> stones, double radius, StoneColour colour) {
+	void drawStonesToCanvas(Collection<Coords> stones, double radius, StoneColour colour) {
 		for (Coords stone : stones) {
-			drawStone(getProjector().fromBoardCoords(stone), radius, colour);
+			drawStoneToCanvas(getProjector().fromBoardCoords(stone), radius, colour);
 		}
 	}
 
