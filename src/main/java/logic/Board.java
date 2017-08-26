@@ -18,101 +18,85 @@
 package logic;
 
 import util.Coords;
+import util.StoneColour;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class Board {
 
-	private ChainSet blackStones;
-	private ChainSet whiteStones;
+	private ChainSet stones[];
 
-	private int blackCaptures;
-	private int whiteCaptures;
+	/*
+	 * Contains the number of stones each player has captured. i.e. captures[BLACK] is the number of *white* stones
+	 * that have been captured by *black*
+	 */
+	private int captures[];
 
 	public Board() {
-		blackCaptures = 0;
-		whiteCaptures = 0;
-		blackStones = new ChainSet();
-		whiteStones = new ChainSet();
+		captures = new int[StoneColour.values().length];
+		stones = new ChainSet[StoneColour.values().length];
+
+		for (StoneColour colour : StoneColour.values()) {
+			captures[colour.ordinal()] = 0;
+			stones[colour.ordinal()] = new ChainSet();
+		}
 	}
 
-	public final Set<Coords> getBlackStones() {
-		return blackStones.getStones();
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getChainSet(colour).getStones();
 	}
 
-	public final Set<Coords> getWhiteStones() {
-		return whiteStones.getStones();
+	private ChainSet getChainSet(StoneColour colour) {
+		return stones[colour.ordinal()];
 	}
 
-	public void playBlackStone(Coords coords) {
-		if ( !isLegalBlackMove(coords) )
+	public void playStone(Coords coords, StoneColour colour) {
+		if ( !isLegalMove(coords, colour) )
 			throwIllegalMove(coords);
 
-		if ( whiteStones.chainIsCaptured(coords, blackStones) )
-			blackCaptures += whiteStones.captureStones(coords, blackStones);
+		ChainSet stones = getChainSet(colour);
+		ChainSet otherStones = getChainSet(colour.other());
 
-		blackStones.add(coords);
+		if ( otherStones.chainIsCaptured(coords, stones) )
+			addCaptures(otherStones.captureStones(coords, stones), colour);
+
+		stones.add(coords);
 	}
 
-	public boolean isLegalBlackMove(Coords coords) {
+	private void addCaptures(int number, StoneColour colour) {
+		captures[colour.ordinal()] += number;
+	}
+
+	public boolean isLegalMove(Coords coords, StoneColour colour) {
 		boolean isLegal;
 
 		isLegal = !isOccupied(coords);
-		isLegal &= !isBlackSuicide(coords);
+		isLegal &= !isSuicide(colour, coords);
 
 		return isLegal;
+	}
+
+	private boolean isOccupied(Coords coords) {
+		return getChainSet(StoneColour.BLACK).contains(coords) || getChainSet(StoneColour.WHITE).contains(coords);
+	}
+
+	private boolean isSuicide(StoneColour colour, Coords coords) {
+		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
 	private void throwIllegalMove(Coords coords) {
 		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
-	private boolean isOccupied(Coords coords) {
-		return blackStones.contains(coords) || whiteStones.contains(coords);
+	public int getCaptures(StoneColour colour) {
+		return captures[colour.ordinal()];
 	}
 
-	private boolean isBlackSuicide(Coords coords) {
-		return blackStones.isSuicide(coords, whiteStones);
-	}
-
-	public void playWhiteStone(Coords coords) {
-		if ( !isLegalWhiteMove(coords) )
-			throwIllegalMove(coords);
-
-		if ( blackStones.chainIsCaptured(coords, whiteStones) )
-			whiteCaptures += blackStones.captureStones(coords, whiteStones);
-
-		whiteStones.add(coords);
-	}
-
-	public boolean isLegalWhiteMove(Coords coords) {
-		boolean isLegal;
-
-		isLegal = !isOccupied(coords);
-		isLegal &= !isWhiteSuicide(coords);
-
-		return isLegal;
-	}
-
-	private boolean isWhiteSuicide(Coords coords) {
-		return whiteStones.isSuicide(coords, blackStones);
-	}
-
-	protected Chain getChainAtCoords(Coords coords) {
-		if ( blackStones.contains(coords) )
-			return blackStones.getChainFromStone(coords);
-
-		if ( whiteStones.contains(coords) )
-			return whiteStones.getChainFromStone(coords);
+	Chain getChainAtCoords(Coords coords) {
+		for (StoneColour colour : StoneColour.values())
+			if ( getChainSet(colour).contains(coords) )
+				return getChainSet(colour).getChainFromStone(coords);
 
 		return null;
-	}
-
-	public int getBlackCaptures() {
-		return blackCaptures;
-	}
-
-	public int getWhiteCaptures() {
-		return whiteCaptures;
 	}
 }

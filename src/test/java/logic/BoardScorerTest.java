@@ -23,7 +23,6 @@ import util.StoneColour;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
@@ -77,7 +76,7 @@ public class BoardScorerTest {
 	@Test
 	public void emptyBoardIsZeroPoints() {
 		Board board = new Board();
-		BoardScorer scorer = new BoardScorer(board);
+		BoardScorer scorer = new BoardScorer(board, 0);
 
 		assertThat(scorer.getScore(StoneColour.BLACK), is(0.0));
 		assertThat(scorer.getScore(StoneColour.WHITE), is(0.0));
@@ -107,7 +106,7 @@ public class BoardScorerTest {
 	@Test
 	public void findingContiguousPoints() {
 		Board board = new Board();
-		BoardScorer scorer = new BoardScorer(board);
+		BoardScorer scorer = new BoardScorer(board, 0);
 
 		Collection<Coords> emptyPoints = new HashSet<>();
 
@@ -131,7 +130,7 @@ public class BoardScorerTest {
 				   hasItems(getCoords("D1"), getCoords("E1"), getCoords("F1"), getCoords("G1")));
 
 		board = buildTestBoard(testBoard1);
-		scorer = new BoardScorer(board);
+		scorer = new BoardScorer(board, 0);
 		emptyPoints = scorer.getEmptyIntersections();
 
 		assertThat(scorer.getContiguousEmptySection(emptyPoints, getCoords("S19")).size(), is(1));
@@ -143,9 +142,9 @@ public class BoardScorerTest {
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 0 )
-				testBoard.playBlackStone(getCoords(sequence[i]));
+				testBoard.playStone(getCoords(sequence[i]), StoneColour.BLACK);
 			else
-				testBoard.playWhiteStone(getCoords(sequence[i]));
+				testBoard.playStone(getCoords(sequence[i]), StoneColour.WHITE);
 		}
 
 		return testBoard;
@@ -171,13 +170,13 @@ public class BoardScorerTest {
 		Board testBoard = new Board();
 
 		for (Coords stone : getHandicapStones(handicap))
-			testBoard.playBlackStone(stone);
+			testBoard.playStone(stone, StoneColour.BLACK);
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 1 )
-				testBoard.playBlackStone(getCoords(sequence[i]));
+				testBoard.playStone(getCoords(sequence[i]), StoneColour.BLACK);
 			else
-				testBoard.playWhiteStone(getCoords(sequence[i]));
+				testBoard.playStone(getCoords(sequence[i]), StoneColour.WHITE);
 		}
 
 		return testBoard;
@@ -186,7 +185,7 @@ public class BoardScorerTest {
 	@Test
 	public void realGameScore2() {
 		Board board = buildTestBoard(testBoard4, 3);
-		board.playWhiteStone(getCoords("N11"));
+		board.playStone(getCoords("N11"), StoneColour.WHITE);
 
 		BoardScorer scorer = new BoardScorer(board, -4.5);
 		scorer.markGroupDead(getCoords("K5"));
@@ -200,14 +199,14 @@ public class BoardScorerTest {
 	@Test
 	public void markingDeadStones() {
 		Board board = buildTestBoard(testBoard1);
-		BoardScorer scorer = new BoardScorer(board);
+		BoardScorer scorer = new BoardScorer(board, 0);
 
 		scorer.markGroupDead(getCoords("K10"));
 		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(0));
 		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(0));
 
-		assertThat(board.getBlackCaptures(), is(3));
-		assertThat(board.getWhiteCaptures(), is(0));
+		assertThat(board.getCaptures(StoneColour.BLACK), is(3));
+		assertThat(board.getCaptures(StoneColour.WHITE), is(0));
 
 		scorer.markGroupDead(getCoords("M18"));
 		scorer.markGroupDead(getCoords("T19"));
@@ -228,7 +227,7 @@ public class BoardScorerTest {
 	@Test
 	public void simpleScore() {
 		Board board = buildTestBoard(testBoard2);
-		BoardScorer scorer = new BoardScorer(board);
+		BoardScorer scorer = new BoardScorer(board, 0);
 
 		assertThat(scorer.getScore(StoneColour.BLACK), is(152.0));
 		assertThat(scorer.getScore(StoneColour.WHITE), is(171.0));
@@ -238,7 +237,7 @@ public class BoardScorerTest {
 	@Test
 	public void complexScore() {
 		Board board = buildTestBoard(testBoard1);
-		BoardScorer scorer = new BoardScorer(board);
+		BoardScorer scorer = new BoardScorer(board, 0);
 
 		scorer.markGroupDead(getCoords("M18"));
 		scorer.markGroupDead(getCoords("T19"));

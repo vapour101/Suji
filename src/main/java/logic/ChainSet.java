@@ -19,18 +19,22 @@ package logic;
 
 import util.Coords;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 public class ChainSet {
 
-	private Set<Chain> chains;
+	private Collection<Chain> chains;
 
-	public ChainSet() {
+	ChainSet() {
 		chains = new HashSet<>();
 	}
 
-	public boolean contains(Coords stone) {
+	public void add(Coords stone) {
+		addChain(new Chain(stone));
+	}
+
+	boolean contains(Coords stone) {
 		for (Chain chain : chains)
 			if ( chain.contains(stone) )
 				return true;
@@ -38,8 +42,8 @@ public class ChainSet {
 		return false;
 	}
 
-	public Set<Coords> getStones() {
-		Set<Coords> stones = new HashSet<>();
+	Collection<Coords> getStones() {
+		Collection<Coords> stones = new HashSet<>();
 
 		for (Chain chain : chains)
 			stones.addAll(chain.getStones());
@@ -47,26 +51,28 @@ public class ChainSet {
 		return stones;
 	}
 
-	boolean chainIsCaptured(Coords stone, ChainSet other) {
+	//Returns true if the opponent's move would capture one of our chains
+	boolean chainIsCaptured(Coords opponentMove, ChainSet opponentStones) {
 		for (Chain chain : chains)
-			if ( chain.getLiberties().contains(stone) ) {
-				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+			if ( chain.getLiberties().contains(opponentMove) ) {
+				Collection<Coords> freeLiberties = chain.getOpenLiberties(opponentStones);
 
-				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
+				if ( freeLiberties.size() == 1 && freeLiberties.contains(opponentMove) )
 					return true;
 			}
 
 		return false;
 	}
 
-	int captureStones(Coords stone, ChainSet other) {
-		Set<Chain> deadChains = new HashSet<>();
+	//Remove any chains captured by the opponent's move and return the number of stones that were captured.
+	int captureStones(Coords opponentMove, ChainSet opponentStone) {
+		Collection<Chain> deadChains = new HashSet<>();
 
 		for (Chain chain : chains) {
-			if ( chain.getLiberties().contains(stone) ) {
-				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+			if ( chain.getLiberties().contains(opponentMove) ) {
+				Collection<Coords> freeLiberties = chain.getOpenLiberties(opponentStone);
 
-				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
+				if ( freeLiberties.size() == 1 && freeLiberties.contains(opponentMove) )
 					deadChains.add(chain);
 			}
 		}
@@ -87,18 +93,24 @@ public class ChainSet {
 			return false;
 
 		ChainSet futureChain = copy();
-		boolean suicide = false;
 
 		futureChain.add(stone);
 		Chain stoneChain = futureChain.getChainFromStone(stone);
 
-		suicide = (stoneChain.getOpenLiberties(other).size() == 0);
-
-		return suicide;
+		return (stoneChain.getOpenLiberties(other).size() == 0);
 	}
 
-	public void add(Coords stone) {
-		addChain(new Chain(stone));
+	int getChainCount() {
+		return chains.size();
+	}
+
+	Chain getChainFromStone(Coords stone) {
+		for (Chain chain : chains)
+			if ( chain.contains(stone) ) {
+				return chain;
+			}
+
+		return null;
 	}
 
 	private void addChain(Chain chain) {
@@ -120,18 +132,5 @@ public class ChainSet {
 			result.chains.add(chain.copy());
 
 		return result;
-	}
-
-	int getChainCount() {
-		return chains.size();
-	}
-
-	Chain getChainFromStone(Coords stone) {
-		for (Chain chain : chains)
-			if ( chain.contains(stone) ) {
-				return chain;
-			}
-
-		return null;
 	}
 }

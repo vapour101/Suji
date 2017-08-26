@@ -19,13 +19,13 @@ package logic;
 
 import util.Coords;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 public class Chain {
 
-	private Set<Coords> stones;
-	private Set<Coords> liberties;
+	private Collection<Coords> stones;
+	private Collection<Coords> liberties;
 
 	private Chain(Chain other) {
 		stones = new HashSet<>();
@@ -39,7 +39,7 @@ public class Chain {
 		liberties = new HashSet<>();
 
 		for (Coords stone : stones) {
-			Set<Coords> neighbours = stone.getNeighbours();
+			Collection<Coords> neighbours = stone.getNeighbours();
 
 			for (Coords c : neighbours)
 				if ( !this.contains(c) )
@@ -47,7 +47,7 @@ public class Chain {
 		}
 	}
 
-	protected boolean contains(Coords stone) {
+	boolean contains(Coords stone) {
 		return stones.contains(stone);
 	}
 
@@ -58,19 +58,23 @@ public class Chain {
 		recalculateLiberties();
 	}
 
-	protected boolean isAdjacentTo(Coords coords) {
+	protected Chain copy() {
+		return new Chain(this);
+	}
+
+	boolean isAdjacentTo(Coords coords) {
 		return liberties.contains(coords);
 	}
 
-	protected int size() {
+	int size() {
 		return stones.size();
 	}
 
-	protected int countLiberties() {
+	int countLiberties() {
 		return liberties.size();
 	}
 
-	protected void mergeChain(Chain other) {
+	void mergeChain(Chain other) {
 		if ( !isAdjacentTo(other) )
 			throw new IllegalArgumentException("Chains are not adjacent and cannot be merged.");
 
@@ -81,7 +85,7 @@ public class Chain {
 		recalculateLiberties();
 	}
 
-	protected boolean isAdjacentTo(Chain other) {
+	boolean isAdjacentTo(Chain other) {
 		for (Coords lib : liberties)
 			if ( other.contains(lib) )
 				return true;
@@ -94,12 +98,12 @@ public class Chain {
 		liberties.clear();
 	}
 
-	protected Set<Coords> getStones() {
+	Collection<Coords> getStones() {
 		return stones;
 	}
 
-	protected Set<Coords> getOpenLiberties(ChainSet others) {
-		HashSet<Coords> openLiberties = new HashSet<>();
+	Collection<Coords> getOpenLiberties(ChainSet others) {
+		Collection<Coords> openLiberties = new HashSet<>();
 
 		openLiberties.addAll(getLiberties());
 		openLiberties.removeAll(others.getStones());
@@ -107,11 +111,7 @@ public class Chain {
 		return openLiberties;
 	}
 
-	protected Set<Coords> getLiberties() {
+	Collection<Coords> getLiberties() {
 		return liberties;
-	}
-
-	protected Chain copy() {
-		return new Chain(this);
 	}
 }

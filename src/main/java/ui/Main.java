@@ -28,12 +28,11 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ui.controller.NewLocalGameController;
 
 public class Main extends Application {
 
 	private Stage window;
-	private BorderPane layout;
-	private Parent localGame;
 	private Parent newLocalGameMenu;
 
 	public static void main(String[] args) {
@@ -50,7 +49,6 @@ public class Main extends Application {
 
 		newLocalGameMenu = loader.load();
 		loader.<NewLocalGameController>getController().setWindow(window);
-		//localGame = FXMLLoader.load(getClass().getResource("/localGame.fxml"));
 
 		//file menu, creating the main tabs
 		Menu fileMenu = new Menu("New...");
@@ -72,7 +70,7 @@ public class Main extends Application {
 		MenuBar menuBar = new MenuBar();
 		menuBar.getMenus().addAll(fileMenu, exitMenu);
 
-		layout = new BorderPane();
+		BorderPane layout = new BorderPane();
 
 		layout.setTop(menuBar);
 		Scene scene = new Scene(layout, 400, 300);

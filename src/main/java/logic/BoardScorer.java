@@ -32,18 +32,10 @@ public class BoardScorer {
 	private double komi;
 	private Multimap<StoneColour, Chain> deadChains;
 
-	public BoardScorer(Board board) {
-		this(board, 0);
-	}
-
 	public BoardScorer(Board board, double komi) {
 		this.board = board;
 		this.komi = komi;
 		deadChains = HashMultimap.create();
-	}
-
-	private Collection<Chain> getDeadChains(StoneColour colour) {
-		return deadChains.get(colour);
 	}
 
 	public double getScore() {
@@ -52,7 +44,7 @@ public class BoardScorer {
 
 	public double getScore(StoneColour colour) {
 		double score = countTerritory(colour);
-		score += (colour == StoneColour.BLACK) ? board.getBlackCaptures() : board.getWhiteCaptures();
+		score += board.getCaptures(colour);
 
 		for (Chain chain : getDeadChains(colour.other()))
 			score += chain.size();
@@ -94,20 +86,21 @@ public class BoardScorer {
 		return territory;
 	}
 
-	private int countTerritory(StoneColour colour) {
-		return getTerritory(colour).size();
-	}
-
 	public void markGroupDead(Coords coords) {
 		Chain deadChain = board.getChainAtCoords(coords);
 
 		if ( deadChain == null )
 			return;
 
-		if ( board.getBlackStones().contains(coords) )
-			getDeadChains(StoneColour.BLACK).add(deadChain);
-		else
-			getDeadChains(StoneColour.WHITE).add(deadChain);
+		for (StoneColour colour : StoneColour.values())
+			if ( board.getStones(colour).contains(coords) ) {
+				getDeadChains(colour).add(deadChain);
+				break;
+			}
+	}
+
+	private Collection<Chain> getDeadChains(StoneColour colour) {
+		return deadChains.get(colour);
 	}
 
 	public void unmarkGroupDead(Coords coords) {
@@ -134,44 +127,6 @@ public class BoardScorer {
 			getDeadChains(StoneColour.BLACK).remove(undeadChain);
 	}
 
-	private Collection<Coords> getLiveStones() {
-		Collection<Coords> liveStones = getLiveStones(StoneColour.BLACK);
-		liveStones.addAll(getLiveStones(StoneColour.WHITE));
-
-		return liveStones;
-	}
-
-	protected Collection<Coords> getEmptyIntersections() {
-		Collection<Coords> emptyIntersections = getAllIntersections();
-
-		emptyIntersections.removeAll(getLiveStones());
-
-		return emptyIntersections;
-	}
-
-	private Collection<Coords> getAllIntersections() {
-		Set<Coords> coords = new HashSet<>();
-
-		for (int i = 1; i < 20; i++)
-			for (int j = 1; j < 20; j++)
-				coords.add(getCoords(i, j));
-
-		return coords;
-	}
-
-	private Set<Coords> getLiveStones(StoneColour colour) {
-		Set<Coords> liveStones;
-
-		if ( colour == StoneColour.BLACK )
-			liveStones = board.getBlackStones();
-		else
-			liveStones = board.getWhiteStones();
-
-		liveStones.removeAll(getDeadStones(colour));
-
-		return liveStones;
-	}
-
 	public Set<Coords> getDeadStones(StoneColour colour) {
 		Set<Coords> deadStones = new HashSet<>();
 
@@ -181,7 +136,15 @@ public class BoardScorer {
 		return deadStones;
 	}
 
-	protected Collection<Coords> getContiguousEmptySection(Collection<Coords> emptyBoard, Coords startingPoint) {
+	Collection<Coords> getEmptyIntersections() {
+		Collection<Coords> emptyIntersections = getAllIntersections();
+
+		emptyIntersections.removeAll(getLiveStones());
+
+		return emptyIntersections;
+	}
+
+	Collection<Coords> getContiguousEmptySection(Collection<Coords> emptyBoard, Coords startingPoint) {
 		Set<Coords> contiguousEmpty = new HashSet<>();
 		Queue<Coords> searchQueue = new ArrayDeque<>();
 
@@ -202,5 +165,37 @@ public class BoardScorer {
 		}
 
 		return contiguousEmpty;
+	}
+
+	private int countTerritory(StoneColour colour) {
+		return getTerritory(colour).size();
+	}
+
+	private Collection<Coords> getLiveStones() {
+		Collection<Coords> liveStones = getLiveStones(StoneColour.BLACK);
+		liveStones.addAll(getLiveStones(StoneColour.WHITE));
+
+		return liveStones;
+	}
+
+	private Collection<Coords> getAllIntersections() {
+		Set<Coords> coords = new HashSet<>();
+
+		for (int i = 1; i < 20; i++)
+			for (int j = 1; j < 20; j++)
+				coords.add(getCoords(i, j));
+
+		return coords;
+	}
+
+	private Collection<Coords> getLiveStones(StoneColour colour) {
+		Collection<Coords> liveStones;
+
+		liveStones = board.getStones(colour);
+
+
+		liveStones.removeAll(getDeadStones(colour));
+
+		return liveStones;
 	}
 }

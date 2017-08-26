@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.121"
-      fx:controller="ui.NewLocalGameController">
+      fx:controller="ui.controller.NewLocalGameController">
     <GridPane prefWidth="300.0">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
