@@ -32,6 +32,7 @@ jfx {
 cobertura {
     coverageFormats = ['html', 'xml']
     coverageExcludes = ['.*instrumented_classes.ui.*']
+    coverageIgnoreTrivial = true
 }
 
 version '0.1'
