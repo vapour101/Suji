@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui;
+package ui.controller;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -32,6 +32,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.Board;
 import logic.BoardScorer;
+import ui.drawer.BoardDrawer;
+import ui.drawer.BoardScoreDrawer;
 import util.*;
 
 import java.net.URL;
@@ -93,10 +95,6 @@ public class BoardController implements Initializable {
 		drawBoard();
 	}
 
-	public void setKomi(double komi) {
-		this.komi = komi;
-	}
-
 	private void constructCanvas() {
 		boardCanvas = new Canvas();
 		boardCanvas.setOnMouseMoved(this::canvasHover);
@@ -141,6 +139,10 @@ public class BoardController implements Initializable {
 			blackScore.setText(Double.toString(scorer.getScore(StoneColour.BLACK)));
 			whiteScore.setText(Double.toString(scorer.getScore(StoneColour.WHITE)));
 		}
+	}
+
+	void setKomi(double komi) {
+		this.komi = komi;
 	}
 
 	void setHandicap(int handicap) {

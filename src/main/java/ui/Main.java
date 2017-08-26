@@ -28,6 +28,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ui.controller.NewLocalGameController;
 
 public class Main extends Application {
 

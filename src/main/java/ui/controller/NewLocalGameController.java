@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui;
+package ui.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,7 +45,7 @@ public class NewLocalGameController implements Initializable {
 
 	private Stage window;
 
-	protected void setWindow(Stage window) {
+	public void setWindow(Stage window) {
 		this.window = window;
 	}
 
