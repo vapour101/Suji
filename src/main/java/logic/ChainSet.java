@@ -19,18 +19,22 @@ package logic;
 
 import util.Coords;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 public class ChainSet {
 
-	private Set<Chain> chains;
+	private Collection<Chain> chains;
 
-	public ChainSet() {
+	ChainSet() {
 		chains = new HashSet<>();
 	}
 
-	public boolean contains(Coords stone) {
+	public void add(Coords stone) {
+		addChain(new Chain(stone));
+	}
+
+	boolean contains(Coords stone) {
 		for (Chain chain : chains)
 			if ( chain.contains(stone) )
 				return true;
@@ -38,8 +42,8 @@ public class ChainSet {
 		return false;
 	}
 
-	public Set<Coords> getStones() {
-		Set<Coords> stones = new HashSet<>();
+	Collection<Coords> getStones() {
+		Collection<Coords> stones = new HashSet<>();
 
 		for (Chain chain : chains)
 			stones.addAll(chain.getStones());
@@ -47,14 +51,10 @@ public class ChainSet {
 		return stones;
 	}
 
-	public void add(Coords stone) {
-		addChain(new Chain(stone));
-	}
-
 	boolean chainIsCaptured(Coords stone, ChainSet other) {
 		for (Chain chain : chains)
 			if ( chain.getLiberties().contains(stone) ) {
-				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+				Collection<Coords> freeLiberties = chain.getOpenLiberties(other);
 
 				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
 					return true;
@@ -64,11 +64,11 @@ public class ChainSet {
 	}
 
 	int captureStones(Coords stone, ChainSet other) {
-		Set<Chain> deadChains = new HashSet<>();
+		Collection<Chain> deadChains = new HashSet<>();
 
 		for (Chain chain : chains) {
 			if ( chain.getLiberties().contains(stone) ) {
-				Set<Coords> freeLiberties = chain.getOpenLiberties(other);
+				Collection<Coords> freeLiberties = chain.getOpenLiberties(other);
 
 				if ( freeLiberties.size() == 1 && freeLiberties.contains(stone) )
 					deadChains.add(chain);
@@ -91,14 +91,11 @@ public class ChainSet {
 			return false;
 
 		ChainSet futureChain = copy();
-		boolean suicide = false;
 
 		futureChain.add(stone);
 		Chain stoneChain = futureChain.getChainFromStone(stone);
 
-		suicide = (stoneChain.getOpenLiberties(other).size() == 0);
-
-		return suicide;
+		return (stoneChain.getOpenLiberties(other).size() == 0);
 	}
 
 	int getChainCount() {

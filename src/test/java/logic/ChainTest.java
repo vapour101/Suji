@@ -20,7 +20,7 @@ package logic;
 import org.junit.Test;
 import util.Coords;
 
-import java.util.Set;
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -53,7 +53,7 @@ public class ChainTest {
 	public void liberties() {
 		Chain chain = new Chain(getCoords("D4"));
 
-		Set<Coords> liberties = chain.getLiberties();
+		Collection<Coords> liberties = chain.getLiberties();
 
 		assertThat(liberties.size(), is(4));
 		assertThat(liberties, hasItems(getCoords("D3"), getCoords("C4"), getCoords("D5"), getCoords("E4")));
