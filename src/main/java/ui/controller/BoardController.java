@@ -51,31 +51,31 @@ public class BoardController implements Initializable {
 
 	private Canvas boardCanvas;
 	private Board board;
-	private BoardScorer scorer;
-	private BoardDrawer drawer;
+	private BoardScorer boardScorer;
+	private BoardDrawer boardDrawer;
 
 	private boolean blackMove;
 	private boolean pass;
-	private boolean scoring;
-	private boolean playing;
+	private GameState gameState;
 	private double komi;
 
 	public BoardController() {
 		board = new Board();
 		blackMove = true;
 		pass = false;
-		scoring = false;
-		playing = true;
+		gameState = GameState.PLAYING;
 		komi = 0;
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		pane.widthProperty().addListener(this::resizeCanvas);
-		pane.heightProperty().addListener(this::resizeCanvas);
+		setupPanes();
 		constructCanvas();
-		drawer = new BoardDrawer(boardCanvas);
-		scorePane.setVisible(false);
+		setupButtons();
+		drawBoard();
+	}
+
+	private void setupButtons() {
 		passButton.setOnAction(this::pass);
 
 		blackDone.setOnAction(event -> {
@@ -89,28 +89,17 @@ public class BoardController implements Initializable {
 			if ( blackDone.isDisabled() )
 				doneScoring();
 		});
-
-		scorePane.widthProperty().addListener(this::resizeScore);
-
-		drawBoard();
-	}
-
-	private void constructCanvas() {
-		boardCanvas = new Canvas();
-		boardCanvas.setOnMouseMoved(this::canvasHover);
-		boardCanvas.setOnMouseClicked(this::canvasClicked);
-		pane.getChildren().add(boardCanvas);
 	}
 
 	private void doneScoring() {
-		scoring = false;
-		playing = false;
+		gameState = GameState.GAMEOVER;
 
+		displayFinalScore(boardScorer.getScore());
+	}
+
+	private void displayFinalScore(double finalScore) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Game Over");
-
-		double finalScore = scorer.getScore();
-
 		if ( finalScore == 0 ) {
 			alert.setContentText("Game ends in a draw.");
 			alert.showAndWait();
@@ -132,12 +121,33 @@ public class BoardController implements Initializable {
 		alert.showAndWait();
 	}
 
-	private void drawBoard() {
-		drawer.draw(board);
+	private void setupPanes() {
+		pane.widthProperty().addListener(this::resizeCanvas);
+		pane.heightProperty().addListener(this::resizeCanvas);
+		scorePane.widthProperty().addListener(this::resizeScore);
+		scorePane.setVisible(false);
+	}
 
-		if ( scoring ) {
-			blackScore.setText(Double.toString(scorer.getScore(StoneColour.BLACK)));
-			whiteScore.setText(Double.toString(scorer.getScore(StoneColour.WHITE)));
+	private void constructCanvas() {
+		boardCanvas = new Canvas();
+		boardCanvas.setOnMouseMoved(this::canvasHover);
+		boardCanvas.setOnMouseClicked(this::canvasClicked);
+
+		pane.getChildren().add(boardCanvas);
+
+		boardDrawer = new BoardDrawer(boardCanvas);
+	}
+
+	private void drawBoard() {
+		boardDrawer.draw(board);
+
+		updateScore();
+	}
+
+	private void updateScore() {
+		if ( gameState == GameState.SCORING ) {
+			blackScore.setText(Double.toString(boardScorer.getScore(StoneColour.BLACK)));
+			whiteScore.setText(Double.toString(boardScorer.getScore(StoneColour.WHITE)));
 		}
 	}
 
@@ -161,15 +171,15 @@ public class BoardController implements Initializable {
 		CoordProjector projector = new CoordProjector(getBoardLength(), getTopLeftCorner());
 		Coords boardPos = projector.nearestCoords(mousePosition);
 
-		if ( scoring ) {
+		if ( gameState == GameState.SCORING ) {
 			blackDone.setDisable(false);
 			whiteDone.setDisable(false);
 			if ( mouseEvent.getButton() == MouseButton.PRIMARY )
-				scorer.markGroupDead(boardPos);
+				boardScorer.markGroupDead(boardPos);
 			else if ( mouseEvent.getButton() == MouseButton.SECONDARY )
-				scorer.unmarkGroupDead(boardPos);
+				boardScorer.unmarkGroupDead(boardPos);
 		}
-		else if ( playing ) {
+		else if ( gameState == GameState.PLAYING ) {
 			if ( blackMove && board.isLegalBlackMove(boardPos) ) {
 				board.playBlackStone(boardPos);
 				blackMove = !blackMove;
@@ -209,7 +219,7 @@ public class BoardController implements Initializable {
 	}
 
 	private void canvasHover(MouseEvent mouseEvent) {
-		if ( scoring || !playing )
+		if ( gameState != GameState.PLAYING )
 			return;
 
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
@@ -217,7 +227,7 @@ public class BoardController implements Initializable {
 
 		StoneColour turnPlayer = blackMove ? StoneColour.BLACK : StoneColour.WHITE;
 
-		drawer.drawGhostStone(board, mousePosition, turnPlayer);
+		boardDrawer.drawGhostStone(board, mousePosition, turnPlayer);
 	}
 
 	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -255,17 +265,20 @@ public class BoardController implements Initializable {
 		blackMove = !blackMove;
 
 		if ( pass ) {
-			playing = false;
-			scoring = true;
-			scorer = new BoardScorer(board, komi);
+			gameState = GameState.SCORING;
+			boardScorer = new BoardScorer(board, komi);
 			passButton.setVisible(false);
 			scorePane.setVisible(true);
 
-			drawer = new BoardScoreDrawer(boardCanvas, scorer);
+			boardDrawer = new BoardScoreDrawer(boardCanvas, boardScorer);
 
 			drawBoard();
 		}
 
 		pass = true;
+	}
+
+	private enum GameState {
+		PLAYING, SCORING, GAMEOVER
 	}
 }
