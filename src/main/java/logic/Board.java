@@ -43,7 +43,7 @@ public class Board {
 	}
 
 	public void playStone(Coords coords, StoneColour colour) {
-		if ( !isOccupied(coords) )
+		if ( isOccupied(coords) )
 			throwIllegalMove(coords);
 
 		ChainSet stones = getChainSet(colour);
