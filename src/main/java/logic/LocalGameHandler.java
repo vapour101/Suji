@@ -20,16 +20,15 @@ package logic;
 import util.Coords;
 import util.StoneColour;
 
-import java.util.Collection;
+public class LocalGameHandler extends GameHandler {
 
-public class LocalGameHandler {
-
-	GameTree gameTree;
+	private GameTree gameTree;
 
 	public LocalGameHandler() {
 		gameTree = new GameTree();
 	}
 
+	@Override
 	public boolean isLegalMove(Coords move, StoneColour colour) {
 		boolean isLegal;
 
@@ -47,15 +46,13 @@ public class LocalGameHandler {
 		return isLegal;
 	}
 
+	@Override
 	public void playStone(Coords move, StoneColour colour) {
 		gameTree.playMove(move, colour);
 	}
 
-	public Collection<Coords> getStones(StoneColour colour) {
-		return getPosition().getStones(colour);
-	}
-
-	public Board getPosition() {
+	@Override
+	public Board getBoard() {
 		return gameTree.getPosition();
 	}
 }

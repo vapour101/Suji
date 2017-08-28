@@ -22,7 +22,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import logic.Board;
-import logic.LocalGameHandler;
+import logic.GameHandler;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
@@ -43,14 +43,14 @@ public class BoardDrawer {
 		this.canvas = canvas;
 	}
 
-	public void draw(Board board) {
+	public void draw(GameHandler board) {
 		drawBackground();
 		drawBoardTexture();
 		drawBoardLines();
-		drawStones(board);
+		drawStones(board.getBoard());
 	}
 
-	public void drawGhostStone(LocalGameHandler board, DrawCoords position, StoneColour colour) {
+	public void drawGhostStone(GameHandler board, DrawCoords position, StoneColour colour) {
 		double radius = getStoneRadius();
 		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
 		GraphicsContext context = getGraphicsContext();

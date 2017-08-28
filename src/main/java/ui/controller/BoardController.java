@@ -31,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.BoardScorer;
+import logic.GameHandler;
 import logic.LocalGameHandler;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
@@ -52,7 +53,7 @@ public class BoardController implements Initializable {
 	public Button whiteDone;
 
 	private Canvas boardCanvas;
-	private LocalGameHandler board;
+	private GameHandler game;
 	private BoardScorer boardScorer;
 	private BoardDrawer boardDrawer;
 
@@ -62,7 +63,7 @@ public class BoardController implements Initializable {
 	private double komi;
 
 	public BoardController() {
-		board = new LocalGameHandler();
+		game = new LocalGameHandler();
 		blackMove = true;
 		pass = false;
 		gameState = GameState.PLAYING;
@@ -141,7 +142,7 @@ public class BoardController implements Initializable {
 	}
 
 	private void drawBoard() {
-		boardDrawer.draw(board.getPosition());
+		boardDrawer.draw(game);
 
 		updateScore();
 	}
@@ -153,19 +154,19 @@ public class BoardController implements Initializable {
 		}
 	}
 
-	void setKomi(double komi) {
-		this.komi = komi;
-	}
-
 	void setHandicap(int handicap) {
-		if ( board.getStones(StoneColour.BLACK).size() > 0 || board.getStones(StoneColour.WHITE).size() > 0 )
-			board = new LocalGameHandler();
+		if ( game.getStones(StoneColour.BLACK).size() > 0 || game.getStones(StoneColour.WHITE).size() > 0 )
+			game = new LocalGameHandler();
 
 		blackMove = (handicap == 0);
 
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
-				board.playStone(stone, StoneColour.BLACK);
+				game.playStone(stone, StoneColour.BLACK);
+	}
+
+	void setKomi(double komi) {
+		this.komi = komi;
 	}
 
 	private void canvasClicked(MouseEvent mouseEvent) {
@@ -183,8 +184,8 @@ public class BoardController implements Initializable {
 				boardScorer.unmarkGroupDead(boardPos);
 		}
 		else if ( gameState == GameState.PLAYING ) {
-			if ( board.isLegalMove(boardPos, getTurnPlayer()) ) {
-				board.playStone(boardPos, getTurnPlayer());
+			if ( game.isLegalMove(boardPos, getTurnPlayer()) ) {
+				game.playStone(boardPos, getTurnPlayer());
 				blackMove = !blackMove;
 				pass = false;
 			}
@@ -209,7 +210,7 @@ public class BoardController implements Initializable {
 
 		StoneColour turnPlayer = blackMove ? StoneColour.BLACK : StoneColour.WHITE;
 
-		boardDrawer.drawGhostStone(board, mousePosition, turnPlayer);
+		boardDrawer.drawGhostStone(game, mousePosition, turnPlayer);
 	}
 
 	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -248,7 +249,7 @@ public class BoardController implements Initializable {
 
 		if ( pass ) {
 			gameState = GameState.SCORING;
-			boardScorer = new BoardScorer(board.getPosition(), komi);
+			boardScorer = new BoardScorer(game.getBoard(), komi);
 			passButton.setVisible(false);
 			scorePane.setVisible(true);
 
