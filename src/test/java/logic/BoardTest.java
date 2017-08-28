@@ -157,48 +157,6 @@ public class BoardTest {
 	}
 
 	@Test
-	public void playingOnOccupiedSpaceIsIllegal() {
-		Board board = new Board();
-
-		board.playStone(getCoords("D4"), StoneColour.BLACK);
-
-		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
-		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
-
-		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.BLACK), is(true));
-		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.WHITE), is(true));
-
-		board = new Board();
-		board.playStone(getCoords("D4"), StoneColour.WHITE);
-
-		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
-		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
-
-		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.BLACK), is(true));
-		assertThat(board.isLegalMove(getCoords("D3"), StoneColour.WHITE), is(true));
-	}
-
-	@Test
-	public void suicideIsIllegal() {
-		Board board = new Board();
-
-		board.playStone(getCoords("D5"), StoneColour.BLACK);
-		board.playStone(getCoords("D3"), StoneColour.BLACK);
-		board.playStone(getCoords("E4"), StoneColour.BLACK);
-		board.playStone(getCoords("C4"), StoneColour.BLACK);
-
-		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.WHITE), is(false));
-
-		board = new Board();
-		board.playStone(getCoords("D5"), StoneColour.WHITE);
-		board.playStone(getCoords("D3"), StoneColour.WHITE);
-		board.playStone(getCoords("E4"), StoneColour.WHITE);
-		board.playStone(getCoords("C4"), StoneColour.WHITE);
-
-		assertThat(board.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
-	}
-
-	@Test
 	public void simpleCapturing() {
 		Board board = new Board();
 
