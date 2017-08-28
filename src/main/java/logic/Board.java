@@ -99,4 +99,25 @@ public class Board {
 
 		return null;
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		if ( this == other )
+			return true;
+		else if ( !(other instanceof Board) )
+			return false;
+		else {
+			Board compare = (Board) other;
+			boolean equals = this.getStones(StoneColour.BLACK).containsAll(compare.getStones(StoneColour.BLACK));
+			equals &= compare.getStones(StoneColour.BLACK).containsAll(this.getStones(StoneColour.BLACK));
+
+			equals &= this.getStones(StoneColour.WHITE).containsAll(compare.getStones(StoneColour.WHITE));
+			equals &= compare.getStones(StoneColour.WHITE).containsAll(this.getStones(StoneColour.WHITE));
+			
+			equals &= this.getCaptures(StoneColour.BLACK) == compare.getCaptures(StoneColour.BLACK);
+			equals &= this.getCaptures(StoneColour.WHITE) == compare.getCaptures(StoneColour.WHITE);
+
+			return equals;
+		}
+	}
 }

@@ -29,6 +29,27 @@ import static util.Coords.getCoords;
 public class BoardTest {
 
 	@Test
+	public void equals()
+	{
+		Board board1 = new Board();
+		Board board2 = new Board();
+		
+		board1.playStone(getCoords("D4"), StoneColour.BLACK);
+		board1.playStone(getCoords("C4"), StoneColour.BLACK);
+		board1.playStone(getCoords("M17"), StoneColour.WHITE);
+		board1.playStone(getCoords("R4"), StoneColour.WHITE);
+		board1.playStone(getCoords("B14"), StoneColour.BLACK);
+
+		board2.playStone(getCoords("R4"), StoneColour.WHITE);
+		board2.playStone(getCoords("B14"), StoneColour.BLACK);
+		board2.playStone(getCoords("C4"), StoneColour.BLACK);
+		board2.playStone(getCoords("D4"), StoneColour.BLACK);
+		board2.playStone(getCoords("M17"), StoneColour.WHITE);
+
+		assertThat(board1, is(board2));
+	}
+	
+	@Test
 	public void playMoves() {
 		Board board = new Board();
 
