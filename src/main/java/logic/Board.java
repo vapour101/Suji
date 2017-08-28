@@ -42,14 +42,6 @@ public class Board {
 		}
 	}
 
-	public Collection<Coords> getStones(StoneColour colour) {
-		return getChainSet(colour).getStones();
-	}
-
-	private ChainSet getChainSet(StoneColour colour) {
-		return stones[colour.ordinal()];
-	}
-
 	public void playStone(Coords coords, StoneColour colour) {
 		if ( !isLegalMove(coords, colour) )
 			throwIllegalMove(coords);
@@ -80,16 +72,16 @@ public class Board {
 		return getChainSet(StoneColour.BLACK).contains(coords) || getChainSet(StoneColour.WHITE).contains(coords);
 	}
 
+	private ChainSet getChainSet(StoneColour colour) {
+		return stones[colour.ordinal()];
+	}
+
 	private boolean isSuicide(StoneColour colour, Coords coords) {
 		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
 	private void throwIllegalMove(Coords coords) {
 		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
-	}
-
-	public int getCaptures(StoneColour colour) {
-		return captures[colour.ordinal()];
 	}
 
 	Chain getChainAtCoords(Coords coords) {
@@ -113,11 +105,19 @@ public class Board {
 
 			equals &= this.getStones(StoneColour.WHITE).containsAll(compare.getStones(StoneColour.WHITE));
 			equals &= compare.getStones(StoneColour.WHITE).containsAll(this.getStones(StoneColour.WHITE));
-			
+
 			equals &= this.getCaptures(StoneColour.BLACK) == compare.getCaptures(StoneColour.BLACK);
 			equals &= this.getCaptures(StoneColour.WHITE) == compare.getCaptures(StoneColour.WHITE);
 
 			return equals;
 		}
+	}
+
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getChainSet(colour).getStones();
+	}
+
+	public int getCaptures(StoneColour colour) {
+		return captures[colour.ordinal()];
 	}
 }

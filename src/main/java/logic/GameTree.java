@@ -20,21 +20,44 @@ package logic;
 import util.Coords;
 import util.StoneColour;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class GameTree {
 
-	public void playMove(Coords coords, StoneColour colour)
-	{
+	List<Move> moveList;
+
+	GameTree() {
+		moveList = new LinkedList<>();
+	}
+
+	public void playMove(Coords coords, StoneColour colour) {
+		Move move = new Move(coords, colour);
+		moveList.add(move);
+	}
+
+	public Board getPosition() {
+		Board board = new Board();
+
+		for (Move move : moveList) {
+			board.playStone(move.coords, move.colour);
+		}
+
+		return board;
+	}
+
+	public void stepBack() {
 
 	}
 
-	public Board getPosition()
-	{
-		return null;
+	private class Move {
+
+		public Coords coords;
+		public StoneColour colour;
+
+		Move(Coords coords, StoneColour colour) {
+			this.coords = coords;
+			this.colour = colour;
+		}
 	}
-
-	public void stepBack()
-	{
-
-	}
-
 }

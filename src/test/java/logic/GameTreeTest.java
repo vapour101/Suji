@@ -17,20 +17,17 @@
 
 package logic;
 
-import logic.Board;
-import logic.GameTree;
 import org.junit.Test;
 import util.StoneColour;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
 public class GameTreeTest {
 
 	@Test
-	public void playMove()
-	{
+	public void playMove() {
 		GameTree tree = new GameTree();
 		Board board = new Board();
 
@@ -42,5 +39,4 @@ public class GameTreeTest {
 
 		assertThat(tree.getPosition(), is(board));
 	}
-
 }

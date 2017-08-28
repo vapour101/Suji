@@ -29,11 +29,10 @@ import static util.Coords.getCoords;
 public class BoardTest {
 
 	@Test
-	public void equals()
-	{
+	public void equals() {
 		Board board1 = new Board();
 		Board board2 = new Board();
-		
+
 		board1.playStone(getCoords("D4"), StoneColour.BLACK);
 		board1.playStone(getCoords("C4"), StoneColour.BLACK);
 		board1.playStone(getCoords("M17"), StoneColour.WHITE);
@@ -48,7 +47,7 @@ public class BoardTest {
 
 		assertThat(board1, is(board2));
 	}
-	
+
 	@Test
 	public void playMoves() {
 		Board board = new Board();
