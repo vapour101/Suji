@@ -102,9 +102,6 @@ public class Board {
 			equals &= this.getStones(StoneColour.WHITE).containsAll(compare.getStones(StoneColour.WHITE));
 			equals &= compare.getStones(StoneColour.WHITE).containsAll(this.getStones(StoneColour.WHITE));
 
-			equals &= this.getCaptures(StoneColour.BLACK) == compare.getCaptures(StoneColour.BLACK);
-			equals &= this.getCaptures(StoneColour.WHITE) == compare.getCaptures(StoneColour.WHITE);
-
 			return equals;
 		}
 	}

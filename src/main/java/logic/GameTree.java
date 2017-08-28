@@ -36,13 +36,7 @@ public class GameTree {
 	}
 
 	public Board getPosition() {
-		Board board = new Board();
-
-		for (Move move : moveList) {
-			board.playStone(move.coords, move.colour);
-		}
-
-		return board;
+		return getPositionAt(moveList.size());
 	}
 
 	public void stepBack() {
@@ -58,5 +52,23 @@ public class GameTree {
 			this.coords = coords;
 			this.colour = colour;
 		}
+	}
+
+	public Board getPositionAt(int moveNumber) {
+		Board board = new Board();
+
+		for (int i = 0; i < moveNumber; ++i) {
+			board.playStone(moveList.get(i).coords, moveList.get(i).colour);
+		}
+
+		return board;
+	}
+
+	public int getNumberOfMoves() {
+		return moveList.size();
+	}
+
+	public Board getLastPosition() {
+		return getPositionAt(moveList.size() - 1);
 	}
 }

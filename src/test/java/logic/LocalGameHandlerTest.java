@@ -26,7 +26,7 @@ import static util.Coords.getCoords;
 
 public class LocalGameHandlerTest {
 
-	private static final String[] koBoard = {"C3", "D4", "D3", "E3", "D5", "E5", "K4", "F4", "E4"};
+	private static final String[] koBoard = {"C4", "D4", "D3", "E3", "D5", "E5", "K4", "F4", "E4"};
 
 	@Test
 	public void koIsIllegal() {

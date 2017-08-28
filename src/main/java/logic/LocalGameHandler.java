@@ -37,6 +37,13 @@ public class LocalGameHandler {
 		isLegal = !gameTree.getPosition().isOccupied(move);
 		isLegal &= !gameTree.getPosition().isSuicide(move, colour);
 
+		if ( isLegal && gameTree.getNumberOfMoves() > 2  ) {
+			Board previous = gameTree.getLastPosition();
+			Board future = gameTree.getPosition();
+			future.playStone(move, colour);
+
+			isLegal &= !previous.equals(future);
+		}
 
 		return isLegal;
 	}
