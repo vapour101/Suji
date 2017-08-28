@@ -39,4 +39,25 @@ public class GameTreeTest {
 
 		assertThat(tree.getPosition(), is(board));
 	}
+
+	@Test
+	public void undoMove() {
+		GameTree tree = new GameTree();
+		Board board = new Board();
+
+		tree.playMove(getCoords("D4"), StoneColour.BLACK);
+		tree.playMove(getCoords("C4"), StoneColour.BLACK);
+		tree.playMove(getCoords("M17"), StoneColour.WHITE);
+		tree.playMove(getCoords("R4"), StoneColour.WHITE);
+		tree.playMove(getCoords("B14"), StoneColour.BLACK);
+
+		tree.stepBack();
+
+		board.playStone(getCoords("D4"), StoneColour.BLACK);
+		board.playStone(getCoords("C4"), StoneColour.BLACK);
+		board.playStone(getCoords("M17"), StoneColour.WHITE);
+		board.playStone(getCoords("R4"), StoneColour.WHITE);
+
+		assertThat(tree.getPosition(), is(board));
+	}
 }

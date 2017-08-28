@@ -21,11 +21,10 @@ import util.Coords;
 import util.StoneColour;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class GameTree {
 
-	List<Move> moveList;
+	LinkedList<Move> moveList;
 
 	GameTree() {
 		moveList = new LinkedList<>();
@@ -47,7 +46,7 @@ public class GameTree {
 	}
 
 	public void stepBack() {
-
+		moveList.removeLast();
 	}
 
 	private class Move {
