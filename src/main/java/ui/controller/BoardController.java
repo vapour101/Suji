@@ -30,8 +30,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.Board;
 import logic.BoardScorer;
+import logic.LocalGameHandler;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
 import util.*;
@@ -52,7 +52,7 @@ public class BoardController implements Initializable {
 	public Button whiteDone;
 
 	private Canvas boardCanvas;
-	private Board board;
+	private LocalGameHandler board;
 	private BoardScorer boardScorer;
 	private BoardDrawer boardDrawer;
 
@@ -62,7 +62,7 @@ public class BoardController implements Initializable {
 	private double komi;
 
 	public BoardController() {
-		board = new Board();
+		board = new LocalGameHandler();
 		blackMove = true;
 		pass = false;
 		gameState = GameState.PLAYING;
@@ -141,7 +141,7 @@ public class BoardController implements Initializable {
 	}
 
 	private void drawBoard() {
-		boardDrawer.draw(board);
+		boardDrawer.draw(board.getPosition());
 
 		updateScore();
 	}
@@ -159,7 +159,7 @@ public class BoardController implements Initializable {
 
 	void setHandicap(int handicap) {
 		if ( board.getStones(StoneColour.BLACK).size() > 0 || board.getStones(StoneColour.WHITE).size() > 0 )
-			board = new Board();
+			board = new LocalGameHandler();
 
 		blackMove = (handicap == 0);
 
@@ -248,7 +248,7 @@ public class BoardController implements Initializable {
 
 		if ( pass ) {
 			gameState = GameState.SCORING;
-			boardScorer = new BoardScorer(board, komi);
+			boardScorer = new BoardScorer(board.getPosition(), komi);
 			passButton.setVisible(false);
 			scorePane.setVisible(true);
 

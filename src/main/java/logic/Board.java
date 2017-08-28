@@ -67,17 +67,12 @@ public class Board {
 		return stones[colour.ordinal()];
 	}
 
-	@Deprecated
-	public boolean isLegalMove(Coords move, StoneColour colour) {
-		return false;
+	private void throwIllegalMove(Coords coords) {
+		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
 	public boolean isSuicide(Coords coords, StoneColour colour) {
 		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
-	}
-
-	private void throwIllegalMove(Coords coords) {
-		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
 	Chain getChainAtCoords(Coords coords) {

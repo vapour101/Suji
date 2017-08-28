@@ -26,8 +26,7 @@ public class LocalGameHandler {
 
 	GameTree gameTree;
 
-	public LocalGameHandler()
-	{
+	public LocalGameHandler() {
 		gameTree = new GameTree();
 	}
 
@@ -37,12 +36,12 @@ public class LocalGameHandler {
 		isLegal = !gameTree.getPosition().isOccupied(move);
 		isLegal &= !gameTree.getPosition().isSuicide(move, colour);
 
-		if ( isLegal && gameTree.getNumberOfMoves() > 2  ) {
+		if ( isLegal && gameTree.getNumberOfMoves() > 2 ) {
 			Board previous = gameTree.getLastPosition();
 			Board future = gameTree.getPosition();
 			future.playStone(move, colour);
 
-			isLegal &= !previous.equals(future);
+			isLegal = !previous.equals(future);
 		}
 
 		return isLegal;
@@ -52,13 +51,11 @@ public class LocalGameHandler {
 		gameTree.playMove(move, colour);
 	}
 
-	public Board getPosition() {
-		return null;
-	}
-
 	public Collection<Coords> getStones(StoneColour colour) {
-		return null;
+		return getPosition().getStones(colour);
 	}
 
-
+	public Board getPosition() {
+		return gameTree.getPosition();
+	}
 }

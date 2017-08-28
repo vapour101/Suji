@@ -36,6 +36,19 @@ public class LocalGameHandlerTest {
 		assertThat(handler.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(true));
 	}
 
+	private LocalGameHandler buildTestHandler(String[] sequence) {
+		LocalGameHandler handler = new LocalGameHandler();
+
+		for (int i = 0; i < sequence.length; i++) {
+			if ( i % 2 == 0 )
+				handler.playStone(getCoords(sequence[i]), StoneColour.BLACK);
+			else
+				handler.playStone(getCoords(sequence[i]), StoneColour.WHITE);
+		}
+
+		return handler;
+	}
+
 	@Test
 	public void playingOnOccupiedSpaceIsIllegal() {
 		LocalGameHandler handler = new LocalGameHandler();
@@ -76,18 +89,5 @@ public class LocalGameHandlerTest {
 		handler.playStone(getCoords("C4"), StoneColour.WHITE);
 
 		assertThat(handler.isLegalMove(getCoords("D4"), StoneColour.BLACK), is(false));
-	}
-
-	private LocalGameHandler buildTestHandler(String[] sequence) {
-		LocalGameHandler handler = new LocalGameHandler();
-
-		for (int i = 0; i < sequence.length; i++) {
-			if ( i % 2 == 0 )
-				handler.playStone(getCoords(sequence[i]), StoneColour.BLACK);
-			else
-				handler.playStone(getCoords(sequence[i]), StoneColour.WHITE);
-		}
-
-		return handler;
 	}
 }
