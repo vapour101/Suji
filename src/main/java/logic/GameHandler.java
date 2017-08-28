@@ -28,7 +28,7 @@ public abstract class GameHandler {
 
 	public abstract void playStone(Coords move, StoneColour colour);
 
-	public Collection<Coords> getStones(StoneColour colour) {
+	public final Collection<Coords> getStones(StoneColour colour) {
 		return getBoard().getStones(colour);
 	}
 
