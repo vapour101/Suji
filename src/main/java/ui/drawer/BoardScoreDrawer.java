@@ -22,7 +22,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import logic.Board;
 import logic.BoardScorer;
-import logic.GameHandler;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
@@ -40,7 +39,7 @@ public class BoardScoreDrawer extends BoardDrawer {
 	}
 
 	@Override
-	public void draw(GameHandler board) {
+	public void draw(Board board) {
 		super.draw(board);
 		drawTerritory();
 	}

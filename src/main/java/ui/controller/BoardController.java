@@ -142,7 +142,7 @@ public class BoardController implements Initializable {
 	}
 
 	private void drawBoard() {
-		boardDrawer.draw(game);
+		boardDrawer.draw(game.getBoard());
 
 		updateScore();
 	}

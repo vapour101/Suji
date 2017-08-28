@@ -43,11 +43,11 @@ public class BoardDrawer {
 		this.canvas = canvas;
 	}
 
-	public void draw(GameHandler board) {
+	public void draw(Board board) {
 		drawBackground();
 		drawBoardTexture();
 		drawBoardLines();
-		drawStones(board.getBoard());
+		drawStones(board);
 	}
 
 	public void drawGhostStone(GameHandler board, DrawCoords position, StoneColour colour) {
