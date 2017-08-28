@@ -43,7 +43,7 @@ public class Board {
 	}
 
 	public void playStone(Coords coords, StoneColour colour) {
-		if ( !isLegalMove(coords, colour) )
+		if ( !isOccupied(coords) )
 			throwIllegalMove(coords);
 
 		ChainSet stones = getChainSet(colour);
@@ -59,16 +59,7 @@ public class Board {
 		captures[colour.ordinal()] += number;
 	}
 
-	public boolean isLegalMove(Coords coords, StoneColour colour) {
-		boolean isLegal;
-
-		isLegal = !isOccupied(coords);
-		isLegal &= !isSuicide(colour, coords);
-
-		return isLegal;
-	}
-
-	private boolean isOccupied(Coords coords) {
+	public boolean isOccupied(Coords coords) {
 		return getChainSet(StoneColour.BLACK).contains(coords) || getChainSet(StoneColour.WHITE).contains(coords);
 	}
 
@@ -76,7 +67,12 @@ public class Board {
 		return stones[colour.ordinal()];
 	}
 
-	private boolean isSuicide(StoneColour colour, Coords coords) {
+	@Deprecated
+	public boolean isLegalMove(Coords move, StoneColour colour) {
+		return false;
+	}
+
+	public boolean isSuicide(Coords coords, StoneColour colour) {
 		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 

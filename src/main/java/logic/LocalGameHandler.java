@@ -32,7 +32,12 @@ public class LocalGameHandler {
 	}
 
 	public boolean isLegalMove(Coords move, StoneColour colour) {
-		return board.isLegalMove(move, colour);
+		boolean isLegal;
+
+		isLegal = !board.isOccupied(move);
+		isLegal &= !board.isSuicide(move, colour);
+
+		return isLegal;
 	}
 
 	public void playStone(Coords move, StoneColour colour) {
