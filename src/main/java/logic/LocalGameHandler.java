@@ -24,24 +24,25 @@ import java.util.Collection;
 
 public class LocalGameHandler {
 
-	Board board;
+	GameTree gameTree;
 
 	public LocalGameHandler()
 	{
-		board = new Board();
+		gameTree = new GameTree();
 	}
 
 	public boolean isLegalMove(Coords move, StoneColour colour) {
 		boolean isLegal;
 
-		isLegal = !board.isOccupied(move);
-		isLegal &= !board.isSuicide(move, colour);
+		isLegal = !gameTree.getPosition().isOccupied(move);
+		isLegal &= !gameTree.getPosition().isSuicide(move, colour);
+
 
 		return isLegal;
 	}
 
 	public void playStone(Coords move, StoneColour colour) {
-		board.playStone(move, colour);
+		gameTree.playMove(move, colour);
 	}
 
 	public Board getPosition() {
@@ -51,4 +52,6 @@ public class LocalGameHandler {
 	public Collection<Coords> getStones(StoneColour colour) {
 		return null;
 	}
+
+
 }
