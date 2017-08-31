@@ -47,11 +47,16 @@ public class CoordProjector {
 		return result;
 	}
 
+	protected double getSpacing()
+	{
+		return boardLength / BOARD_SIZE;
+	}
+
 	public Coords nearestCoords(DrawCoords point) {
 		point = snapToBounds(point);
 		point.removeOffset(topLeft);
 
-		double spacing = boardLength / BOARD_SIZE;
+		double spacing = getSpacing();
 
 		int boardX = (int) Math.round(point.getX() / spacing + 0.5);
 		int boardY = (int) Math.round(point.getY() / spacing + 0.5);
