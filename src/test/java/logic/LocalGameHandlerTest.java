@@ -20,6 +20,7 @@ package logic;
 import org.junit.Test;
 import util.StoneColour;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
@@ -27,6 +28,17 @@ import static util.Coords.getCoords;
 public class LocalGameHandlerTest {
 
 	private static final String[] koBoard = {"C4", "D4", "D3", "E3", "D5", "E5", "K4", "F4", "E4"};
+
+	@Test
+	public void gameTracking() {
+		LocalGameHandler handler = new LocalGameHandler();
+
+		handler.playStone(getCoords("D4"), StoneColour.BLACK);
+		handler.playStone(getCoords("E5"), StoneColour.WHITE);
+
+		assertThat(handler.getStones(StoneColour.BLACK), hasItems(getCoords("D4")));
+		assertThat(handler.getStones(StoneColour.WHITE), hasItems(getCoords("E5")));
+	}
 
 	@Test
 	public void koIsIllegal() {

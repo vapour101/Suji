@@ -46,6 +46,9 @@ public class BoardTest {
 		board2.playStone(getCoords("M17"), StoneColour.WHITE);
 
 		assertThat(board1, is(board2));
+
+		assertThat(board1, is(board1));
+		assertThat(board1, is(not(getCoords("D4"))));
 	}
 
 	@Test
