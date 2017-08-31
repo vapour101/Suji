@@ -42,16 +42,8 @@ public class Board {
 		}
 	}
 
-	public Collection<Coords> getStones(StoneColour colour) {
-		return getChainSet(colour).getStones();
-	}
-
-	private ChainSet getChainSet(StoneColour colour) {
-		return stones[colour.ordinal()];
-	}
-
 	public void playStone(Coords coords, StoneColour colour) {
-		if ( !isLegalMove(coords, colour) )
+		if ( isOccupied(coords) )
 			throwIllegalMove(coords);
 
 		ChainSet stones = getChainSet(colour);
@@ -67,29 +59,20 @@ public class Board {
 		captures[colour.ordinal()] += number;
 	}
 
-	public boolean isLegalMove(Coords coords, StoneColour colour) {
-		boolean isLegal;
-
-		isLegal = !isOccupied(coords);
-		isLegal &= !isSuicide(colour, coords);
-
-		return isLegal;
-	}
-
-	private boolean isOccupied(Coords coords) {
+	public boolean isOccupied(Coords coords) {
 		return getChainSet(StoneColour.BLACK).contains(coords) || getChainSet(StoneColour.WHITE).contains(coords);
 	}
 
-	private boolean isSuicide(StoneColour colour, Coords coords) {
-		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
+	private ChainSet getChainSet(StoneColour colour) {
+		return stones[colour.ordinal()];
 	}
 
 	private void throwIllegalMove(Coords coords) {
 		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
-	public int getCaptures(StoneColour colour) {
-		return captures[colour.ordinal()];
+	public boolean isSuicide(Coords coords, StoneColour colour) {
+		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
 	Chain getChainAtCoords(Coords coords) {
@@ -98,5 +81,31 @@ public class Board {
 				return getChainSet(colour).getChainFromStone(coords);
 
 		return null;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if ( this == other )
+			return true;
+		else if ( !(other instanceof Board) )
+			return false;
+		else {
+			Board compare = (Board) other;
+			boolean equals = this.getStones(StoneColour.BLACK).containsAll(compare.getStones(StoneColour.BLACK));
+			equals &= compare.getStones(StoneColour.BLACK).containsAll(this.getStones(StoneColour.BLACK));
+
+			equals &= this.getStones(StoneColour.WHITE).containsAll(compare.getStones(StoneColour.WHITE));
+			equals &= compare.getStones(StoneColour.WHITE).containsAll(this.getStones(StoneColour.WHITE));
+
+			return equals;
+		}
+	}
+
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getChainSet(colour).getStones();
+	}
+
+	public int getCaptures(StoneColour colour) {
+		return captures[colour.ordinal()];
 	}
 }

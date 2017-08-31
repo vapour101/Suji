@@ -26,6 +26,6 @@ build/
 out/
 
 #Local Settings
-.idea/workspace.xml
+.idea/workspace.xml*
 .idea/dictionaries
 .gradle/
