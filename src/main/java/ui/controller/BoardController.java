@@ -35,6 +35,7 @@ import logic.GameHandler;
 import logic.LocalGameHandler;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
+import ui.drawer.WabiSabiBoardDrawer;
 import util.*;
 
 import java.net.URL;
@@ -138,7 +139,7 @@ public class BoardController implements Initializable {
 
 		pane.getChildren().add(boardCanvas);
 
-		boardDrawer = new BoardDrawer(boardCanvas);
+		boardDrawer = new WabiSabiBoardDrawer(boardCanvas);
 	}
 
 	private void drawBoard() {

@@ -109,6 +109,11 @@ public class BoardDrawer {
 		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
 	}
 
+	Canvas getCanvas()
+	{
+		return canvas;
+	}
+
 	void drawStonesToCanvas(Collection<Coords> stones, double radius, StoneColour colour) {
 		for (Coords stone : stones) {
 			drawStoneToCanvas(getProjector().fromBoardCoords(stone), radius, colour);
