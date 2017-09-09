@@ -22,15 +22,13 @@ import util.StoneColour;
 
 import java.util.Collection;
 
-public abstract class GameHandler {
+public interface GameHandler {
 
-	public abstract boolean isLegalMove(Coords move, StoneColour colour);
+	boolean isLegalMove(Coords move, StoneColour colour);
 
-	public abstract void playStone(Coords move, StoneColour colour);
+	void playStone(Coords move, StoneColour colour);
 
-	public final Collection<Coords> getStones(StoneColour colour) {
-		return getBoard().getStones(colour);
-	}
+	Collection<Coords> getStones(StoneColour colour);
 
-	public abstract Board getBoard();
+	Board getBoard();
 }

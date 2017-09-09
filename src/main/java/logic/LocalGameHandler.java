@@ -20,7 +20,9 @@ package logic;
 import util.Coords;
 import util.StoneColour;
 
-public class LocalGameHandler extends GameHandler {
+import java.util.Collection;
+
+public class LocalGameHandler implements GameHandler {
 
 	private GameTree gameTree;
 
@@ -49,6 +51,11 @@ public class LocalGameHandler extends GameHandler {
 	@Override
 	public void playStone(Coords move, StoneColour colour) {
 		gameTree.playMove(move, colour);
+	}
+
+	@Override
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getBoard().getStones(colour);
 	}
 
 	@Override
