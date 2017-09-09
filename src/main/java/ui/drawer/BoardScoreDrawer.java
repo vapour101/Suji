@@ -18,10 +18,12 @@
 package ui.drawer;
 
 
+import event.EventBus;
+import event.ScoreEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import logic.Board;
 import logic.BoardScorer;
+import logic.GameHandler;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
@@ -33,23 +35,25 @@ public class BoardScoreDrawer extends BoardDrawer {
 
 	private BoardScorer scorer;
 
-	public BoardScoreDrawer(Canvas canvas, BoardScorer scorer) {
-		super(canvas);
+	public BoardScoreDrawer(Canvas canvas, GameHandler game, BoardScorer scorer) {
+		super(canvas, game);
 		this.scorer = scorer;
+
+		EventBus.addEventHandler(ScoreEvent.ANY, this::onScoreChange);
 	}
 
 	@Override
-	public void draw(Board board) {
-		super.draw(board);
+	public void draw() {
+		super.draw();
 		drawTerritory();
 	}
 
 	@Override
-	void drawStones(Board board, StoneColour colour) {
+	void drawStones(StoneColour colour) {
 		double radius = getStoneRadius();
 		GraphicsContext context = getGraphicsContext();
 
-		Collection<Coords> stones = board.getStones(colour);
+		Collection<Coords> stones = getStones(colour);
 		stones.removeAll(scorer.getDeadStones(colour));
 
 		context.setGlobalAlpha(0.5);
@@ -57,6 +61,10 @@ public class BoardScoreDrawer extends BoardDrawer {
 		context.setGlobalAlpha(1);
 
 		drawStonesToCanvas(stones, radius, colour);
+	}
+
+	private void onScoreChange(ScoreEvent event) {
+
 	}
 
 	private void drawTerritory() {

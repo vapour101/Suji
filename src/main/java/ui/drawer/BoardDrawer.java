@@ -21,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import logic.Board;
 import logic.GameHandler;
 import util.CoordProjector;
 import util.Coords;
@@ -38,32 +37,30 @@ import static util.HandicapHelper.getHandicapStones;
 public class BoardDrawer {
 
 	private Canvas canvas;
+	private GameHandler game;
 
-	public BoardDrawer(Canvas canvas) {
+	public BoardDrawer(Canvas canvas, GameHandler game) {
 		this.canvas = canvas;
+		this.game = game;
 	}
 
-	public void draw(Board board) {
+	public void draw() {
 		drawBackground();
 		drawBoardTexture();
 		drawBoardLines();
-		drawStones(board);
+		drawStones();
 	}
 
-	public void drawGhostStone(GameHandler board, DrawCoords position, StoneColour colour) {
+	private void drawStones() {
+		for (StoneColour colour : StoneColour.values())
+			drawStones(colour);
+	}
+
+	void drawStones(StoneColour colour) {
 		double radius = getStoneRadius();
-		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
-		GraphicsContext context = getGraphicsContext();
-		Coords boardPos = projector.nearestCoords(position);
-		DrawCoords pos = projector.fromBoardCoords(boardPos);
 
-		context.setGlobalAlpha(0.5);
-
-		if ( board.isLegalMove(boardPos, colour) ) {
-			drawStoneToCanvas(pos, radius, colour);
-		}
-
-		context.setGlobalAlpha(1);
+		Collection<Coords> stones = getStones(colour);
+		drawStonesToCanvas(stones, radius, colour);
 	}
 
 	double getStoneRadius() {
@@ -93,16 +90,24 @@ public class BoardDrawer {
 		getGraphicsContext().fillOval(left, top, diameter, diameter);
 	}
 
-	private void drawStones(Board board) {
-		for (StoneColour colour : StoneColour.values())
-			drawStones(board, colour);
+	Collection<Coords> getStones(StoneColour colour) {
+		return game.getStones(colour);
 	}
 
-	void drawStones(Board board, StoneColour colour) {
+	public void drawGhostStone(DrawCoords position, StoneColour colour) {
 		double radius = getStoneRadius();
+		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
+		GraphicsContext context = getGraphicsContext();
+		Coords boardPos = projector.nearestCoords(position);
+		DrawCoords pos = projector.fromBoardCoords(boardPos);
 
-		Collection<Coords> stones = board.getStones(colour);
-		drawStonesToCanvas(stones, radius, colour);
+		context.setGlobalAlpha(0.5);
+
+		if ( game.isLegalMove(boardPos, colour) ) {
+			drawStoneToCanvas(pos, radius, colour);
+		}
+
+		context.setGlobalAlpha(1);
 	}
 
 	CoordProjector getProjector() {
