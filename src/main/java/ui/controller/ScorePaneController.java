@@ -17,6 +17,8 @@
 
 package ui.controller;
 
+import event.EventBus;
+import event.ScoreEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +29,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.BoardScorer;
 import util.StoneColour;
 
 import java.io.IOException;
@@ -64,6 +65,8 @@ public class ScorePaneController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		scorePane.widthProperty().addListener(this::resizeScore);
 		setVisible(false);
+
+		EventBus.addEventHandler(ScoreEvent.ANY, this::updateScore);
 	}
 
 	void setVisible(boolean visible) {
@@ -89,9 +92,9 @@ public class ScorePaneController implements Initializable {
 		});
 	}
 
-	void updateScore(BoardScorer boardScorer) {
-		blackScore.setText(Double.toString(boardScorer.getScore(StoneColour.BLACK)));
-		whiteScore.setText(Double.toString(boardScorer.getScore(StoneColour.WHITE)));
+	private void updateScore(ScoreEvent event) {
+		blackScore.setText(Double.toString(event.getScore(StoneColour.BLACK)));
+		whiteScore.setText(Double.toString(event.getScore(StoneColour.WHITE)));
 	}
 
 	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {

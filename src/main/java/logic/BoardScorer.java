@@ -19,8 +19,8 @@ package logic;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import event.EventBus;
 import event.ScoreEvent;
-import javafx.event.*;
 import util.Coords;
 import util.StoneColour;
 
@@ -28,9 +28,7 @@ import java.util.*;
 
 import static util.Coords.getCoords;
 
-public class BoardScorer implements EventTarget {
-
-	private Multimap<EventType, EventHandler> handlers;
+public class BoardScorer {
 
 	private Board board;
 	private double komi;
@@ -41,7 +39,7 @@ public class BoardScorer implements EventTarget {
 		this.komi = komi;
 		deadChains = HashMultimap.create();
 
-		handlers = HashMultimap.create();
+		fireScoreEvent();
 	}
 
 	public double getScore() {
@@ -108,6 +106,12 @@ public class BoardScorer implements EventTarget {
 
 	private Collection<Chain> getDeadChains(StoneColour colour) {
 		return deadChains.get(colour);
+	}
+
+	private void fireScoreEvent() {
+		EventBus bus = EventBus.getInstance();
+		ScoreEvent event = new ScoreEvent(this, bus);
+		bus.fireEvent(event);
 	}
 
 	public void unmarkGroupDead(Coords coords) {
@@ -207,39 +211,5 @@ public class BoardScorer implements EventTarget {
 		liveStones.removeAll(getDeadStones(colour));
 
 		return liveStones;
-	}
-
-	@Override
-	public final EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
-		return tail.prepend(this::dispatchEvent);
-	}
-
-	private void handleEvent(Event event, Collection<EventHandler> handlers) {
-		if (handlers != null) {
-			handlers.forEach(handler -> handler.handle(event));
-		}
-	}
-
-	private Event dispatchEvent(Event event, EventDispatchChain tail) {
-		EventType type = event.getEventType();
-		while (type != Event.ANY) {
-			handleEvent(event, handlers.get(type));
-			type = type.getSuperType();
-		}
-		handleEvent(event, handlers.get(Event.ANY));
-		return event;
-	}
-
-	public final <T extends Event> void addEventHandler(EventType<T> eventType, EventHandler<? super T> eventHandler) {
-		handlers.put(eventType, eventHandler);
-		fireScoreEvent();
-	}
-
-	public final <T extends Event> void removeEventHandler(EventType<T> eventType, EventHandler<? super T> eventHandler) {
-		handlers.remove(eventType, eventHandler);
-	}
-
-	public void fireScoreEvent() {
-		Event.fireEvent(this, new ScoreEvent(this, this));
 	}
 }

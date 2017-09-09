@@ -17,7 +17,6 @@
 
 package ui.controller;
 
-import event.ScoreEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -107,12 +106,6 @@ public class BoardController implements Initializable {
 
 	private void drawBoard() {
 		boardDrawer.draw(game.getBoard());
-	}
-
-	private void updateScore() {
-		if ( gameState == GameState.SCORING ) {
-			scorePaneController.updateScore(boardScorer);
-		}
 	}
 
 	private void doneScoring() {
@@ -215,7 +208,6 @@ public class BoardController implements Initializable {
 		if ( pass ) {
 			gameState = GameState.SCORING;
 			boardScorer = new BoardScorer(game.getBoard(), komi);
-			boardScorer.addEventHandler(ScoreEvent.ANY, scoreEvent -> updateScore());
 			passButton.setVisible(false);
 			scorePaneController.setVisible(true);
 
