@@ -20,16 +20,13 @@ package ui.controller;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import logic.BoardScorer;
 import logic.GameHandler;
 import logic.LocalGameHandler;
@@ -56,6 +53,7 @@ public class BoardController implements Initializable {
 	private GameHandler game;
 	private BoardScorer boardScorer;
 	private BoardDrawer boardDrawer;
+	private ScorePaneController scorePaneController;
 
 	private boolean blackMove;
 	private boolean pass;
@@ -127,8 +125,7 @@ public class BoardController implements Initializable {
 	private void setupPanes() {
 		pane.widthProperty().addListener(this::resizeCanvas);
 		pane.heightProperty().addListener(this::resizeCanvas);
-		scorePane.widthProperty().addListener(this::resizeScore);
-		scorePane.setVisible(false);
+		scorePaneController = new ScorePaneController(scorePane);
 	}
 
 	private void constructCanvas() {
@@ -213,31 +210,6 @@ public class BoardController implements Initializable {
 		boardDrawer.drawGhostStone(game, mousePosition, turnPlayer);
 	}
 
-	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-		VBox blackScoreBox = null;
-		Separator separator = null;
-
-		for (Node node : scorePane.getChildren()) {
-			if ( node instanceof Separator )
-				separator = (Separator) node;
-		}
-
-		if ( separator == null )
-			return;
-
-		for (Node node : scorePane.getChildren()) {
-			if ( node instanceof VBox && node.getLayoutX() < separator.getLayoutX() )
-				blackScoreBox = (VBox) node;
-		}
-
-		if ( blackScoreBox == null )
-			return;
-
-		double width = (scorePane.getWidth() - separator.getWidth()) / 2;
-
-		blackScoreBox.setMinWidth(width);
-	}
-
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		boardCanvas.setHeight(pane.getHeight());
 		boardCanvas.setWidth(pane.getWidth());
@@ -251,7 +223,7 @@ public class BoardController implements Initializable {
 			gameState = GameState.SCORING;
 			boardScorer = new BoardScorer(game.getBoard(), komi);
 			passButton.setVisible(false);
-			scorePane.setVisible(true);
+			scorePaneController.setVisible(true);
 
 			boardDrawer = new BoardScoreDrawer(boardCanvas, boardScorer);
 
