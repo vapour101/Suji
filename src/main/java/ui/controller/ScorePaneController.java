@@ -47,7 +47,7 @@ public class ScorePaneController implements Initializable {
 	@FXML
 	private Label whiteScore;
 
-	public static FXMLLoader getScorePaneLoader() {
+	static FXMLLoader getScorePaneLoader() {
 		FXMLLoader loader = new FXMLLoader(ScorePaneController.class.getResource("/scorePane.fxml"));
 
 		try {
@@ -66,16 +66,16 @@ public class ScorePaneController implements Initializable {
 		setVisible(false);
 	}
 
-	public void setVisible(boolean visible) {
+	void setVisible(boolean visible) {
 		scorePane.setVisible(visible);
 	}
 
-	public void enableButtons() {
+	void enableButtons() {
 		blackDone.setDisable(false);
 		whiteDone.setDisable(false);
 	}
 
-	public void setDoneScoring(Runnable callback) {
+	void setDoneScoring(Runnable callback) {
 		blackDone.setOnAction(event -> {
 			blackDone.setDisable(true);
 			if ( whiteDone.isDisabled() )
@@ -89,7 +89,7 @@ public class ScorePaneController implements Initializable {
 		});
 	}
 
-	public void updateScore(BoardScorer boardScorer) {
+	void updateScore(BoardScorer boardScorer) {
 		blackScore.setText(Double.toString(boardScorer.getScore(StoneColour.BLACK)));
 		whiteScore.setText(Double.toString(boardScorer.getScore(StoneColour.WHITE)));
 	}
