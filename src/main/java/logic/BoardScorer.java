@@ -19,6 +19,8 @@ package logic;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import event.EventBus;
+import event.ScoreEvent;
 import util.Coords;
 import util.StoneColour;
 
@@ -36,6 +38,8 @@ public class BoardScorer {
 		this.board = board;
 		this.komi = komi;
 		deadChains = HashMultimap.create();
+
+		fireScoreEvent();
 	}
 
 	public double getScore() {
@@ -95,12 +99,19 @@ public class BoardScorer {
 		for (StoneColour colour : StoneColour.values())
 			if ( board.getStones(colour).contains(coords) ) {
 				getDeadChains(colour).add(deadChain);
+				fireScoreEvent();
 				break;
 			}
 	}
 
 	private Collection<Chain> getDeadChains(StoneColour colour) {
 		return deadChains.get(colour);
+	}
+
+	private void fireScoreEvent() {
+		EventBus bus = EventBus.getInstance();
+		ScoreEvent event = new ScoreEvent(this, bus);
+		bus.fireEvent(event);
 	}
 
 	public void unmarkGroupDead(Coords coords) {
@@ -114,6 +125,7 @@ public class BoardScorer {
 
 		if ( undeadChain != null ) {
 			getDeadChains(StoneColour.WHITE).remove(undeadChain);
+			fireScoreEvent();
 			return;
 		}
 
@@ -123,8 +135,10 @@ public class BoardScorer {
 				break;
 			}
 
-		if ( undeadChain != null )
+		if ( undeadChain != null ) {
 			getDeadChains(StoneColour.BLACK).remove(undeadChain);
+			fireScoreEvent();
+		}
 	}
 
 	public Set<Coords> getDeadStones(StoneColour colour) {
