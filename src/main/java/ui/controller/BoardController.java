@@ -19,6 +19,7 @@ package ui.controller;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -42,9 +43,12 @@ import static util.DimensionHelper.getBoardLength;
 
 public class BoardController implements Initializable {
 
-	public Button passButton;
-	public Pane pane;
-	public VBox sideBar;
+	@FXML
+	private Button passButton;
+	@FXML
+	private Pane boardPane;
+	@FXML
+	private VBox sideBar;
 
 	private Canvas boardCanvas;
 	private GameHandler game;
@@ -79,9 +83,12 @@ public class BoardController implements Initializable {
 	}
 
 	private void setupPanes() {
-		pane.widthProperty().addListener(this::resizeCanvas);
-		pane.heightProperty().addListener(this::resizeCanvas);
+		boardPane.widthProperty().addListener(this::resizeCanvas);
+		boardPane.heightProperty().addListener(this::resizeCanvas);
+		loadScorePane();
+	}
 
+	private void loadScorePane() {
 		FXMLLoader scoreLoader = ScorePaneController.getScorePaneLoader();
 		scorePaneController = scoreLoader.getController();
 		sideBar.getChildren().add(scoreLoader.getRoot());
@@ -92,7 +99,7 @@ public class BoardController implements Initializable {
 		boardCanvas.setOnMouseMoved(this::canvasHover);
 		boardCanvas.setOnMouseClicked(this::canvasClicked);
 
-		pane.getChildren().add(boardCanvas);
+		boardPane.getChildren().add(boardCanvas);
 
 		boardDrawer = new BoardDrawer(boardCanvas);
 	}
@@ -198,8 +205,8 @@ public class BoardController implements Initializable {
 	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-		boardCanvas.setHeight(pane.getHeight());
-		boardCanvas.setWidth(pane.getWidth());
+		boardCanvas.setHeight(boardPane.getHeight());
+		boardCanvas.setWidth(boardPane.getWidth());
 		drawBoard();
 	}
 
