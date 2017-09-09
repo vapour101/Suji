@@ -101,11 +101,16 @@ public class BoardController implements Initializable {
 
 		boardPane.getChildren().add(boardCanvas);
 
-		boardDrawer = new BoardDrawer(boardCanvas);
+		boardDrawer = new BoardDrawer(boardCanvas, game);
 	}
 
-	private void drawBoard() {
-		boardDrawer.draw(game.getBoard());
+	private void canvasHover(MouseEvent mouseEvent) {
+		if ( gameState != GameState.PLAYING )
+			return;
+
+		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
+		drawBoard();
+		boardDrawer.drawGhostStone(mousePosition, getTurnPlayer());
 	}
 
 	private void doneScoring() {
@@ -184,16 +189,8 @@ public class BoardController implements Initializable {
 			return StoneColour.WHITE;
 	}
 
-	private void canvasHover(MouseEvent mouseEvent) {
-		if ( gameState != GameState.PLAYING )
-			return;
-
-		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		drawBoard();
-
-		StoneColour turnPlayer = blackMove ? StoneColour.BLACK : StoneColour.WHITE;
-
-		boardDrawer.drawGhostStone(game, mousePosition, turnPlayer);
+	private void drawBoard() {
+		boardDrawer.draw();
 	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -211,7 +208,7 @@ public class BoardController implements Initializable {
 			passButton.setVisible(false);
 			scorePaneController.setVisible(true);
 
-			boardDrawer = new BoardScoreDrawer(boardCanvas, boardScorer);
+			boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
 
 			drawBoard();
 		}
