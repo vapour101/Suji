@@ -18,25 +18,80 @@
 package ui.controller;
 
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import logic.BoardScorer;
+import util.StoneColour;
 
-public class ScorePaneController {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+public class ScorePaneController implements Initializable {
+
+	@FXML
 	private Pane scorePane;
+	@FXML
+	private Button blackDone;
+	@FXML
+	private Button whiteDone;
+	@FXML
+	private Label blackScore;
+	@FXML
+	private Label whiteScore;
 
-	public ScorePaneController(Pane pane) {
-		scorePane = pane;
+	public static FXMLLoader getScorePaneLoader() {
+		FXMLLoader loader = new FXMLLoader(ScorePaneController.class.getResource("/scorePane.fxml"));
+
+		try {
+			loader.load();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return loader;
+	}
+
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
 		scorePane.widthProperty().addListener(this::resizeScore);
-
 		setVisible(false);
 	}
 
 	public void setVisible(boolean visible) {
 		scorePane.setVisible(visible);
+	}
+
+	public void enableButtons() {
+		blackDone.setDisable(false);
+		whiteDone.setDisable(false);
+	}
+
+	public void setDoneScoring(Runnable callback) {
+		blackDone.setOnAction(event -> {
+			blackDone.setDisable(true);
+			if ( whiteDone.isDisabled() )
+				callback.run();
+		});
+
+		whiteDone.setOnAction(event -> {
+			whiteDone.setDisable(true);
+			if ( blackDone.isDisabled() )
+				callback.run();
+		});
+	}
+
+	public void updateScore(BoardScorer boardScorer) {
+		blackScore.setText(Double.toString(boardScorer.getScore(StoneColour.BLACK)));
+		whiteScore.setText(Double.toString(boardScorer.getScore(StoneColour.WHITE)));
 	}
 
 	private void resizeScore(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
