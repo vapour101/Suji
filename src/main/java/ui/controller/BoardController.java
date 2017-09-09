@@ -198,7 +198,6 @@ public class BoardController implements Initializable {
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		boardCanvas.setHeight(boardPane.getHeight());
 		boardCanvas.setWidth(boardPane.getWidth());
-		drawBoard();
 	}
 
 	private void pass(ActionEvent event) {

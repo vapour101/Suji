@@ -17,6 +17,7 @@
 
 package ui.drawer;
 
+import javafx.beans.Observable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -42,6 +43,12 @@ public class BoardDrawer {
 	public BoardDrawer(Canvas canvas, GameHandler game) {
 		this.canvas = canvas;
 		this.game = game;
+		canvas.widthProperty().addListener(this::onCanvasResize);
+		canvas.heightProperty().addListener(this::onCanvasResize);
+	}
+
+	private void onCanvasResize(Observable observable) {
+		draw();
 	}
 
 	public void draw() {
