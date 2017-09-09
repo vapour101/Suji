@@ -18,49 +18,35 @@
 package ui;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ui.controller.NewLocalGameController;
+import ui.dialog.LocalGameDialog;
 
 public class Main extends Application {
 
 	private Stage window;
-	private Parent newLocalGameMenu;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/newLocalGame.fxml"));
-
 		window = primaryStage;
 		window.setTitle("Suji");
-
-		newLocalGameMenu = loader.load();
-		loader.<NewLocalGameController>getController().setWindow(window);
 
 		//file menu, creating the main tabs
 		Menu fileMenu = new Menu("New...");
 		Menu exitMenu = new Menu("Exit");
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
-		newLocalGame.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				window.setScene(new Scene(newLocalGameMenu));
-				window.show();
-			}
+		newLocalGame.setOnAction(event -> {
+			window.setScene(LocalGameDialog.build(window));
+			window.show();
 		});
 
 		//Home items
