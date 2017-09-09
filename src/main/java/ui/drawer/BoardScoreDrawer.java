@@ -64,7 +64,7 @@ public class BoardScoreDrawer extends BoardDrawer {
 	}
 
 	private void onScoreChange(ScoreEvent event) {
-
+		draw();
 	}
 
 	private void drawTerritory() {

@@ -190,6 +190,8 @@ public class BoardController implements Initializable {
 	}
 
 	private void drawBoard() {
+		if ( gameState == GameState.SCORING )
+			return;
 		boardDrawer.draw();
 	}
 
@@ -209,8 +211,7 @@ public class BoardController implements Initializable {
 			scorePaneController.setVisible(true);
 
 			boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
-
-			drawBoard();
+			boardDrawer.draw();
 		}
 
 		pass = true;
