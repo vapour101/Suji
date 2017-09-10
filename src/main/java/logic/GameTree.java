@@ -20,55 +20,15 @@ package logic;
 import util.Coords;
 import util.StoneColour;
 
-import java.util.LinkedList;
+public interface GameTree {
 
-public class GameTree {
+	void playMove(Coords coords, StoneColour colour);
 
-	LinkedList<Move> moveList;
+	Board getPosition();
 
-	GameTree() {
-		moveList = new LinkedList<>();
-	}
+	void stepBack();
 
-	public void playMove(Coords coords, StoneColour colour) {
-		Move move = new Move(coords, colour);
-		moveList.add(move);
-	}
+	Board getLastPosition();
 
-	public Board getPosition() {
-		return getPositionAt(moveList.size());
-	}
-
-	public Board getPositionAt(int moveNumber) {
-		Board board = new Board();
-
-		for (int i = 0; i < moveNumber; ++i) {
-			board.playStone(moveList.get(i).coords, moveList.get(i).colour);
-		}
-
-		return board;
-	}
-
-	public void stepBack() {
-		moveList.removeLast();
-	}
-
-	public int getNumberOfMoves() {
-		return moveList.size();
-	}
-
-	public Board getLastPosition() {
-		return getPositionAt(moveList.size() - 1);
-	}
-
-	private class Move {
-
-		public Coords coords;
-		public StoneColour colour;
-
-		Move(Coords coords, StoneColour colour) {
-			this.coords = coords;
-			this.colour = colour;
-		}
-	}
+	int getMoveNumber();
 }

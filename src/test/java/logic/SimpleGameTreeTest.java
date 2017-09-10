@@ -24,11 +24,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 
-public class GameTreeTest {
+public class SimpleGameTreeTest {
 
 	@Test
 	public void playMove() {
-		GameTree tree = new GameTree();
+		SimpleGameTree tree = new SimpleGameTree();
 		Board board = new Board();
 
 		tree.playMove(getCoords("D4"), StoneColour.BLACK);
@@ -42,7 +42,7 @@ public class GameTreeTest {
 
 	@Test
 	public void undoMove() {
-		GameTree tree = new GameTree();
+		SimpleGameTree tree = new SimpleGameTree();
 		Board board = new Board();
 
 		tree.playMove(getCoords("D4"), StoneColour.BLACK);
