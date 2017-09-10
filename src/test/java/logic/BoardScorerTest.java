@@ -32,18 +32,10 @@ import static util.HandicapHelper.getHandicapStones;
 
 public class BoardScorerTest {
 
-	private static final String[] testBoard1 = {"D1", "E1", "D2", "E2", "D3", "E4", "E3", "F3", "D4", "E5", "F2",
-			"G2", "F1", "G1", "D5", "D6", "C5", "C6", "B4", "G4", "B6", "B7", "A7", "A8", "A6", "B8", "T19", "S18",
-			"T18", "S17", "T17", "S15", "T16", "R14", "S16", "R16", "T15", "T14", "Q19", "R19", "Q18", "R18", "Q17",
-			"R17", "Q16", "Q15", "P15", "P14", "O15", "O14", "N15", "N14", "N17", "M15", "M16", "L16", "L17", "K16",
-			"K17", "J16", "J17", "H16", "H17", "G16", "G17", "F16", "F17", "E17", "E18", "D17", "D18", "C18", "C19",
-			"B19", "B18", "C17", "A19", "B17", "B19", "A17", "F18", "A18", "D19", "M18", "M17"};
-
-	private static final String[] testBoard2 = {"J1", "K1", "J2", "K2", "J3", "K3", "J4", "K4", "J5", "K5", "J6",
-			"K6", "J7", "K7", "J8", "K8", "J9", "K9", "J10", "K10", "J11", "K11", "J12", "K12", "J13", "K13", "J14",
-			"K14", "J15", "K15", "J16", "K16", "J17", "K17", "J18", "K18", "J19", "K19"};
-
-	private static final String[] testBoard3 = {"R4", "D16", "F3", "C6", "L3", "Q10", "O17", "Q14", "K17", "M17",
+	public static final String[] testBoard2 = {"J1", "K1", "J2", "K2", "J3", "K3", "J4", "K4", "J5", "K5", "J6", "K6",
+			"J7", "K7", "J8", "K8", "J9", "K9", "J10", "K10", "J11", "K11", "J12", "K12", "J13", "K13", "J14", "K14",
+			"J15", "K15", "J16", "K16", "J17", "K17", "J18", "K18", "J19", "K19"};
+	public static final String[] testBoard3 = {"R4", "D16", "F3", "C6", "L3", "Q10", "O17", "Q14", "K17", "M17",
 			"M18", "F17", "C11", "C15", "C8", "D2", "G6", "R7", "R17", "Q17", "S16", "S15", "Q18", "R16", "S18",
 			"O16", "N17", "N16", "P4", "L18", "L17", "M16", "N18", "J17", "K18", "L5", "J4", "N5", "M4", "O6", "M11",
 			"O11", "T15", "T14", "T16", "S14", "N10", "M12", "L12", "M13", "N11", "O12", "O9", "P8", "S6", "R6", "S5",
@@ -58,7 +50,12 @@ public class BoardScorerTest {
 			"A6", "B2", "A4", "B3", "G2", "G3", "B1", "A2", "A5", "C1", "D1", "H2", "A3", "G1", "A1", "T5", "T7",
 			"L15", "M15", "H13", "G13", "H19", "J18", "F11", "J12", "K13", "K5", "J5", "F12", "L14", "M14", "J14",
 			"A9", "L1", "M1", "K1", "A10", "D9", "H18", "K19", "C14", "O10", "L16"};
-
+	private static final String[] testBoard1 = {"D1", "E1", "D2", "E2", "D3", "E4", "E3", "F3", "D4", "E5", "F2",
+			"G2", "F1", "G1", "D5", "D6", "C5", "C6", "B4", "G4", "B6", "B7", "A7", "A8", "A6", "B8", "T19", "S18",
+			"T18", "S17", "T17", "S15", "T16", "R14", "S16", "R16", "T15", "T14", "Q19", "R19", "Q18", "R18", "Q17",
+			"R17", "Q16", "Q15", "P15", "P14", "O15", "O14", "N15", "N14", "N17", "M15", "M16", "L16", "L17", "K16",
+			"K17", "J16", "J17", "H16", "H17", "G16", "G17", "F16", "F17", "E17", "E18", "D17", "D18", "C18", "C19",
+			"B19", "B18", "C17", "A19", "B17", "B19", "A17", "F18", "A18", "D19", "M18", "M17"};
 	private static final String[] testBoard4 = {"E17", "Q10", "O17", "R14", "L16", "K4", "R6", "O3", "S4", "R3", "Q8",
 			"R10", "H3", "F3", "K3", "L3", "L2", "M2", "J2", "M4", "J4", "C3", "Q18", "R17", "C9", "D15", "C16",
 			"C15", "D16", "C12", "E15", "B11", "E14", "B16", "B17", "B15", "C6", "O16", "N16", "O15", "N15", "N14",
@@ -137,7 +134,7 @@ public class BoardScorerTest {
 		assertThat(scorer.getContiguousEmptySection(emptyPoints, getCoords("S19")), hasItems(getCoords("S19")));
 	}
 
-	private Board buildTestBoard(String[] sequence) {
+	public static Board buildTestBoard(String[] sequence) {
 		Board testBoard = new Board();
 
 		for (int i = 0; i < sequence.length; i++) {
@@ -163,7 +160,7 @@ public class BoardScorerTest {
 		assertThat(scorer.getScore(), is(2.5));
 	}
 
-	private Board buildTestBoard(String[] sequence, int handicap) {
+	public static Board buildTestBoard(String[] sequence, int handicap) {
 		if ( handicap < 2 || handicap > 9 )
 			return buildTestBoard(sequence);
 
