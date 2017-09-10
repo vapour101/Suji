@@ -27,7 +27,7 @@ public class LocalGameHandler implements GameHandler {
 	private GameTree gameTree;
 
 	public LocalGameHandler() {
-		gameTree = new GameTree();
+		gameTree = new SimpleGameTree();
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class LocalGameHandler implements GameHandler {
 		isLegal = !gameTree.getPosition().isOccupied(move);
 		isLegal &= !gameTree.getPosition().isSuicide(move, colour);
 
-		if ( isLegal && gameTree.getNumberOfMoves() > 2 ) {
+		if ( isLegal && gameTree.getMoveNumber() > 2 ) {
 			Board previous = gameTree.getLastPosition();
 			Board future = gameTree.getPosition();
 			future.playStone(move, colour);
