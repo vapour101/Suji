@@ -66,4 +66,9 @@ public class SimpleGameTree implements GameTree {
 	public int getMoveNumber() {
 		return moveList.size();
 	}
+
+	@Override
+	public Move getLastMove() {
+		return moveList.getLast();
+	}
 }

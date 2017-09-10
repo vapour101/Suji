@@ -67,7 +67,7 @@ public class BoardController implements Initializable {
 	private double komi;
 
 	public BoardController() {
-		game = buildGameHandler();
+		game = buildGameHandler(0);
 		blackMove = true;
 		pass = false;
 		gameState = GameState.PLAYING;
@@ -82,8 +82,8 @@ public class BoardController implements Initializable {
 		boardDrawer.draw();
 	}
 
-	private GameHandler buildGameHandler() {
-		GameHandler result = new LocalGameHandler();
+	private GameHandler buildGameHandler(int handicap) {
+		GameHandler result = new LocalGameHandler(handicap);
 		return new GameEventDecorator(result);
 	}
 
@@ -99,10 +99,6 @@ public class BoardController implements Initializable {
 		passButton.setOnAction(this::pass);
 		undoButton.setOnAction(this::undo);
 		scorePaneController.setDoneScoring(this::doneScoring);
-	}
-
-	private void undo(ActionEvent event) {
-		game.undo();
 	}
 
 	private void setupPanes() {
@@ -127,6 +123,10 @@ public class BoardController implements Initializable {
 		boardDrawer = new BoardDrawer(boardCanvas, game);
 	}
 
+	private void undo(ActionEvent event) {
+		game.undo();
+	}
+
 	private void canvasHover(MouseEvent mouseEvent) {
 		if ( gameState != GameState.PLAYING )
 			return;
@@ -137,10 +137,7 @@ public class BoardController implements Initializable {
 	}
 
 	private StoneColour getTurnPlayer() {
-		if ( blackMove )
-			return StoneColour.BLACK;
-		else
-			return StoneColour.WHITE;
+		return game.getTurnPlayer();
 	}
 
 	private void doneScoring() {
@@ -175,13 +172,13 @@ public class BoardController implements Initializable {
 
 	void setHandicap(int handicap) {
 		if ( game.getStones(StoneColour.BLACK).size() > 0 || game.getStones(StoneColour.WHITE).size() > 0 )
-			game = buildGameHandler();
+			game = buildGameHandler(handicap);
 
 		blackMove = (handicap == 0);
 
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
-				game.playStone(stone, StoneColour.BLACK);
+				game.playStone(new Move(stone, StoneColour.BLACK));
 	}
 
 	void setKomi(double komi) {
@@ -202,8 +199,8 @@ public class BoardController implements Initializable {
 				boardScorer.unmarkGroupDead(boardPos);
 		}
 		else if ( gameState == GameState.PLAYING ) {
-			if ( game.isLegalMove(boardPos, getTurnPlayer()) ) {
-				game.playStone(boardPos, getTurnPlayer());
+			if ( game.isLegalMove(new Move(boardPos, getTurnPlayer())) ) {
+				game.playStone(new Move(boardPos, getTurnPlayer()));
 				blackMove = !blackMove;
 				pass = false;
 			}

@@ -18,6 +18,7 @@
 package logic;
 
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 import java.util.Collection;
@@ -25,22 +26,28 @@ import java.util.Collection;
 public class LocalGameHandler implements GameHandler {
 
 	private GameTree gameTree;
+	private int handicap;
 
 	public LocalGameHandler() {
+		this(0);
+	}
+
+	public LocalGameHandler(int handicap) {
 		gameTree = new SimpleGameTree();
+		this.handicap = handicap;
 	}
 
 	@Override
-	public boolean isLegalMove(Coords move, StoneColour colour) {
+	public boolean isLegalMove(Move move) {
 		boolean isLegal;
 
-		isLegal = !gameTree.getPosition().isOccupied(move);
-		isLegal &= !gameTree.getPosition().isSuicide(move, colour);
+		isLegal = !gameTree.getPosition().isOccupied(move.getPosition());
+		isLegal &= !gameTree.getPosition().isSuicide(move.getPosition(), move.getPlayer());
 
 		if ( isLegal && gameTree.getMoveNumber() > 2 ) {
 			Board previous = gameTree.getLastPosition();
 			Board future = gameTree.getPosition();
-			future.playStone(move, colour);
+			future.playStone(move.getPosition(), move.getPlayer());
 
 			isLegal = !previous.equals(future);
 		}
@@ -49,8 +56,8 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
-	public void playStone(Coords move, StoneColour colour) {
-		gameTree.playMove(move, colour);
+	public void playStone(Move move) {
+		gameTree.playMove(move.getPosition(), move.getPlayer());
 	}
 
 	@Override
@@ -66,5 +73,13 @@ public class LocalGameHandler implements GameHandler {
 	@Override
 	public Board getBoard() {
 		return gameTree.getPosition();
+	}
+
+	@Override
+	public StoneColour getTurnPlayer() {
+		if ( gameTree.getMoveNumber() == 0 )
+			return handicap == 0 ? StoneColour.BLACK : StoneColour.WHITE;
+
+		return gameTree.getLastMove().getPlayer().other();
 	}
 }
