@@ -17,6 +17,7 @@
 
 package ui.controller;
 
+import event.EventBus;
 import event.GameEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -69,6 +70,19 @@ public class BoardController implements Initializable {
 		pass = false;
 		gameState = GameState.PLAYING;
 		komi = 0;
+
+		EventBus.addEventHandler(GameEvent.ANY, event -> this.drawBoard());
+	}
+
+	private void drawBoard() {
+		if ( gameState == GameState.SCORING )
+			return;
+		boardDrawer.draw();
+	}
+
+	private GameHandler buildGameHandler() {
+		GameHandler result = new LocalGameHandler();
+		return new GameEventDecorator(result);
 	}
 
 	@Override
@@ -76,7 +90,7 @@ public class BoardController implements Initializable {
 		setupPanes();
 		constructCanvas();
 		setupButtons();
-		drawBoard();
+		GameEvent.fireGameEvent(game, GameEvent.START);
 	}
 
 	private void setupButtons() {
@@ -113,6 +127,13 @@ public class BoardController implements Initializable {
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
 		drawBoard();
 		boardDrawer.drawGhostStone(mousePosition, getTurnPlayer());
+	}
+
+	private StoneColour getTurnPlayer() {
+		if ( blackMove )
+			return StoneColour.BLACK;
+		else
+			return StoneColour.WHITE;
 	}
 
 	private void doneScoring() {
@@ -180,21 +201,6 @@ public class BoardController implements Initializable {
 				pass = false;
 			}
 		}
-
-		drawBoard();
-	}
-
-	private StoneColour getTurnPlayer() {
-		if ( blackMove )
-			return StoneColour.BLACK;
-		else
-			return StoneColour.WHITE;
-	}
-
-	private void drawBoard() {
-		if ( gameState == GameState.SCORING )
-			return;
-		boardDrawer.draw();
 	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -220,10 +226,5 @@ public class BoardController implements Initializable {
 
 	private enum GameState {
 		PLAYING, SCORING, GAMEOVER
-	}
-
-	private GameHandler buildGameHandler() {
-		GameHandler result = new LocalGameHandler();
-		return new GameEventDecorator(result);
 	}
 }

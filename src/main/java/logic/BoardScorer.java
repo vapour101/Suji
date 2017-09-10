@@ -42,6 +42,12 @@ public class BoardScorer {
 		fireScoreEvent();
 	}
 
+	private void fireScoreEvent() {
+		EventBus bus = EventBus.getInstance();
+		ScoreEvent event = new ScoreEvent(this, bus);
+		bus.fireEvent(event);
+	}
+
 	public double getScore() {
 		return getScore(StoneColour.BLACK) - getScore(StoneColour.WHITE);
 	}
@@ -106,12 +112,6 @@ public class BoardScorer {
 
 	private Collection<Chain> getDeadChains(StoneColour colour) {
 		return deadChains.get(colour);
-	}
-
-	private void fireScoreEvent() {
-		EventBus bus = EventBus.getInstance();
-		ScoreEvent event = new ScoreEvent(this, bus);
-		bus.fireEvent(event);
 	}
 
 	public void unmarkGroupDead(Coords coords) {

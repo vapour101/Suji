@@ -19,7 +19,6 @@ package logic;
 
 import event.EventBus;
 import event.GameEvent;
-import event.ScoreEvent;
 import util.Coords;
 import util.StoneColour;
 
@@ -29,8 +28,7 @@ public class GameEventDecorator implements GameHandler {
 
 	private GameHandler instance;
 
-	public GameEventDecorator (GameHandler game)
-	{
+	public GameEventDecorator(GameHandler game) {
 		instance = game;
 	}
 
