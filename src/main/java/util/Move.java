@@ -19,12 +19,25 @@ package util;
 
 public class Move {
 
+	private Type moveType;
 	private Coords position;
 	private StoneColour player;
 
-	public Move(Coords position, StoneColour player) {
-		this.position = position;
+	private Move(Type type, StoneColour player) {
+		this.moveType = type;
 		this.player = player;
+	}
+
+	public static Move play(Coords position, StoneColour player) {
+		Move result = new Move(Type.PLAY, player);
+
+		result.position = position;
+
+		return result;
+	}
+
+	public static Move pass(StoneColour player) {
+		return new Move(Type.PASS, player);
 	}
 
 	public Coords getPosition() {
@@ -33,5 +46,13 @@ public class Move {
 
 	public StoneColour getPlayer() {
 		return player;
+	}
+
+	public Type getType() {
+		return moveType;
+	}
+
+	public enum Type {
+		PLAY, PASS;
 	}
 }

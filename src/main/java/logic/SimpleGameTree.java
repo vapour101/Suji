@@ -33,7 +33,7 @@ public class SimpleGameTree implements GameTree {
 
 	@Override
 	public void playMove(Coords coords, StoneColour colour) {
-		Move move = new Move(coords, colour);
+		Move move = Move.play(coords, colour);
 		moveList.add(move);
 	}
 

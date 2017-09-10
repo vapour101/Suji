@@ -17,7 +17,6 @@
 
 package logic;
 
-import event.EventBus;
 import event.GameEvent;
 import util.Coords;
 import util.Move;
@@ -72,8 +71,6 @@ public class GameEventDecorator implements GameHandler {
 	}
 
 	private void fireGameEvent() {
-		EventBus bus = EventBus.getInstance();
-		GameEvent event = new GameEvent(this, bus);
-		bus.fireEvent(event);
+		GameEvent.fireGameEvent(this, GameEvent.ANY);
 	}
 }

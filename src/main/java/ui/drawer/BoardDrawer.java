@@ -80,7 +80,7 @@ public class BoardDrawer {
 
 		context.setGlobalAlpha(0.5);
 
-		if ( game.isLegalMove(new Move(boardPos, colour)) ) {
+		if ( game.isLegalMove(Move.play(boardPos, colour)) ) {
 			drawStoneToCanvas(pos, radius, colour);
 		}
 
