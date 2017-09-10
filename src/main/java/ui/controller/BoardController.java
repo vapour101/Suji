@@ -62,15 +62,11 @@ public class BoardController implements Initializable {
 	private BoardDrawer boardDrawer;
 	private ScorePaneController scorePaneController;
 
-	private boolean blackMove;
-	private boolean pass;
 	private GameState gameState;
 	private double komi;
 
 	public BoardController() {
 		game = buildGameHandler(0);
-		blackMove = true;
-		pass = false;
 		gameState = GameState.PLAYING;
 		komi = 0;
 
@@ -176,8 +172,6 @@ public class BoardController implements Initializable {
 		if ( game.getStones(StoneColour.BLACK).size() > 0 || game.getStones(StoneColour.WHITE).size() > 0 )
 			game = buildGameHandler(handicap);
 
-		blackMove = (handicap == 0);
-
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
 				game.playMove(play(stone, StoneColour.BLACK));
@@ -203,8 +197,6 @@ public class BoardController implements Initializable {
 		else if ( gameState == GameState.PLAYING ) {
 			if ( game.isLegalMove(play(boardPos, getTurnPlayer())) ) {
 				game.playMove(play(boardPos, getTurnPlayer()));
-				blackMove = !blackMove;
-				pass = false;
 			}
 		}
 	}
