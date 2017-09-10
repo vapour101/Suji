@@ -42,6 +42,10 @@ public class BoardScoreDrawer extends BoardDrawer {
 		EventBus.addEventHandler(ScoreEvent.ANY, this::onScoreChange);
 	}
 
+	private void onScoreChange(ScoreEvent event) {
+		draw();
+	}
+
 	@Override
 	public void draw() {
 		super.draw();
@@ -61,10 +65,6 @@ public class BoardScoreDrawer extends BoardDrawer {
 		context.setGlobalAlpha(1);
 
 		drawStonesToCanvas(stones, radius, colour);
-	}
-
-	private void onScoreChange(ScoreEvent event) {
-		draw();
 	}
 
 	private void drawTerritory() {

@@ -70,6 +70,26 @@ public class BoardDrawer {
 		drawStonesToCanvas(stones, radius, colour);
 	}
 
+	Collection<Coords> getStones(StoneColour colour) {
+		return game.getStones(colour);
+	}
+
+	public void drawGhostStone(DrawCoords position, StoneColour colour) {
+		double radius = getStoneRadius();
+		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
+		GraphicsContext context = getGraphicsContext();
+		Coords boardPos = projector.nearestCoords(position);
+		DrawCoords pos = projector.fromBoardCoords(boardPos);
+
+		context.setGlobalAlpha(0.5);
+
+		if ( game.isLegalMove(boardPos, colour) ) {
+			drawStoneToCanvas(pos, radius, colour);
+		}
+
+		context.setGlobalAlpha(1);
+	}
+
 	double getStoneRadius() {
 		return getBoardLength(canvas) / (19 + 1) / 2;
 	}
@@ -95,26 +115,6 @@ public class BoardDrawer {
 		double diameter = 2 * radius;
 
 		getGraphicsContext().fillOval(left, top, diameter, diameter);
-	}
-
-	Collection<Coords> getStones(StoneColour colour) {
-		return game.getStones(colour);
-	}
-
-	public void drawGhostStone(DrawCoords position, StoneColour colour) {
-		double radius = getStoneRadius();
-		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
-		GraphicsContext context = getGraphicsContext();
-		Coords boardPos = projector.nearestCoords(position);
-		DrawCoords pos = projector.fromBoardCoords(boardPos);
-
-		context.setGlobalAlpha(0.5);
-
-		if ( game.isLegalMove(boardPos, colour) ) {
-			drawStoneToCanvas(pos, radius, colour);
-		}
-
-		context.setGlobalAlpha(1);
 	}
 
 	CoordProjector getProjector() {
