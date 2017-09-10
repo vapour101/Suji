@@ -29,6 +29,8 @@ public interface GameHandler {
 
 	void playMove(Move move);
 
+	void pass();
+
 	void undo();
 
 	Collection<Coords> getStones(StoneColour colour);
@@ -36,4 +38,6 @@ public interface GameHandler {
 	Board getBoard();
 
 	StoneColour getTurnPlayer();
+
+	GameTree getGameTree();
 }

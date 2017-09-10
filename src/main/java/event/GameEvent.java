@@ -31,6 +31,7 @@ public class GameEvent extends Event {
 
 	public static final EventType<GameEvent> ANY = new EventType<GameEvent>("GAME");
 	public static final EventType<GameEvent> START = new EventType<GameEvent>(ANY, "START");
+	public static final EventType<GameEvent> GAMEOVER = new EventType<GameEvent>(ANY, "GAMEOVER");
 
 	private GameHandler handler;
 

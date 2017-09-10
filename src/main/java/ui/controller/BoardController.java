@@ -75,6 +75,7 @@ public class BoardController implements Initializable {
 		komi = 0;
 
 		EventBus.addEventHandler(GameEvent.ANY, event -> this.drawBoard());
+		EventBus.addEventHandler(GameEvent.GAMEOVER, this::gameOver);
 	}
 
 	private void drawBoard() {
@@ -214,20 +215,18 @@ public class BoardController implements Initializable {
 	}
 
 	private void pass(ActionEvent event) {
-		blackMove = !blackMove;
+		game.pass();
+	}
 
-		if ( pass ) {
-			gameState = GameState.SCORING;
-			boardScorer = new BoardScorer(game.getBoard(), komi);
-			passButton.setVisible(false);
-			undoButton.setVisible(false);
-			scorePaneController.setVisible(true);
+	private void gameOver(GameEvent event) {
+		gameState = GameState.SCORING;
+		boardScorer = new BoardScorer(event.getBoard(), komi);
+		passButton.setVisible(false);
+		undoButton.setVisible(false);
+		scorePaneController.setVisible(true);
 
-			boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
-			boardDrawer.draw();
-		}
-
-		pass = true;
+		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
+		boardDrawer.draw();
 	}
 
 	private enum GameState {
