@@ -32,7 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.BoardScorer;
-import logic.GameEventDecorator;
+import logic.GameHandlerEventDecorator;
 import logic.GameHandler;
 import logic.LocalGameHandler;
 import ui.drawer.BoardDrawer;
@@ -71,7 +71,7 @@ public class BoardController implements Initializable {
 		komi = 0;
 
 		EventBus.addEventHandler(GameEvent.ANY, event -> this.drawBoard());
-		EventBus.addEventHandler(GameEvent.GAMEOVER, this::gameOver);
+		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
 	}
 
 	private void drawBoard() {
@@ -82,7 +82,7 @@ public class BoardController implements Initializable {
 
 	private GameHandler buildGameHandler(int handicap) {
 		GameHandler result = new LocalGameHandler(handicap);
-		return new GameEventDecorator(result);
+		return new GameHandlerEventDecorator(result);
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class BoardController implements Initializable {
 		game.pass();
 	}
 
-	private void gameOver(GameEvent event) {
+	private void enterScoring(GameEvent event) {
 		gameState = GameState.SCORING;
 		boardScorer = new BoardScorer(event.getBoard(), komi);
 		passButton.setVisible(false);

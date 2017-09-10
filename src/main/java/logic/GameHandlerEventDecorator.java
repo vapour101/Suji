@@ -24,11 +24,11 @@ import util.StoneColour;
 
 import java.util.Collection;
 
-public class GameEventDecorator implements GameHandler {
+public class GameHandlerEventDecorator implements GameHandler {
 
 	private GameHandler instance;
 
-	public GameEventDecorator(GameHandler game) {
+	public GameHandlerEventDecorator(GameHandler game) {
 		instance = game;
 	}
 
