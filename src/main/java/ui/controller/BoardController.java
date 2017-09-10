@@ -17,6 +17,7 @@
 
 package ui.controller;
 
+import event.GameEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.BoardScorer;
+import logic.GameEventDecorator;
 import logic.GameHandler;
 import logic.LocalGameHandler;
 import ui.drawer.BoardDrawer;
@@ -62,7 +64,7 @@ public class BoardController implements Initializable {
 	private double komi;
 
 	public BoardController() {
-		game = new LocalGameHandler();
+		game = buildGameHandler();
 		blackMove = true;
 		pass = false;
 		gameState = GameState.PLAYING;
@@ -145,7 +147,7 @@ public class BoardController implements Initializable {
 
 	void setHandicap(int handicap) {
 		if ( game.getStones(StoneColour.BLACK).size() > 0 || game.getStones(StoneColour.WHITE).size() > 0 )
-			game = new LocalGameHandler();
+			game = buildGameHandler();
 
 		blackMove = (handicap == 0);
 
@@ -218,5 +220,10 @@ public class BoardController implements Initializable {
 
 	private enum GameState {
 		PLAYING, SCORING, GAMEOVER
+	}
+
+	private GameHandler buildGameHandler() {
+		GameHandler result = new LocalGameHandler();
+		return new GameEventDecorator(result);
 	}
 }
