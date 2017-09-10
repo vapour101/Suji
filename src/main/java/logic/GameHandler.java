@@ -27,7 +27,7 @@ public interface GameHandler {
 
 	boolean isLegalMove(Move move);
 
-	void playStone(Move move);
+	void playMove(Move move);
 
 	void undo();
 

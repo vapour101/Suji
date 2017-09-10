@@ -178,7 +178,7 @@ public class BoardController implements Initializable {
 
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
-				game.playStone(Move.play(stone, StoneColour.BLACK));
+				game.playMove(Move.play(stone, StoneColour.BLACK));
 	}
 
 	void setKomi(double komi) {
@@ -200,7 +200,7 @@ public class BoardController implements Initializable {
 		}
 		else if ( gameState == GameState.PLAYING ) {
 			if ( game.isLegalMove(Move.play(boardPos, getTurnPlayer())) ) {
-				game.playStone(Move.play(boardPos, getTurnPlayer()));
+				game.playMove(Move.play(boardPos, getTurnPlayer()));
 				blackMove = !blackMove;
 				pass = false;
 			}
