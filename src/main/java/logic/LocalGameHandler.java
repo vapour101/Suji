@@ -56,7 +56,7 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
-	public void playStone(Move move) {
+	public void playMove(Move move) {
 		gameTree.playMove(move.getPosition(), move.getPlayer());
 	}
 

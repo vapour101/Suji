@@ -38,9 +38,9 @@ public class GameEventDecorator implements GameHandler {
 	}
 
 	@Override
-	public void playStone(Move move) {
+	public void playMove(Move move) {
 		Board previousPosition = instance.getBoard();
-		instance.playStone(move);
+		instance.playMove(move);
 
 		if ( !previousPosition.equals(instance.getBoard()) )
 			fireGameEvent();
