@@ -47,6 +47,22 @@ public class GameEventDecorator implements GameHandler {
 	}
 
 	@Override
+	public void pass() {
+
+		GameTree tree = instance.getGameTree();
+		boolean gameOver = false;
+		if ( tree.getMoveNumber() > 0 && tree.getLastMove().getType() == Move.Type.PASS )
+			gameOver = true;
+
+		instance.pass();
+
+		if ( gameOver )
+			fireGameOverEvent();
+		else
+			fireGameEvent();
+	}
+
+	@Override
 	public void undo() {
 		Board previousPosition = instance.getBoard();
 		instance.undo();
@@ -68,6 +84,15 @@ public class GameEventDecorator implements GameHandler {
 	@Override
 	public StoneColour getTurnPlayer() {
 		return instance.getTurnPlayer();
+	}
+
+	@Override
+	public GameTree getGameTree() {
+		return instance.getGameTree();
+	}
+
+	private void fireGameOverEvent() {
+		GameEvent.fireGameEvent(this, GameEvent.GAMEOVER);
 	}
 
 	private void fireGameEvent() {

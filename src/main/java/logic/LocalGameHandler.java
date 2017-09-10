@@ -64,6 +64,11 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
+	public void pass() {
+		playMove(Move.pass(getTurnPlayer()));
+	}
+
+	@Override
 	public void undo() {
 		gameTree.stepBack();
 	}
@@ -84,5 +89,10 @@ public class LocalGameHandler implements GameHandler {
 			return handicap == 0 ? StoneColour.BLACK : StoneColour.WHITE;
 
 		return gameTree.getLastMove().getPlayer().other();
+	}
+
+	@Override
+	public GameTree getGameTree() {
+		return gameTree;
 	}
 }
