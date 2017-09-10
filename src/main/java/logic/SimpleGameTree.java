@@ -18,13 +18,14 @@
 package logic;
 
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 import java.util.LinkedList;
 
 public class SimpleGameTree implements GameTree {
 
-	LinkedList<Move> moveList;
+	private LinkedList<Move> moveList;
 
 	SimpleGameTree() {
 		moveList = new LinkedList<>();
@@ -45,7 +46,7 @@ public class SimpleGameTree implements GameTree {
 		Board board = new Board();
 
 		for (int i = 0; i < moveNumber; ++i) {
-			board.playStone(moveList.get(i).coords, moveList.get(i).colour);
+			board.playStone(moveList.get(i).getPosition(), moveList.get(i).getPlayer());
 		}
 
 		return board;
@@ -64,16 +65,5 @@ public class SimpleGameTree implements GameTree {
 	@Override
 	public int getMoveNumber() {
 		return moveList.size();
-	}
-
-	private class Move {
-
-		public Coords coords;
-		public StoneColour colour;
-
-		Move(Coords coords, StoneColour colour) {
-			this.coords = coords;
-			this.colour = colour;
-		}
 	}
 }
