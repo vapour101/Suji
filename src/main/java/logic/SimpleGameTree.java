@@ -17,9 +17,7 @@
 
 package logic;
 
-import util.Coords;
 import util.Move;
-import util.StoneColour;
 
 import java.util.LinkedList;
 
@@ -32,8 +30,7 @@ public class SimpleGameTree implements GameTree {
 	}
 
 	@Override
-	public void playMove(Coords coords, StoneColour colour) {
-		Move move = Move.play(coords, colour);
+	public void playMove(Move move) {
 		moveList.add(move);
 	}
 

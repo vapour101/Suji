@@ -28,7 +28,7 @@ public class LocalGameHandler implements GameHandler {
 	private GameTree gameTree;
 	private int handicap;
 
-	public LocalGameHandler() {
+	LocalGameHandler() {
 		this(0);
 	}
 
@@ -39,6 +39,9 @@ public class LocalGameHandler implements GameHandler {
 
 	@Override
 	public boolean isLegalMove(Move move) {
+		if ( move.getType() == Move.Type.PASS )
+			return true; //Passing is never illegal
+
 		boolean isLegal;
 
 		isLegal = !gameTree.getPosition().isOccupied(move.getPosition());
@@ -57,7 +60,7 @@ public class LocalGameHandler implements GameHandler {
 
 	@Override
 	public void playMove(Move move) {
-		gameTree.playMove(move.getPosition(), move.getPlayer());
+		gameTree.playMove(move);
 	}
 
 	@Override
