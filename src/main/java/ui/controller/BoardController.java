@@ -219,6 +219,7 @@ public class BoardController implements Initializable {
 			gameState = GameState.SCORING;
 			boardScorer = new BoardScorer(game.getBoard(), komi);
 			passButton.setVisible(false);
+			undoButton.setVisible(false);
 			scorePaneController.setVisible(true);
 
 			boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
