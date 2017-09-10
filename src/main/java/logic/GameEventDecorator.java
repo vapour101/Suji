@@ -20,6 +20,7 @@ package logic;
 import event.EventBus;
 import event.GameEvent;
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 import java.util.Collection;
@@ -33,14 +34,14 @@ public class GameEventDecorator implements GameHandler {
 	}
 
 	@Override
-	public boolean isLegalMove(Coords move, StoneColour colour) {
-		return instance.isLegalMove(move, colour);
+	public boolean isLegalMove(Move move) {
+		return instance.isLegalMove(move);
 	}
 
 	@Override
-	public void playStone(Coords move, StoneColour colour) {
+	public void playStone(Move move) {
 		Board previousPosition = instance.getBoard();
-		instance.playStone(move, colour);
+		instance.playStone(move);
 
 		if ( !previousPosition.equals(instance.getBoard()) )
 			fireGameEvent();
@@ -63,6 +64,11 @@ public class GameEventDecorator implements GameHandler {
 	@Override
 	public Board getBoard() {
 		return instance.getBoard();
+	}
+
+	@Override
+	public StoneColour getTurnPlayer() {
+		return instance.getTurnPlayer();
 	}
 
 	private void fireGameEvent() {

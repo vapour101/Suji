@@ -18,6 +18,7 @@
 package logic;
 
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 public interface GameTree {
@@ -31,4 +32,6 @@ public interface GameTree {
 	Board getLastPosition();
 
 	int getMoveNumber();
+
+	Move getLastMove();
 }

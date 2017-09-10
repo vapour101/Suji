@@ -18,19 +18,22 @@
 package logic;
 
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 import java.util.Collection;
 
 public interface GameHandler {
 
-	boolean isLegalMove(Coords move, StoneColour colour);
+	boolean isLegalMove(Move move);
 
-	void playStone(Coords move, StoneColour colour);
+	void playStone(Move move);
 
 	void undo();
 
 	Collection<Coords> getStones(StoneColour colour);
 
 	Board getBoard();
+
+	StoneColour getTurnPlayer();
 }

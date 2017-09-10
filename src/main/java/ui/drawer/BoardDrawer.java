@@ -23,10 +23,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import logic.GameHandler;
-import util.CoordProjector;
-import util.Coords;
-import util.DrawCoords;
-import util.StoneColour;
+import util.*;
 
 import java.util.Collection;
 
@@ -83,7 +80,7 @@ public class BoardDrawer {
 
 		context.setGlobalAlpha(0.5);
 
-		if ( game.isLegalMove(boardPos, colour) ) {
+		if ( game.isLegalMove(new Move(boardPos, colour)) ) {
 			drawStoneToCanvas(pos, radius, colour);
 		}
 

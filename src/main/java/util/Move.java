@@ -18,11 +18,11 @@
 package util;
 
 public class Move {
+
 	private Coords position;
 	private StoneColour player;
 
-	public Move(Coords position, StoneColour player)
-	{
+	public Move(Coords position, StoneColour player) {
 		this.position = position;
 		this.player = player;
 	}
