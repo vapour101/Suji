@@ -28,6 +28,8 @@ public interface GameHandler {
 
 	void playStone(Coords move, StoneColour colour);
 
+	void undo();
+
 	Collection<Coords> getStones(StoneColour colour);
 
 	Board getBoard();

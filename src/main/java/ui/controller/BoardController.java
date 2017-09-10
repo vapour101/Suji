@@ -47,6 +47,8 @@ import static util.DimensionHelper.getBoardLength;
 public class BoardController implements Initializable {
 
 	@FXML
+	private Button undoButton;
+	@FXML
 	private Button passButton;
 	@FXML
 	private Pane boardPane;
@@ -95,7 +97,12 @@ public class BoardController implements Initializable {
 
 	private void setupButtons() {
 		passButton.setOnAction(this::pass);
+		undoButton.setOnAction(this::undo);
 		scorePaneController.setDoneScoring(this::doneScoring);
+	}
+
+	private void undo(ActionEvent event) {
+		game.undo();
 	}
 
 	private void setupPanes() {
