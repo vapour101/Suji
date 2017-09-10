@@ -18,13 +18,13 @@
 package logic;
 
 import org.junit.Test;
-import util.Move;
 import util.StoneColour;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
+import static util.Move.play;
 
 public class LocalGameHandlerTest {
 
@@ -34,8 +34,8 @@ public class LocalGameHandlerTest {
 	public void gameTracking() {
 		LocalGameHandler handler = new LocalGameHandler();
 
-		handler.playMove(Move.play(getCoords("D4"), StoneColour.BLACK));
-		handler.playMove(Move.play(getCoords("E5"), StoneColour.WHITE));
+		handler.playMove(play(getCoords("D4"), StoneColour.BLACK));
+		handler.playMove(play(getCoords("E5"), StoneColour.WHITE));
 
 		assertThat(handler.getStones(StoneColour.BLACK), hasItems(getCoords("D4")));
 		assertThat(handler.getStones(StoneColour.WHITE), hasItems(getCoords("E5")));
@@ -45,8 +45,8 @@ public class LocalGameHandlerTest {
 	public void koIsIllegal() {
 		LocalGameHandler handler = buildTestHandler(koBoard);
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.WHITE)), is(false));
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.BLACK)), is(true));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.WHITE)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.BLACK)), is(true));
 	}
 
 	private LocalGameHandler buildTestHandler(String[] sequence) {
@@ -54,9 +54,9 @@ public class LocalGameHandlerTest {
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 0 )
-				handler.playMove(Move.play(getCoords(sequence[i]), StoneColour.BLACK));
+				handler.playMove(play(getCoords(sequence[i]), StoneColour.BLACK));
 			else
-				handler.playMove(Move.play(getCoords(sequence[i]), StoneColour.WHITE));
+				handler.playMove(play(getCoords(sequence[i]), StoneColour.WHITE));
 		}
 
 		return handler;
@@ -66,41 +66,41 @@ public class LocalGameHandlerTest {
 	public void playingOnOccupiedSpaceIsIllegal() {
 		LocalGameHandler handler = new LocalGameHandler();
 
-		handler.playMove(Move.play(getCoords("D4"), StoneColour.BLACK));
+		handler.playMove(play(getCoords("D4"), StoneColour.BLACK));
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.BLACK)), is(false));
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.WHITE)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.BLACK)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.WHITE)), is(false));
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D3"), StoneColour.BLACK)), is(true));
-		assertThat(handler.isLegalMove(Move.play(getCoords("D3"), StoneColour.WHITE)), is(true));
+		assertThat(handler.isLegalMove(play(getCoords("D3"), StoneColour.BLACK)), is(true));
+		assertThat(handler.isLegalMove(play(getCoords("D3"), StoneColour.WHITE)), is(true));
 
 		handler = new LocalGameHandler();
-		handler.playMove(Move.play(getCoords("D4"), StoneColour.WHITE));
+		handler.playMove(play(getCoords("D4"), StoneColour.WHITE));
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.BLACK)), is(false));
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.WHITE)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.BLACK)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.WHITE)), is(false));
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D3"), StoneColour.BLACK)), is(true));
-		assertThat(handler.isLegalMove(Move.play(getCoords("D3"), StoneColour.WHITE)), is(true));
+		assertThat(handler.isLegalMove(play(getCoords("D3"), StoneColour.BLACK)), is(true));
+		assertThat(handler.isLegalMove(play(getCoords("D3"), StoneColour.WHITE)), is(true));
 	}
 
 	@Test
 	public void suicideIsIllegal() {
 		LocalGameHandler handler = new LocalGameHandler();
 
-		handler.playMove(Move.play(getCoords("D5"), StoneColour.BLACK));
-		handler.playMove(Move.play(getCoords("D3"), StoneColour.BLACK));
-		handler.playMove(Move.play(getCoords("E4"), StoneColour.BLACK));
-		handler.playMove(Move.play(getCoords("C4"), StoneColour.BLACK));
+		handler.playMove(play(getCoords("D5"), StoneColour.BLACK));
+		handler.playMove(play(getCoords("D3"), StoneColour.BLACK));
+		handler.playMove(play(getCoords("E4"), StoneColour.BLACK));
+		handler.playMove(play(getCoords("C4"), StoneColour.BLACK));
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.WHITE)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.WHITE)), is(false));
 
 		handler = new LocalGameHandler();
-		handler.playMove(Move.play(getCoords("D5"), StoneColour.WHITE));
-		handler.playMove(Move.play(getCoords("D3"), StoneColour.WHITE));
-		handler.playMove(Move.play(getCoords("E4"), StoneColour.WHITE));
-		handler.playMove(Move.play(getCoords("C4"), StoneColour.WHITE));
+		handler.playMove(play(getCoords("D5"), StoneColour.WHITE));
+		handler.playMove(play(getCoords("D3"), StoneColour.WHITE));
+		handler.playMove(play(getCoords("E4"), StoneColour.WHITE));
+		handler.playMove(play(getCoords("C4"), StoneColour.WHITE));
 
-		assertThat(handler.isLegalMove(Move.play(getCoords("D4"), StoneColour.BLACK)), is(false));
+		assertThat(handler.isLegalMove(play(getCoords("D4"), StoneColour.BLACK)), is(false));
 	}
 }

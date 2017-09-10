@@ -23,6 +23,7 @@ import util.StoneColour;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
+import static util.Move.play;
 
 public class SimpleGameTreeTest {
 
@@ -31,8 +32,8 @@ public class SimpleGameTreeTest {
 		SimpleGameTree tree = new SimpleGameTree();
 		Board board = new Board();
 
-		tree.playMove(getCoords("D4"), StoneColour.BLACK);
-		tree.playMove(getCoords("C3"), StoneColour.WHITE);
+		tree.playMove(play(getCoords("D4"), StoneColour.BLACK));
+		tree.playMove(play(getCoords("C3"), StoneColour.WHITE));
 
 		board.playStone(getCoords("D4"), StoneColour.BLACK);
 		board.playStone(getCoords("C3"), StoneColour.WHITE);
@@ -45,17 +46,17 @@ public class SimpleGameTreeTest {
 		SimpleGameTree tree = new SimpleGameTree();
 		Board board = new Board();
 
-		tree.playMove(getCoords("D4"), StoneColour.BLACK);
-		tree.playMove(getCoords("C4"), StoneColour.BLACK);
-		tree.playMove(getCoords("M17"), StoneColour.WHITE);
-		tree.playMove(getCoords("R4"), StoneColour.WHITE);
-		tree.playMove(getCoords("B14"), StoneColour.BLACK);
+		tree.playMove(play(getCoords("D4"), StoneColour.BLACK));
+		tree.playMove(play(getCoords("C4"), StoneColour.WHITE));
+		tree.playMove(play(getCoords("M17"), StoneColour.BLACK));
+		tree.playMove(play(getCoords("R4"), StoneColour.WHITE));
+		tree.playMove(play(getCoords("B14"), StoneColour.BLACK));
 
 		tree.stepBack();
 
 		board.playStone(getCoords("D4"), StoneColour.BLACK);
-		board.playStone(getCoords("C4"), StoneColour.BLACK);
-		board.playStone(getCoords("M17"), StoneColour.WHITE);
+		board.playStone(getCoords("M17"), StoneColour.BLACK);
+		board.playStone(getCoords("C4"), StoneColour.WHITE);
 		board.playStone(getCoords("R4"), StoneColour.WHITE);
 
 		assertThat(tree.getPosition(), is(board));

@@ -43,6 +43,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static util.DimensionHelper.getBoardLength;
+import static util.Move.play;
 
 public class BoardController implements Initializable {
 
@@ -178,7 +179,7 @@ public class BoardController implements Initializable {
 
 		if ( handicap > 0 )
 			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
-				game.playMove(Move.play(stone, StoneColour.BLACK));
+				game.playMove(play(stone, StoneColour.BLACK));
 	}
 
 	void setKomi(double komi) {
@@ -199,8 +200,8 @@ public class BoardController implements Initializable {
 				boardScorer.unmarkGroupDead(boardPos);
 		}
 		else if ( gameState == GameState.PLAYING ) {
-			if ( game.isLegalMove(Move.play(boardPos, getTurnPlayer())) ) {
-				game.playMove(Move.play(boardPos, getTurnPlayer()));
+			if ( game.isLegalMove(play(boardPos, getTurnPlayer())) ) {
+				game.playMove(play(boardPos, getTurnPlayer()));
 				blackMove = !blackMove;
 				pass = false;
 			}
