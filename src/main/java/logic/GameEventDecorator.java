@@ -47,6 +47,15 @@ public class GameEventDecorator implements GameHandler {
 	}
 
 	@Override
+	public void undo() {
+		Board previousPosition = instance.getBoard();
+		instance.undo();
+
+		if ( !previousPosition.equals(instance.getBoard()) )
+			fireGameEvent();
+	}
+
+	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return instance.getStones(colour);
 	}

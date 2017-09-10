@@ -54,6 +54,11 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
+	public void undo() {
+		gameTree.stepBack();
+	}
+
+	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return getBoard().getStones(colour);
 	}
