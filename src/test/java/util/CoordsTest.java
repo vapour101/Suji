@@ -160,8 +160,7 @@ public class CoordsTest {
 	}
 
 	@Test
-	public void sgfString()
-	{
+	public void sgfString() {
 		assertThat(getCoords("A1").sgfString(), is("aa"));
 		assertThat(getCoords("T19").sgfString(), is("ss"));
 	}

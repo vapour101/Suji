@@ -18,6 +18,6 @@
 package sgf;
 
 public interface SGFWriter {
-	String getSGFString();
 
+	String getSGFString();
 }

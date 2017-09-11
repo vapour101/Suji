@@ -31,14 +31,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import logic.BoardScorer;
-import logic.GameHandlerEventDecorator;
 import logic.GameHandler;
+import logic.GameHandlerEventDecorator;
 import logic.LocalGameHandler;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
 import util.*;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -47,6 +49,8 @@ import static util.Move.play;
 
 public class BoardController implements Initializable {
 
+	@FXML
+	private Button saveButton;
 	@FXML
 	private Button undoButton;
 	@FXML
@@ -96,7 +100,9 @@ public class BoardController implements Initializable {
 	private void setupButtons() {
 		passButton.setOnAction(this::pass);
 		undoButton.setOnAction(this::undo);
+		saveButton.setOnAction(this::save);
 		scorePaneController.setDoneScoring(this::doneScoring);
+		saveButton.setVisible(false);
 	}
 
 	private void setupPanes() {
@@ -121,6 +127,28 @@ public class BoardController implements Initializable {
 		boardDrawer = new BoardDrawer(boardCanvas, game);
 	}
 
+	private void save(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save Game As...");
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SGF", "*.sgf"));
+		File file = fileChooser.showSaveDialog(null);
+
+		if ( file != null ) {
+			try {
+				if ( !file.exists() )
+					file.createNewFile();
+
+				Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+
+				writer.write(game.getGameTree().getSGFWriter().getSGFString());
+				writer.close();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void undo(ActionEvent event) {
 		game.undo();
 	}
@@ -141,6 +169,7 @@ public class BoardController implements Initializable {
 	private void doneScoring() {
 		gameState = GameState.GAMEOVER;
 
+		saveButton.setVisible(true);
 		displayFinalScore(boardScorer.getScore());
 	}
 
