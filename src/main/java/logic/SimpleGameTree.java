@@ -17,6 +17,8 @@
 
 package logic;
 
+import sgf.SGFWriter;
+import sgf.SimpleGameTreeSGFConverter;
 import util.Move;
 
 import java.util.LinkedList;
@@ -68,5 +70,10 @@ public class SimpleGameTree implements GameTree {
 	@Override
 	public Move getLastMove() {
 		return moveList.getLast();
+	}
+
+	@Override
+	public SGFWriter getSGFWriter() {
+		return new SimpleGameTreeSGFConverter(this.moveList);
 	}
 }

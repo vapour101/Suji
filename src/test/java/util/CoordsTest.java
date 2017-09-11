@@ -158,4 +158,10 @@ public class CoordsTest {
 			assertThat(e, instanceOf(IllegalArgumentException.class));
 		}
 	}
+
+	@Test
+	public void sgfString() {
+		assertThat(getCoords("A1").sgfString(), is("aa"));
+		assertThat(getCoords("T19").sgfString(), is("ss"));
+	}
 }

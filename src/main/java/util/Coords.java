@@ -130,4 +130,17 @@ public class Coords {
 		result += ")";
 		return result;
 	}
+
+	public String sgfString() {
+		char x = 'a';
+		x += getX() - 1;
+		char y = 'a';
+		y += getY() - 1;
+
+		String result = "";
+		result += x;
+		result += y;
+
+		return result;
+	}
 }

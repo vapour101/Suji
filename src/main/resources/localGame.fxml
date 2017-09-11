@@ -19,6 +19,10 @@
                     <Button fx:id="undoButton" mnemonicParsing="false" text="Undo" AnchorPane.leftAnchor="0"
                             AnchorPane.rightAnchor="0"/>
                 </AnchorPane>
+                <AnchorPane>
+                    <Button fx:id="saveButton" mnemonicParsing="false" text="Save as SGF" AnchorPane.leftAnchor="0"
+                            AnchorPane.rightAnchor="0"/>
+                </AnchorPane>
 
             </VBox>
 
