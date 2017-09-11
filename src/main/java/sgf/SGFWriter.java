@@ -15,24 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package sgf;
 
-import sgf.SGFWriter;
-import util.Move;
+public interface SGFWriter {
+	String getSGFString();
 
-public interface GameTree {
-
-	void playMove(Move move);
-
-	Board getPosition();
-
-	void stepBack();
-
-	Board getLastPosition();
-
-	int getMoveNumber();
-
-	Move getLastMove();
-
-	SGFWriter getSGFWriter();
 }
