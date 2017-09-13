@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.dockfx:DockFX:0.1.12">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.dockfx/DockFX/0.1.12/ea03076c793432897b3781568292369c65b22afb/DockFX-0.1.12.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.dockfx/DockFX/0.1.12/9a885853a33cbc4acd40740644da2b3201269189/DockFX-0.1.12-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
