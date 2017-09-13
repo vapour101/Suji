@@ -29,8 +29,6 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
 import javafx.util.StringConverter;
 import org.dockfx.DockNode;
-import org.dockfx.DockPane;
-import org.dockfx.DockPos;
 import util.KomiSpinnerFactory;
 
 import java.io.IOException;
@@ -44,12 +42,7 @@ public class NewLocalGameController implements Initializable {
 	public Button startButton;
 	public Spinner<Double> komiSpinner;
 
-	private DockPane dockPane;
 	private DockNode dockNode;
-
-	public void setPane(DockPane dockPane) {
-		this.dockPane = dockPane;
-	}
 
 	public void setNode(DockNode dockNode) {
 		this.dockNode = dockNode;
@@ -84,27 +77,34 @@ public class NewLocalGameController implements Initializable {
 	}
 
 	private void start(ActionEvent event) {
+		Parent root = buildLocalGame();
+
+		if ( root == null )
+			return;
+
+		dockNode.setTitle("Local Game");
+		dockNode.setContents(root);
+	}
+
+	private Parent buildLocalGame() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/localGame.fxml"));
 
-		Parent scene = null;
+		Parent root = null;
 		try {
-			scene = loader.load();
+			root = loader.load();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		if ( scene == null )
-			return;
+		if ( root == null )
+			return null;
 
 		BoardController controller = loader.getController();
 
 		controller.setHandicap(handicapSpinner.getValue());
 		controller.setKomi(komiSpinner.getValue());
 
-		DockNode gameNode = new DockNode(scene, "Local Game");
-		gameNode.dock(dockPane, DockPos.CENTER);
-
-		dockNode.close();
+		return root;
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {

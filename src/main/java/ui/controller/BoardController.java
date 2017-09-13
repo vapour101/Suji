@@ -78,22 +78,20 @@ public class BoardController implements Initializable {
 		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
 	}
 
-	private void gameEventHandler(GameEvent event)
-	{
-		if (event.getHandler() == game)
-			drawBoard();
+	private GameHandler buildGameHandler(int handicap) {
+		GameHandler result = new LocalGameHandler(handicap);
+		return new GameHandlerEventDecorator(result);
+	}
 
+	private void gameEventHandler(GameEvent event) {
+		if ( event.getHandler() == game )
+			drawBoard();
 	}
 
 	private void drawBoard() {
 		if ( gameState == GameState.SCORING )
 			return;
 		boardDrawer.draw();
-	}
-
-	private GameHandler buildGameHandler(int handicap) {
-		GameHandler result = new LocalGameHandler(handicap);
-		return new GameHandlerEventDecorator(result);
 	}
 
 	@Override

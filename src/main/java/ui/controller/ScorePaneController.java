@@ -64,8 +64,7 @@ public class ScorePaneController implements Initializable {
 		return loader;
 	}
 
-	public void setScorer(BoardScorer scorer)
-	{
+	public void setScorer(BoardScorer scorer) {
 		this.scorer = scorer;
 	}
 

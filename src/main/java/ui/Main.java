@@ -49,7 +49,7 @@ public class Main extends Application {
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
-			DockNode node = LocalGameDialog.build(dockPane);
+			DockNode node = LocalGameDialog.build();
 			node.dock(dockPane, DockPos.CENTER);
 		});
 
