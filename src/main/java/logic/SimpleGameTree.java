@@ -17,11 +17,10 @@
 
 package logic;
 
-import sgf.SGFWriter;
-import sgf.SimpleGameTreeSGFConverter;
 import util.Move;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class SimpleGameTree implements GameTree {
 
@@ -73,7 +72,7 @@ public class SimpleGameTree implements GameTree {
 	}
 
 	@Override
-	public SGFWriter getSGFWriter() {
-		return new SimpleGameTreeSGFConverter(this.moveList);
+	public List<Move> getSequence() {
+		return moveList;
 	}
 }

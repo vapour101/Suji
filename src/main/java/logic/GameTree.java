@@ -17,8 +17,9 @@
 
 package logic;
 
-import sgf.SGFWriter;
 import util.Move;
+
+import java.util.List;
 
 public interface GameTree {
 
@@ -34,5 +35,5 @@ public interface GameTree {
 
 	Move getLastMove();
 
-	SGFWriter getSGFWriter();
+	List<Move> getSequence();
 }

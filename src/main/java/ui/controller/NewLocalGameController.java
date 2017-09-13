@@ -23,13 +23,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.dockfx.DockNode;
 import util.KomiSpinnerFactory;
 
 import java.io.IOException;
@@ -43,10 +42,10 @@ public class NewLocalGameController implements Initializable {
 	public Button startButton;
 	public Spinner<Double> komiSpinner;
 
-	private Stage window;
+	private DockNode dockNode;
 
-	public void setWindow(Stage window) {
-		this.window = window;
+	public void setNode(DockNode dockNode) {
+		this.dockNode = dockNode;
 	}
 
 	@Override
@@ -78,25 +77,34 @@ public class NewLocalGameController implements Initializable {
 	}
 
 	private void start(ActionEvent event) {
+		Parent root = buildLocalGame();
+
+		if ( root == null )
+			return;
+
+		dockNode.setTitle("Local Game");
+		dockNode.setContents(root);
+	}
+
+	private Parent buildLocalGame() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/localGame.fxml"));
 
-		Parent scene = null;
+		Parent root = null;
 		try {
-			scene = loader.load();
+			root = loader.load();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		if ( scene == null )
-			return;
+		if ( root == null )
+			return null;
 
 		BoardController controller = loader.getController();
 
 		controller.setHandicap(handicapSpinner.getValue());
 		controller.setKomi(komiSpinner.getValue());
 
-		window.setScene(new Scene(scene));
-		window.show();
+		return root;
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {

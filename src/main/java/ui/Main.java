@@ -19,11 +19,15 @@ package ui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.dockfx.DockNode;
+import org.dockfx.DockPane;
+import org.dockfx.DockPos;
 import ui.dialog.LocalGameDialog;
 
 public class Main extends Application {
@@ -38,15 +42,20 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
 		window.setTitle("Suji");
+		DockPane dockPane = new DockPane();
 
 		//file menu, creating the main tabs
 		Menu fileMenu = new Menu("New...");
-		Menu exitMenu = new Menu("Exit");
+		Menu exitMenu = new Menu();
+
+		Label exitLabel = new Label("Exit");
+		exitLabel.setOnMouseClicked(event -> window.close());
+		exitMenu.setGraphic(exitLabel);
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
-			window.setScene(LocalGameDialog.build(window));
-			window.show();
+			DockNode node = LocalGameDialog.build();
+			node.dock(dockPane, DockPos.CENTER);
 		});
 
 		//Home items
@@ -59,8 +68,15 @@ public class Main extends Application {
 		BorderPane layout = new BorderPane();
 
 		layout.setTop(menuBar);
-		Scene scene = new Scene(layout, 400, 300);
+		layout.setCenter(dockPane);
+
+		Scene scene = new Scene(layout, 800, 450);
+
+		Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+		DockPane.initializeDefaultUserAgentStylesheet();
+
 		window.setScene(scene);
+		window.sizeToScene();
 		window.show();
 	}
 }

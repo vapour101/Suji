@@ -36,6 +36,8 @@ import logic.BoardScorer;
 import logic.GameHandler;
 import logic.GameHandlerEventDecorator;
 import logic.LocalGameHandler;
+import sgf.SGFWriter;
+import sgf.SimpleSGFWriter;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
 import util.*;
@@ -74,19 +76,24 @@ public class BoardController implements Initializable {
 		gameState = GameState.PLAYING;
 		komi = 0;
 
-		EventBus.addEventHandler(GameEvent.ANY, event -> this.drawBoard());
+		EventBus.addEventHandler(GameEvent.ANY, this::gameEventHandler);
 		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
+	}
+
+	private GameHandler buildGameHandler(int handicap) {
+		GameHandler result = new LocalGameHandler(handicap);
+		return new GameHandlerEventDecorator(result);
+	}
+
+	private void gameEventHandler(GameEvent event) {
+		if ( event.getHandler() == game )
+			drawBoard();
 	}
 
 	private void drawBoard() {
 		if ( gameState == GameState.SCORING )
 			return;
 		boardDrawer.draw();
-	}
-
-	private GameHandler buildGameHandler(int handicap) {
-		GameHandler result = new LocalGameHandler(handicap);
-		return new GameHandlerEventDecorator(result);
 	}
 
 	@Override
@@ -140,7 +147,9 @@ public class BoardController implements Initializable {
 
 				Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 
-				writer.write(game.getGameTree().getSGFWriter().getSGFString());
+				SGFWriter sgf = new SimpleSGFWriter(game.getGameTree().getSequence());
+
+				writer.write(sgf.getSGFString());
 				writer.close();
 			}
 			catch (Exception e) {
@@ -240,10 +249,14 @@ public class BoardController implements Initializable {
 	}
 
 	private void enterScoring(GameEvent event) {
+		if ( event.getHandler() != game )
+			return;
+
 		gameState = GameState.SCORING;
 		boardScorer = new BoardScorer(event.getBoard(), komi);
 		passButton.setVisible(false);
 		undoButton.setVisible(false);
+		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
 		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
