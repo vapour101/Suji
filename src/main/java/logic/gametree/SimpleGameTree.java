@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.gametree;
 
+import logic.Board;
 import util.Move;
 
 import java.util.LinkedList;
@@ -26,13 +27,43 @@ public class SimpleGameTree implements GameTree {
 
 	private LinkedList<Move> moveList;
 
-	SimpleGameTree() {
+	public SimpleGameTree() {
 		moveList = new LinkedList<>();
 	}
 
 	@Override
-	public void playMove(Move move) {
+	public boolean isRoot() {
+		return moveList.size() < 2;
+	}
+
+	@Override
+	public int getNumChildren() {
+		return 0;
+	}
+
+	@Override
+	public void stepForward(Move move) {
 		moveList.add(move);
+	}
+
+	@Override
+	public void stepBack() {
+		moveList.removeLast();
+	}
+
+	@Override
+	public Move getLastMove() {
+		return moveList.getLast();
+	}
+
+	@Override
+	public int getNumMoves() {
+		return moveList.size();
+	}
+
+	@Override
+	public List<Move> getSequence() {
+		return moveList;
 	}
 
 	@Override
@@ -52,27 +83,7 @@ public class SimpleGameTree implements GameTree {
 	}
 
 	@Override
-	public void stepBack() {
-		moveList.removeLast();
-	}
-
-	@Override
 	public Board getLastPosition() {
 		return getPositionAt(moveList.size() - 1);
-	}
-
-	@Override
-	public int getMoveNumber() {
-		return moveList.size();
-	}
-
-	@Override
-	public Move getLastMove() {
-		return moveList.getLast();
-	}
-
-	@Override
-	public List<Move> getSequence() {
-		return moveList;
 	}
 }

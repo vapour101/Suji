@@ -18,6 +18,7 @@
 package logic;
 
 import event.GameEvent;
+import logic.gametree.GameTree;
 import util.Coords;
 import util.Move;
 import util.StoneColour;
@@ -51,7 +52,7 @@ public class GameHandlerEventDecorator implements GameHandler {
 
 		GameTree tree = instance.getGameTree();
 		boolean gameOver = false;
-		if ( tree.getMoveNumber() > 0 && tree.getLastMove().getType() == Move.Type.PASS )
+		if ( tree.getNumMoves() > 0 && tree.getLastMove().getType() == Move.Type.PASS )
 			gameOver = true;
 
 		instance.pass();

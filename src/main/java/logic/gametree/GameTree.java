@@ -15,30 +15,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.gametree;
 
-import logic.gametree.GameTree;
-import util.Coords;
+import logic.Board;
 import util.Move;
-import util.StoneColour;
 
-import java.util.Collection;
+import java.util.List;
 
-public interface GameHandler {
+public interface GameTree {
 
-	boolean isLegalMove(Move move);
+	boolean isRoot();
 
-	void playMove(Move move);
+	int getNumChildren();
 
-	void pass();
+	void stepForward(Move move);
 
-	void undo();
+	void stepBack();
 
-	Collection<Coords> getStones(StoneColour colour);
+	Move getLastMove();
 
-	Board getBoard();
+	int getNumMoves();
 
-	StoneColour getTurnPlayer();
+	List<Move> getSequence();
 
-	GameTree getGameTree();
+	Board getPosition();
+
+	Board getLastPosition();
 }

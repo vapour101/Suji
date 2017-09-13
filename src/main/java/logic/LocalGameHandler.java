@@ -17,6 +17,8 @@
 
 package logic;
 
+import logic.gametree.GameTree;
+import logic.gametree.SimpleGameTree;
 import util.Coords;
 import util.Move;
 import util.StoneColour;
@@ -47,7 +49,7 @@ public class LocalGameHandler implements GameHandler {
 		isLegal = !gameTree.getPosition().isOccupied(move.getPosition());
 		isLegal &= !gameTree.getPosition().isSuicide(move.getPosition(), move.getPlayer());
 
-		if ( isLegal && gameTree.getMoveNumber() > 2 ) {
+		if ( isLegal && gameTree.getNumMoves() > 2 ) {
 			Board previous = gameTree.getLastPosition();
 			Board future = gameTree.getPosition();
 			future.playStone(move.getPosition(), move.getPlayer());
@@ -60,7 +62,7 @@ public class LocalGameHandler implements GameHandler {
 
 	@Override
 	public void playMove(Move move) {
-		gameTree.playMove(move);
+		gameTree.stepForward(move);
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public class LocalGameHandler implements GameHandler {
 
 	@Override
 	public StoneColour getTurnPlayer() {
-		if ( gameTree.getMoveNumber() == 0 )
+		if ( gameTree.getNumMoves() == 0 )
 			return handicap == 0 ? StoneColour.BLACK : StoneColour.WHITE;
 
 		return gameTree.getLastMove().getPlayer().other();

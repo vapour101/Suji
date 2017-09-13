@@ -15,25 +15,63 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.gametree;
 
+import logic.Board;
 import util.Move;
 
 import java.util.List;
 
-public interface GameTree {
+public class ComplexGameTree implements GameTree {
 
-	void playMove(Move move);
 
-	Board getPosition();
+	@Override
+	public boolean isRoot() {
+		return false;
+	}
 
-	void stepBack();
+	@Override
+	public int getNumChildren() {
+		return 0;
+	}
 
-	Board getLastPosition();
+	@Override
+	public void stepForward(Move move) {
 
-	int getMoveNumber();
+	}
 
-	Move getLastMove();
+	@Override
+	public void stepBack() {
 
-	List<Move> getSequence();
+	}
+
+	@Override
+	public Move getLastMove() {
+		return null;
+	}
+
+	@Override
+	public int getNumMoves() {
+		return 0;
+	}
+
+	@Override
+	public List<Move> getSequence() {
+		return null;
+	}
+
+	@Override
+	public Board getPosition() {
+		return null;
+	}
+
+	@Override
+	public Board getLastPosition() {
+		return null;
+	}
+
+	private class GameNode {
+
+		private Move move;
+	}
 }
