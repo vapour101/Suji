@@ -19,6 +19,7 @@ package ui.controller;
 
 import event.EventBus;
 import event.GameEvent;
+import event.ScoreEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -261,6 +262,7 @@ public class BoardController implements Initializable {
 
 		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
 		boardDrawer.draw();
+		ScoreEvent.fireEvent(EventBus.getInstance(), new ScoreEvent(boardScorer, EventBus.getInstance()));
 	}
 
 	private enum GameState {
