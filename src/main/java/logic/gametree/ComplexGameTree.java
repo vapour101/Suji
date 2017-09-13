@@ -20,6 +20,7 @@ package logic.gametree;
 import logic.Board;
 import util.Move;
 
+import java.util.Collection;
 import java.util.List;
 
 public class ComplexGameTree implements GameTree {
@@ -68,10 +69,5 @@ public class ComplexGameTree implements GameTree {
 	@Override
 	public Board getLastPosition() {
 		return null;
-	}
-
-	private class GameNode {
-
-		private Move move;
 	}
 }
