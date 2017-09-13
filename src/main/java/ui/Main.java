@@ -19,6 +19,7 @@ package ui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -45,7 +46,11 @@ public class Main extends Application {
 
 		//file menu, creating the main tabs
 		Menu fileMenu = new Menu("New...");
-		Menu exitMenu = new Menu("Exit");
+		Menu exitMenu = new Menu();
+
+		Label exitLabel = new Label("Exit");
+		exitLabel.setOnMouseClicked(event -> window.close());
+		exitMenu.setGraphic(exitLabel);
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
