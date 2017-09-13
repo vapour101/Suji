@@ -50,6 +50,10 @@ public class GameEvent extends Event {
 		bus.fireEvent(event);
 	}
 
+	public GameHandler getHandler() {
+		return handler;
+	}
+
 	public Board getBoard() {
 		return handler.getBoard();
 	}

@@ -74,8 +74,15 @@ public class BoardController implements Initializable {
 		gameState = GameState.PLAYING;
 		komi = 0;
 
-		EventBus.addEventHandler(GameEvent.ANY, event -> this.drawBoard());
+		EventBus.addEventHandler(GameEvent.ANY, this::gameEventHandler);
 		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
+	}
+
+	private void gameEventHandler(GameEvent event)
+	{
+		if (event.getHandler() == game)
+			drawBoard();
+
 	}
 
 	private void drawBoard() {
@@ -240,10 +247,14 @@ public class BoardController implements Initializable {
 	}
 
 	private void enterScoring(GameEvent event) {
+		if ( event.getHandler() != game )
+			return;
+
 		gameState = GameState.SCORING;
 		boardScorer = new BoardScorer(event.getBoard(), komi);
 		passButton.setVisible(false);
 		undoButton.setVisible(false);
+		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
 		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
