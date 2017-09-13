@@ -18,7 +18,6 @@
 package ui;
 
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -50,8 +49,7 @@ public class Main extends Application {
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
-			Parent root = LocalGameDialog.build(dockPane);
-			DockNode node = new DockNode(root, "New Local Game");
+			DockNode node = LocalGameDialog.build(dockPane);
 			node.dock(dockPane, DockPos.CENTER);
 		});
 

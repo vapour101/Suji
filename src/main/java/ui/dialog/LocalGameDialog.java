@@ -19,6 +19,7 @@ package ui.dialog;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import ui.controller.NewLocalGameController;
 
@@ -26,7 +27,7 @@ import java.io.IOException;
 
 public class LocalGameDialog {
 
-	public static Parent build(DockPane dockPane) {
+	public static DockNode build(DockPane dockPane) {
 		FXMLLoader loader = new FXMLLoader(LocalGameDialog.class.getResource("/newLocalGame.fxml"));
 
 		Parent dialog = null;
@@ -37,8 +38,13 @@ public class LocalGameDialog {
 			e.printStackTrace();
 		}
 
-		loader.<NewLocalGameController>getController().setPane(dockPane);
+		DockNode node = new DockNode(dialog, "New Local Game");
 
-		return dialog;
+		NewLocalGameController controller = loader.<NewLocalGameController>getController();
+		controller.setPane(dockPane);
+		controller.setNode(node);
+
+
+		return node;
 	}
 }

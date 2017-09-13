@@ -45,9 +45,14 @@ public class NewLocalGameController implements Initializable {
 	public Spinner<Double> komiSpinner;
 
 	private DockPane dockPane;
+	private DockNode dockNode;
 
 	public void setPane(DockPane dockPane) {
 		this.dockPane = dockPane;
+	}
+
+	public void setNode(DockNode dockNode) {
+		this.dockNode = dockNode;
 	}
 
 	@Override
@@ -98,6 +103,8 @@ public class NewLocalGameController implements Initializable {
 
 		DockNode gameNode = new DockNode(scene, "Local Game");
 		gameNode.dock(dockPane, DockPos.CENTER);
+
+		dockNode.close();
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {
