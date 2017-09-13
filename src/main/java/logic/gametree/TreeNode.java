@@ -45,8 +45,8 @@ class TreeNode {
 		children.add(child);
 	}
 
-	public void removeChild(TreeNode child) {
-		children.remove(child);
+	public TreeNode getParent() {
+		return parent;
 	}
 
 	public void setParent(TreeNode parent) {
@@ -57,12 +57,8 @@ class TreeNode {
 		this.parent = parent;
 	}
 
-	public void setMove(Move move) {
-		properties.put(PropertyType.MOVE, move);
-	}
-
-	public boolean hasMove() {
-		return properties.containsKey(PropertyType.MOVE);
+	public void removeChild(TreeNode child) {
+		children.remove(child);
 	}
 
 	public Move getMove() {
@@ -72,8 +68,12 @@ class TreeNode {
 		return (Move) properties.get(PropertyType.MOVE);
 	}
 
-	public void setComment(String comment) {
-		properties.put(PropertyType.COMMENT, comment);
+	public void setMove(Move move) {
+		properties.put(PropertyType.MOVE, move);
+	}
+
+	public boolean hasMove() {
+		return properties.containsKey(PropertyType.MOVE);
 	}
 
 	public String getComment() {
@@ -81,6 +81,10 @@ class TreeNode {
 			return null;
 
 		return (String) properties.get(PropertyType.COMMENT);
+	}
+
+	public void setComment(String comment) {
+		properties.put(PropertyType.COMMENT, comment);
 	}
 
 	public boolean hasComment() {

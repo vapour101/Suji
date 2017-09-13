@@ -20,54 +20,112 @@ package logic.gametree;
 import logic.Board;
 import util.Move;
 
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ComplexGameTree implements GameTree {
 
+	private TreeNode root;
+	private TreeNode current;
+
+	public ComplexGameTree() {
+		root = new TreeNode();
+		current = root;
+	}
+
 
 	@Override
 	public boolean isRoot() {
-		return false;
+		return current == root;
 	}
 
 	@Override
 	public int getNumChildren() {
-		return 0;
+		return current.getChildren().size();
 	}
 
 	@Override
 	public void stepForward(Move move) {
+		for (TreeNode node : current.getChildren()) {
+			if ( node.hasMove() && node.getMove().equals(move) ) {
+				current = node;
+				return;
+			}
+		}
 
+		TreeNode node = new TreeNode();
+		node.setMove(move);
+		current.addChild(node);
+		current = node;
 	}
 
 	@Override
 	public void stepBack() {
+		if ( isRoot() )
+			return;
 
+		current = current.getParent();
 	}
 
 	@Override
 	public Move getLastMove() {
-		return null;
+		TreeNode search = current;
+
+		while (!search.hasMove() && search.getParent() != null) {
+			search = search.getParent();
+		}
+
+		return search.getMove();
 	}
 
 	@Override
 	public int getNumMoves() {
-		return 0;
+		TreeNode search = current;
+		int count = 1;
+
+		while (search.getParent() != null) {
+			count++;
+		}
+
+		return count;
 	}
 
 	@Override
 	public List<Move> getSequence() {
-		return null;
+		return getSequenceAt(current);
+	}
+
+	private List<Move> getSequenceAt(TreeNode node) {
+		LinkedList<Move> sequence = new LinkedList<>();
+
+		for (TreeNode search = node; search != null; search = search.getParent()) {
+			if ( search.hasMove() )
+				sequence.addFirst(search.getMove());
+		}
+
+		return sequence;
+	}
+
+	private Board getPositionAt(TreeNode node) {
+		Board position = new Board();
+
+		for (Move m : getSequenceAt(node))
+			if ( m.getType() == Move.Type.PLAY )
+				position.playStone(m.getPosition(), m.getPlayer());
+
+		return position;
 	}
 
 	@Override
 	public Board getPosition() {
-		return null;
+		return getPositionAt(current);
 	}
 
 	@Override
 	public Board getLastPosition() {
-		return null;
+		if ( isRoot() )
+			return new Board();
+
+		return getPositionAt(current.getParent());
 	}
 }
