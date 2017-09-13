@@ -23,13 +23,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.dockfx.DockNode;
+import org.dockfx.DockPane;
+import org.dockfx.DockPos;
 import util.KomiSpinnerFactory;
 
 import java.io.IOException;
@@ -43,10 +44,10 @@ public class NewLocalGameController implements Initializable {
 	public Button startButton;
 	public Spinner<Double> komiSpinner;
 
-	private Stage window;
+	private DockPane dockPane;
 
-	public void setWindow(Stage window) {
-		this.window = window;
+	public void setPane(DockPane dockPane) {
+		this.dockPane = dockPane;
 	}
 
 	@Override
@@ -95,8 +96,8 @@ public class NewLocalGameController implements Initializable {
 		controller.setHandicap(handicapSpinner.getValue());
 		controller.setKomi(komiSpinner.getValue());
 
-		window.setScene(new Scene(scene));
-		window.show();
+		DockNode gameNode = new DockNode(scene, "Local Game");
+		gameNode.dock(dockPane, DockPos.CENTER);
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {
