@@ -52,6 +52,23 @@ public class Move {
 		return moveType;
 	}
 
+	public boolean equals(Object other) {
+		if ( this == other )
+			return true;
+		else if ( !(other instanceof Move) )
+			return false;
+		else {
+			Move compare = (Move) other;
+			boolean equal = this.moveType == compare.moveType;
+			equal &= this.player == compare.player;
+
+			if ( equal && this.moveType == Type.PLAY )
+				equal = this.position.equals(compare.position);
+
+			return equal;
+		}
+	}
+
 	public enum Type {
 		PLAY, PASS;
 	}
