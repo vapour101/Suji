@@ -81,10 +81,13 @@ public class ComplexGameTree implements GameTree {
 	@Override
 	public int getNumMoves() {
 		TreeNode search = current;
-		int count = 1;
+		int count = 0;
 
-		while (search.getParent() != null) {
-			count++;
+		while (search != null) {
+			if ( search.hasMove() )
+				count++;
+
+			search = search.getParent();
 		}
 
 		return count;

@@ -17,8 +17,8 @@
 
 package logic;
 
+import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
-import logic.gametree.SimpleGameTree;
 import util.Coords;
 import util.Move;
 import util.StoneColour;
@@ -35,7 +35,7 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	public LocalGameHandler(int handicap) {
-		gameTree = new SimpleGameTree();
+		gameTree = new ComplexGameTree();
 		this.handicap = handicap;
 	}
 
