@@ -19,17 +19,17 @@ package sgf;
 
 import util.Move;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import static util.Move.Type.PLAY;
 import static util.StoneColour.BLACK;
 
-public class SimpleGameTreeSGFConverter implements SGFWriter {
+public class SimpleSGFWriter implements SGFWriter {
 
-	private LinkedList<Move> tree;
+	private List<Move> tree;
 
-	public SimpleGameTreeSGFConverter(LinkedList<Move> gameTree) {
-		tree = gameTree;
+	public SimpleSGFWriter(List<Move> gameSequence) {
+		tree = gameSequence;
 	}
 
 	@Override
