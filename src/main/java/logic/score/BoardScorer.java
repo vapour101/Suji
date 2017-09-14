@@ -15,12 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.board;
+package logic.score;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import event.EventBus;
 import event.ScoreEvent;
+import logic.board.Board;
+import logic.board.Chain;
 import util.Coords;
 import util.StoneColour;
 

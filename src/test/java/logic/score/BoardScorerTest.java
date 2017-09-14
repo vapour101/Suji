@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.board;
+package logic.score;
 
+import logic.board.Board;
 import org.junit.Test;
 import util.Coords;
 import util.StoneColour;

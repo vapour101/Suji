@@ -18,8 +18,8 @@
 package logic.gamehandler;
 
 import logic.board.BoardProvider;
-import logic.board.ScoreProvider;
 import logic.gametree.GameTreeProvider;
+import logic.score.ScoreProvider;
 import sgf.SGFProvider;
 import util.StoneColour;
 

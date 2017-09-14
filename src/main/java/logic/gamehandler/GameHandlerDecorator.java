@@ -19,8 +19,8 @@ package logic.gamehandler;
 
 
 import logic.board.Board;
-import logic.board.Scorer;
 import logic.gametree.GameTree;
+import logic.score.Scorer;
 import sgf.SGFWriter;
 import util.Coords;
 import util.Move;

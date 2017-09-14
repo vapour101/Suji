@@ -75,7 +75,7 @@ public class Board {
 		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
-	Chain getChainAtCoords(Coords coords) {
+	public Chain getChainAtCoords(Coords coords) {
 		for (StoneColour colour : StoneColour.values())
 			if ( getChainSet(colour).contains(coords) )
 				return getChainSet(colour).getChainFromStone(coords);

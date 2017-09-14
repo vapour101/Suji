@@ -29,7 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.board.Scorer;
+import logic.score.Scorer;
 import util.StoneColour;
 
 import java.io.IOException;
