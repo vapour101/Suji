@@ -33,15 +33,12 @@ public class GameEvent extends Event {
 	public static final EventType<GameEvent> START = new EventType<GameEvent>(ANY, "START");
 	public static final EventType<GameEvent> GAMEOVER = new EventType<GameEvent>(ANY, "GAMEOVER");
 
-	private GameHandler handler;
-
 	public GameEvent(GameHandler source, EventTarget target) {
 		this(source, target, ANY);
 	}
 
 	public GameEvent(GameHandler source, EventTarget target, EventType<? extends GameEvent> eventType) {
 		super(source, target, eventType);
-		handler = source;
 	}
 
 	public static void fireGameEvent(GameHandler game, EventType<? extends GameEvent> eventType) {
@@ -51,14 +48,14 @@ public class GameEvent extends Event {
 	}
 
 	public GameHandler getHandler() {
-		return handler;
+		return (GameHandler) getSource();
 	}
 
 	public Board getBoard() {
-		return handler.getBoard();
+		return getHandler().getBoard();
 	}
 
 	public Collection<Coords> getStones(StoneColour colour) {
-		return handler.getStones(colour);
+		return getHandler().getStones(colour);
 	}
 }
