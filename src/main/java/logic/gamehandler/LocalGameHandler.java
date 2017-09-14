@@ -18,6 +18,7 @@
 package logic.gamehandler;
 
 import logic.board.Board;
+import logic.board.BoardScorer;
 import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
 import sgf.SGFWriter;
@@ -32,6 +33,7 @@ public class LocalGameHandler implements GameHandler {
 
 	private GameTree gameTree;
 	private int handicap;
+	private double komi;
 
 	LocalGameHandler() {
 		this(0);
@@ -40,6 +42,7 @@ public class LocalGameHandler implements GameHandler {
 	public LocalGameHandler(int handicap) {
 		gameTree = new ComplexGameTree();
 		this.handicap = handicap;
+		komi = 0;
 	}
 
 	@Override
@@ -61,6 +64,11 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
+	public void setKomi(double komi) {
+		this.komi = komi;
+	}
+
+	@Override
 	public GameTree getGameTree() {
 		return gameTree;
 	}
@@ -68,6 +76,11 @@ public class LocalGameHandler implements GameHandler {
 	@Override
 	public SGFWriter getSGFWriter() {
 		return new SimpleSGFWriter(gameTree.getSequence());
+	}
+
+	@Override
+	public BoardScorer getScorer() {
+		return new BoardScorer(getBoard(), komi);
 	}
 
 	@Override

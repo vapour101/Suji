@@ -20,7 +20,7 @@ package event;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
-import logic.board.BoardScorer;
+import logic.board.Scorer;
 import util.Coords;
 import util.StoneColour;
 
@@ -29,13 +29,13 @@ import java.util.Collection;
 public class ScoreEvent extends Event {
 
 	public static final EventType<ScoreEvent> ANY = new EventType<ScoreEvent>("SCORE");
-	private BoardScorer scorer;
+	private Scorer scorer;
 
-	public ScoreEvent(BoardScorer source, EventTarget eventTarget) {
+	public ScoreEvent(Scorer source, EventTarget eventTarget) {
 		this(source, eventTarget, ANY);
 	}
 
-	public ScoreEvent(BoardScorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
+	public ScoreEvent(Scorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
 		super(source, eventTarget, eventType);
 		scorer = source;
 	}

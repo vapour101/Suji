@@ -15,21 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package logic.board;
 
-import logic.board.BoardProvider;
-import logic.board.ScoreProvider;
-import logic.gametree.GameTreeProvider;
-import sgf.SGFProvider;
+import util.Coords;
 import util.StoneColour;
 
-public interface GameHandler extends SGFProvider, GameTreeProvider, BoardProvider, ScoreProvider {
+import java.util.Set;
 
-	void pass();
+public interface Scorer {
 
-	void undo();
+	double getScore();
 
-	StoneColour getTurnPlayer();
+	double getScore(StoneColour colour);
 
-	void setKomi(double komi);
+	void markGroupDead(Coords coords);
+
+	void unmarkGroupDead(Coords coords);
+
+	Set<Coords> getDeadStones(StoneColour colour);
+
+	Set<Coords> getTerritory(StoneColour colour);
 }

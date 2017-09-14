@@ -28,7 +28,7 @@ import java.util.*;
 
 import static util.Coords.getCoords;
 
-public class BoardScorer {
+public class BoardScorer implements Scorer {
 
 	private Board board;
 	private double komi;
@@ -48,10 +48,12 @@ public class BoardScorer {
 		bus.fireEvent(event);
 	}
 
+	@Override
 	public double getScore() {
 		return getScore(StoneColour.BLACK) - getScore(StoneColour.WHITE);
 	}
 
+	@Override
 	public double getScore(StoneColour colour) {
 		double score = countTerritory(colour);
 		score += board.getCaptures(colour);
@@ -67,35 +69,7 @@ public class BoardScorer {
 		return score;
 	}
 
-	public Set<Coords> getTerritory(StoneColour colour) {
-		Collection<Coords> potentialTerritory = getEmptyIntersections();
-
-		Set<Coords> liberties = new HashSet<>();
-		Set<Coords> otherLiberties = new HashSet<>();
-
-		for (Coords c : getLiveStones(colour))
-			liberties.addAll(c.getNeighbours());
-
-		for (Coords c : getLiveStones(colour.other()))
-			otherLiberties.addAll(c.getNeighbours());
-
-		liberties.retainAll(potentialTerritory);
-		otherLiberties.retainAll(potentialTerritory);
-
-		liberties.removeAll(otherLiberties);
-		otherLiberties.removeAll(liberties);
-
-		Set<Coords> territory = new HashSet<>();
-
-		for (Coords c : liberties)
-			territory.addAll(getContiguousEmptySection(potentialTerritory, c));
-
-		for (Coords c : otherLiberties)
-			territory.removeAll(getContiguousEmptySection(potentialTerritory, c));
-
-		return territory;
-	}
-
+	@Override
 	public void markGroupDead(Coords coords) {
 		Chain deadChain = board.getChainAtCoords(coords);
 
@@ -114,6 +88,7 @@ public class BoardScorer {
 		return deadChains.get(colour);
 	}
 
+	@Override
 	public void unmarkGroupDead(Coords coords) {
 		Chain undeadChain = null;
 
@@ -141,6 +116,7 @@ public class BoardScorer {
 		}
 	}
 
+	@Override
 	public Set<Coords> getDeadStones(StoneColour colour) {
 		Set<Coords> deadStones = new HashSet<>();
 
@@ -148,6 +124,36 @@ public class BoardScorer {
 			deadStones.addAll(chain.getStones());
 
 		return deadStones;
+	}
+
+	@Override
+	public Set<Coords> getTerritory(StoneColour colour) {
+		Collection<Coords> potentialTerritory = getEmptyIntersections();
+
+		Set<Coords> liberties = new HashSet<>();
+		Set<Coords> otherLiberties = new HashSet<>();
+
+		for (Coords c : getLiveStones(colour))
+			liberties.addAll(c.getNeighbours());
+
+		for (Coords c : getLiveStones(colour.other()))
+			otherLiberties.addAll(c.getNeighbours());
+
+		liberties.retainAll(potentialTerritory);
+		otherLiberties.retainAll(potentialTerritory);
+
+		liberties.removeAll(otherLiberties);
+		otherLiberties.removeAll(liberties);
+
+		Set<Coords> territory = new HashSet<>();
+
+		for (Coords c : liberties)
+			territory.addAll(getContiguousEmptySection(potentialTerritory, c));
+
+		for (Coords c : otherLiberties)
+			territory.removeAll(getContiguousEmptySection(potentialTerritory, c));
+
+		return territory;
 	}
 
 	Collection<Coords> getEmptyIntersections() {

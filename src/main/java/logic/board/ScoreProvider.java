@@ -15,21 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package logic.board;
 
-import logic.board.BoardProvider;
-import logic.board.ScoreProvider;
-import logic.gametree.GameTreeProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+public interface ScoreProvider {
 
-public interface GameHandler extends SGFProvider, GameTreeProvider, BoardProvider, ScoreProvider {
-
-	void pass();
-
-	void undo();
-
-	StoneColour getTurnPlayer();
-
-	void setKomi(double komi);
+	Scorer getScorer();
 }

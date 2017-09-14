@@ -34,7 +34,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import logic.board.BoardScorer;
+import logic.board.Scorer;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGameHandler;
 import sgf.SGFWriter;
@@ -64,17 +64,15 @@ public class BoardController implements Initializable {
 
 	private Canvas boardCanvas;
 	private GameHandler game;
-	private BoardScorer boardScorer;
+	private Scorer boardScorer;
 	private BoardDrawer boardDrawer;
 	private ScorePaneController scorePaneController;
 
 	private GameState gameState;
-	private double komi;
 
 	public BoardController() {
 		game = buildGameHandler(0);
 		gameState = GameState.PLAYING;
-		komi = 0;
 
 		EventBus.addEventHandler(GameEvent.ANY, this::gameEventHandler);
 		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
@@ -216,7 +214,7 @@ public class BoardController implements Initializable {
 	}
 
 	void setKomi(double komi) {
-		this.komi = komi;
+		game.setKomi(komi);
 	}
 
 	private void canvasClicked(MouseEvent mouseEvent) {
@@ -253,7 +251,7 @@ public class BoardController implements Initializable {
 			return;
 
 		gameState = GameState.SCORING;
-		boardScorer = new BoardScorer(event.getBoard(), komi);
+		boardScorer = game.getScorer();
 		passButton.setVisible(false);
 		undoButton.setVisible(false);
 		scorePaneController.setScorer(boardScorer);

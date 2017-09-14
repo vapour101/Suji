@@ -29,7 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.board.BoardScorer;
+import logic.board.Scorer;
 import util.StoneColour;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class ScorePaneController implements Initializable {
 	@FXML
 	private Label whiteScore;
 
-	private BoardScorer scorer;
+	private Scorer scorer;
 
 	static FXMLLoader getScorePaneLoader() {
 		FXMLLoader loader = new FXMLLoader(ScorePaneController.class.getResource("/scorePane.fxml"));
@@ -64,7 +64,7 @@ public class ScorePaneController implements Initializable {
 		return loader;
 	}
 
-	public void setScorer(BoardScorer scorer) {
+	public void setScorer(Scorer scorer) {
 		this.scorer = scorer;
 	}
 

@@ -22,7 +22,7 @@ import event.EventBus;
 import event.ScoreEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import logic.board.BoardScorer;
+import logic.board.Scorer;
 import logic.gamehandler.GameHandler;
 import util.CoordProjector;
 import util.Coords;
@@ -33,9 +33,9 @@ import java.util.Collection;
 
 public class BoardScoreDrawer extends BoardDrawer {
 
-	private BoardScorer scorer;
+	private Scorer scorer;
 
-	public BoardScoreDrawer(Canvas canvas, GameHandler game, BoardScorer scorer) {
+	public BoardScoreDrawer(Canvas canvas, GameHandler game, Scorer scorer) {
 		super(canvas, game);
 		this.scorer = scorer;
 

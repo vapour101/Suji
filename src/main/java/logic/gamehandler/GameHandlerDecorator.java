@@ -19,6 +19,7 @@ package logic.gamehandler;
 
 
 import logic.board.Board;
+import logic.board.Scorer;
 import logic.gametree.GameTree;
 import sgf.SGFWriter;
 import util.Coords;
@@ -51,6 +52,11 @@ public class GameHandlerDecorator implements GameHandler {
 	}
 
 	@Override
+	public void setKomi(double komi) {
+		instance.setKomi(komi);
+	}
+
+	@Override
 	public Board getBoard() {
 		return instance.getBoard();
 	}
@@ -78,5 +84,10 @@ public class GameHandlerDecorator implements GameHandler {
 	@Override
 	public SGFWriter getSGFWriter() {
 		return instance.getSGFWriter();
+	}
+
+	@Override
+	public Scorer getScorer() {
+		return instance.getScorer();
 	}
 }
