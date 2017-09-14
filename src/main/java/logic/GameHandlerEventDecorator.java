@@ -69,6 +69,10 @@ public class GameHandlerEventDecorator implements GameHandler {
 		GameEvent.fireGameEvent(this, GameEvent.GAMEOVER);
 	}
 
+	private void fireGameEvent() {
+		GameEvent.fireGameEvent(this, GameEvent.ANY);
+	}
+
 	@Override
 	public Board getBoard() {
 		return instance.getBoard();
@@ -91,10 +95,6 @@ public class GameHandlerEventDecorator implements GameHandler {
 	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return instance.getStones(colour);
-	}
-
-	private void fireGameEvent() {
-		GameEvent.fireGameEvent(this, GameEvent.ANY);
 	}
 
 	@Override

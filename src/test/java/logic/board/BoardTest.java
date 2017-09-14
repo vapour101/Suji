@@ -103,8 +103,7 @@ public class BoardTest {
 
 		try {
 			board.playStone(getCoords("C4"), StoneColour.BLACK);
-			fail("Board did not throw exception when playing on top of an existing stone with a stone of the same " +
-						 "colour.");
+			fail("Board did not throw exception when playing on top of an existing stone with a stone of the same colour.");
 		}
 		catch (Exception e) {
 			assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -119,8 +118,7 @@ public class BoardTest {
 
 		try {
 			board.playStone(getCoords("C4"), StoneColour.WHITE);
-			fail("Board did not throw exception when playing on top of an existing stone with a stone of a different "
-						 + "colour.");
+			fail("Board did not throw exception when playing on top of an existing stone with a stone of a different colour.");
 		}
 		catch (Exception e) {
 			assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -135,8 +133,7 @@ public class BoardTest {
 
 		try {
 			board.playStone(getCoords("C4"), StoneColour.WHITE);
-			fail("Board did not throw exception when playing on top of an existing stone with a stone of the same " +
-						 "colour.");
+			fail("Board did not throw exception when playing on top of an existing stone with a stone of the same colour.");
 		}
 		catch (Exception e) {
 			assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -151,8 +148,7 @@ public class BoardTest {
 
 		try {
 			board.playStone(getCoords("C4"), StoneColour.BLACK);
-			fail("Board did not throw exception when playing on top of an existing stone with a stone of a different "
-						 + "colour.");
+			fail("Board did not throw exception when playing on top of an existing stone with a stone of a different colour.");
 		}
 		catch (Exception e) {
 			assertThat(e, instanceOf(IllegalArgumentException.class));

@@ -45,7 +45,37 @@ public class LocalGameHandler implements GameHandler {
 	@Override
 	public void pass() {
 		playMove(Move.pass(getTurnPlayer()));
-	}	@Override
+	}
+
+	@Override
+	public void undo() {
+		gameTree.stepBack();
+	}
+
+	@Override
+	public StoneColour getTurnPlayer() {
+		if ( gameTree.getNumMoves() == 0 )
+			return handicap == 0 ? StoneColour.BLACK : StoneColour.WHITE;
+
+		return gameTree.getLastMove().getPlayer().other();
+	}
+
+	@Override
+	public GameTree getGameTree() {
+		return gameTree;
+	}
+
+	@Override
+	public SGFWriter getSGFWriter() {
+		return new SimpleSGFWriter(gameTree.getSequence());
+	}
+
+	@Override
+	public Board getBoard() {
+		return gameTree.getPosition();
+	}
+
+	@Override
 	public boolean isLegalMove(Move move) {
 		if ( move.getType() == Move.Type.PASS )
 			return true; //Passing is never illegal
@@ -67,42 +97,12 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
-	public void undo() {
-		gameTree.stepBack();
-	}	@Override
 	public void playMove(Move move) {
 		gameTree.stepForward(move);
 	}
 
 	@Override
-	public StoneColour getTurnPlayer() {
-		if ( gameTree.getNumMoves() == 0 )
-			return handicap == 0 ? StoneColour.BLACK : StoneColour.WHITE;
-
-		return gameTree.getLastMove().getPlayer().other();
-	}
-
-	@Override
-	public GameTree getGameTree() {
-		return gameTree;
-	}
-
-	@Override
-	public SGFWriter getSGFWriter() {
-		return new SimpleSGFWriter(gameTree.getSequence());
-	}	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return getBoard().getStones(colour);
 	}
-
-	@Override
-	public Board getBoard() {
-		return gameTree.getPosition();
-	}
-
-
-
-
-
-
 }

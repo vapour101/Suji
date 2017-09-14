@@ -208,8 +208,7 @@ public class ChainSetTest {
 		for (String stone : stones)
 			black.add(getCoords(stone));
 
-		stones = new String[]{"B3", "B4", "B5", "B6", "C2", "D2", "E2", "C7", "D7", "E7", "F3", "F4", "F5", "F6",
-				"D5"};
+		stones = new String[]{"B3", "B4", "B5", "B6", "C2", "D2", "E2", "C7", "D7", "E7", "F3", "F4", "F5", "F6", "D5"};
 		for (String stone : stones)
 			white.add(getCoords(stone));
 
