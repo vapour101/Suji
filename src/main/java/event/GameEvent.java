@@ -20,8 +20,8 @@ package event;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
-import logic.GameHandler;
 import logic.board.Board;
+import logic.gamehandler.GameHandler;
 import util.Coords;
 import util.StoneColour;
 

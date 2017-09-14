@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.gamehandler;
 
 import event.GameEvent;
 import logic.board.Board;

@@ -17,8 +17,8 @@
 
 package event;
 
-import logic.GameHandler;
-import logic.LocalGameHandler;
+import logic.gamehandler.GameHandler;
+import logic.gamehandler.LocalGameHandler;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
