@@ -111,6 +111,9 @@ public class LocalGameHandler implements GameHandler {
 
 	@Override
 	public void playMove(Move move) {
+		if ( !isLegalMove(move) )
+			return;
+
 		gameTree.stepForward(move);
 	}
 
