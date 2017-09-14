@@ -19,6 +19,7 @@ package logic.gametree;
 
 import logic.board.Board;
 import org.junit.Test;
+import util.Move;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -80,5 +81,33 @@ public class SimpleGameTreeTest {
 		tree.stepForward(pass(WHITE));
 
 		assertThat(tree.getPosition(), is(board));
+	}
+
+	@Test
+	public void isRoot() {
+		GameTree tree = new SimpleGameTree();
+
+		tree.stepForward(0);
+		assertThat(tree.isRoot(), is(true));
+
+		tree.stepForward(pass(BLACK));
+		assertThat(tree.isRoot(), is(true));
+
+		tree.stepForward(pass(WHITE));
+		assertThat(tree.isRoot(), is(false));
+	}
+
+	@Test
+	public void getLastMove() {
+		Move move = play(getCoords("A1"), BLACK);
+		GameTree tree = new SimpleGameTree();
+
+		tree.stepForward(move);
+
+		assertThat(tree.getLastMove(), is(move));
+
+		assertThat(tree.getNumMoves(), is(1));
+
+		assertThat(tree.getLastPosition(), is(new Board()));
 	}
 }

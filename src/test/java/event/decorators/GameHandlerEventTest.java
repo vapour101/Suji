@@ -22,14 +22,35 @@ import event.GameEvent;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGameHandler;
 import org.junit.Test;
+import util.Move;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 import static util.Move.play;
 import static util.StoneColour.BLACK;
+import static util.StoneColour.WHITE;
 
 public class GameHandlerEventTest {
+
+	@Test
+	public void decoratorDelegates() {
+		GameHandler game = new LocalGameHandler(0);
+		GameHandler decorator = new GameHandlerEventDecorator(game);
+
+		assertThat(decorator.getTurnPlayer(), is(game.getTurnPlayer()));
+
+		decorator.setKomi(15);
+		assertThat(game.getScorer().getScore(WHITE), is(15.0));
+
+		Move move = play(getCoords("A1"), BLACK);
+		assertThat(decorator.isLegalMove(move), is(game.isLegalMove(move)));
+
+		assertThat(decorator.getStones(BLACK), is(game.getStones(BLACK)));
+
+		String sgf = game.getSGFWriter().getSGFString();
+		assertThat(decorator.getSGFWriter().getSGFString(), is(sgf));
+	}
 
 	@Test
 	public void triggerEventsOnUpdate() {
