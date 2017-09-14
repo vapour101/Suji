@@ -22,6 +22,7 @@ import logic.board.Board;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.GameHandlerDecorator;
 import logic.gametree.GameTree;
+import logic.score.Scorer;
 import util.Move;
 
 public class GameHandlerEventDecorator extends GameHandlerDecorator {
@@ -62,6 +63,11 @@ public class GameHandlerEventDecorator extends GameHandlerDecorator {
 
 		if ( !previousPosition.equals(getBoard()) )
 			fireGameEvent();
+	}
+
+	@Override
+	public Scorer getScorer() {
+		return new ScorerEventDecorator(super.getScorer());
 	}
 
 	private void fireGameOverEvent() {
