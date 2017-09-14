@@ -21,6 +21,7 @@ import event.EventBus;
 import event.GameEvent;
 import event.ScoreEvent;
 import event.decorators.GameHandlerEventDecorator;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
@@ -28,6 +29,8 @@ import logic.gamehandler.LocalGameHandler;
 import logic.score.Scorer;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
+import ui.drawer.StoneDrawer;
+import ui.drawer.TexturedStoneDrawer;
 import util.*;
 
 import java.net.URL;
@@ -85,7 +88,15 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	BoardDrawer buildBoardDrawer() {
-		return new BoardDrawer(boardCanvas, game);
+		BoardDrawer drawer = new BoardDrawer(boardCanvas, game);
+
+		Image blackStone = new Image("/black.png", false);
+		Image whiteStone = new Image("/white.png", false);
+
+		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
+		drawer.setStoneDrawer(stoneDrawer);
+
+		return drawer;
 	}
 
 	@Override
@@ -138,9 +149,21 @@ public class LocalGameController extends BoardController {
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
-		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
+		boardDrawer = buildBoardScoreDrawer();
 		boardDrawer.draw();
 		ScoreEvent.fireScoreEvent(boardScorer);
+	}
+
+	private BoardScoreDrawer buildBoardScoreDrawer() {
+		BoardScoreDrawer drawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
+
+		Image blackStone = new Image("/black.png", false);
+		Image whiteStone = new Image("/white.png", false);
+
+		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
+		drawer.setStoneDrawer(stoneDrawer);
+
+		return drawer;
 	}
 
 	@Override

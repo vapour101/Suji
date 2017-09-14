@@ -46,12 +46,20 @@ public class BoardDrawer {
 		this.canvas = canvas;
 		this.game = game;
 
-		stoneDrawer = new SimpleStoneDrawer(canvas);
-		stoneDrawer.setRadius(getStoneRadius());
-		stoneDrawer.setProjector(getProjector());
+		setStoneDrawer(new SimpleStoneDrawer(canvas));
 
 		canvas.widthProperty().addListener(this::onCanvasResize);
 		canvas.heightProperty().addListener(this::onCanvasResize);
+	}
+
+	StoneDrawer getStoneDrawer() {
+		return stoneDrawer;
+	}
+
+	public void setStoneDrawer(StoneDrawer stoneDrawer) {
+		this.stoneDrawer = stoneDrawer;
+		stoneDrawer.setRadius(getStoneRadius());
+		stoneDrawer.setProjector(getProjector());
 	}
 
 	double getStoneRadius() {
@@ -60,10 +68,6 @@ public class BoardDrawer {
 
 	private CoordProjector getProjector() {
 		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
-	}
-
-	StoneDrawer getStoneDrawer() {
-		return stoneDrawer;
 	}
 
 	private void onCanvasResize(Observable observable) {
