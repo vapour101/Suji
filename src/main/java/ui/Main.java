@@ -33,6 +33,8 @@ import ui.dialog.LocalGameDialog;
 public class Main extends Application {
 
 	private Stage window;
+	private DockPane dockPane;
+	private MenuBar menuBar;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -41,16 +43,42 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
+		buildWindow();
+	}
+
+	private void buildWindow() {
 		window.setTitle("Suji");
-		DockPane dockPane = new DockPane();
 
+		window.setScene(getScene());
+		window.sizeToScene();
+
+		window.show();
+	}
+
+	private Scene getScene() {
+		buildDockPane();
+		buildMenuBar();
+
+		BorderPane layout = new BorderPane();
+
+		layout.setTop(menuBar);
+		layout.setCenter(dockPane);
+
+		return new Scene(layout, 800, 450);
+	}
+
+	private void buildMenuBar() {
 		//file menu, creating the main tabs
-		Menu fileMenu = new Menu("New...");
-		Menu exitMenu = new Menu();
+		Menu fileMenu = getFileMenu();
+		Menu exitMenu = getExitMenu();
 
-		Label exitLabel = new Label("Exit");
-		exitLabel.setOnMouseClicked(event -> window.close());
-		exitMenu.setGraphic(exitLabel);
+		//main menu bar
+		menuBar = new MenuBar();
+		menuBar.getMenus().addAll(fileMenu, exitMenu);
+	}
+
+	private Menu getFileMenu() {
+		Menu fileMenu = new Menu("New...");
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
@@ -61,22 +89,22 @@ public class Main extends Application {
 		//Home items
 		fileMenu.getItems().add(newLocalGame);
 
-		//main menu bar
-		MenuBar menuBar = new MenuBar();
-		menuBar.getMenus().addAll(fileMenu, exitMenu);
+		return fileMenu;
+	}
 
-		BorderPane layout = new BorderPane();
+	private Menu getExitMenu() {
+		Menu exitMenu = new Menu();
 
-		layout.setTop(menuBar);
-		layout.setCenter(dockPane);
+		Label exitLabel = new Label("Exit");
+		exitLabel.setOnMouseClicked(event -> window.close());
+		exitMenu.setGraphic(exitLabel);
 
-		Scene scene = new Scene(layout, 800, 450);
+		return exitMenu;
+	}
 
+	private void buildDockPane() {
+		dockPane = new DockPane();
 		Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 		DockPane.initializeDefaultUserAgentStylesheet();
-
-		window.setScene(scene);
-		window.sizeToScene();
-		window.show();
 	}
 }
