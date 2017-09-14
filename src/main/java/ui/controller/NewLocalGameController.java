@@ -88,6 +88,7 @@ public class NewLocalGameController implements Initializable {
 
 	private Parent buildLocalGame() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/localGame.fxml"));
+		loader.setControllerFactory(this::buildController);
 
 		Parent root = null;
 		try {
@@ -99,12 +100,16 @@ public class NewLocalGameController implements Initializable {
 		if ( root == null )
 			return null;
 
-		BoardController controller = loader.getController();
+		return root;
+	}
+
+	private BoardController buildController(Class<?> type) {
+		LocalGameController controller = new LocalGameController();
 
 		controller.setHandicap(handicapSpinner.getValue());
 		controller.setKomi(komiSpinner.getValue());
 
-		return root;
+		return controller;
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {

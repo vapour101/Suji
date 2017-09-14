@@ -29,6 +29,8 @@ import java.util.Collection;
 public class ScoreEvent extends Event {
 
 	public static final EventType<ScoreEvent> ANY = new EventType<ScoreEvent>("SCORE");
+	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(ANY, "DONE");
+
 	private Scorer scorer;
 
 	public ScoreEvent(Scorer source, EventTarget eventTarget) {
