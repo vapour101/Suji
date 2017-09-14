@@ -21,12 +21,9 @@ package ui.drawer;
 import event.EventBus;
 import event.ScoreEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
-import util.CoordProjector;
 import util.Coords;
-import util.DrawCoords;
 import util.StoneColour;
 
 import java.util.Collection;
@@ -56,17 +53,14 @@ public class BoardScoreDrawer extends BoardDrawer {
 
 	@Override
 	void drawStones(StoneColour colour) {
-		double radius = getStoneRadius();
-		GraphicsContext context = getGraphicsContext();
+		StoneDrawer drawer = getStoneDrawer();
 
 		Collection<Coords> stones = getStones(colour);
 		stones.removeAll(scorer.getDeadStones(colour));
 
-		context.setGlobalAlpha(0.5);
-		drawStonesToCanvas(scorer.getDeadStones(colour), radius, colour);
-		context.setGlobalAlpha(1);
+		drawer.drawGhostStones(scorer.getDeadStones(colour), colour);
 
-		drawStonesToCanvas(stones, radius, colour);
+		drawer.drawStones(stones, colour);
 	}
 
 	private void drawTerritory() {
@@ -75,12 +69,11 @@ public class BoardScoreDrawer extends BoardDrawer {
 	}
 
 	private void drawTerritory(StoneColour colour) {
-		double radius = getStoneRadius() / 2;
-		CoordProjector projector = getProjector();
+		StoneDrawer drawer = getStoneDrawer();
+		drawer.setRadius(getStoneRadius() / 2);
 
-		for (Coords stone : scorer.getTerritory(colour)) {
-			DrawCoords position = projector.fromBoardCoords(stone);
-			drawStoneToCanvas(position, radius, colour);
-		}
+		drawer.drawStones(scorer.getTerritory(colour), colour);
+
+		drawer.setRadius(getStoneRadius());
 	}
 }
