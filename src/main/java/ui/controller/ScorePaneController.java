@@ -21,22 +21,21 @@ import event.EventBus;
 import event.ScoreEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.BoardScorer;
+import logic.score.Scorer;
 import util.StoneColour;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ScorePaneController implements Initializable {
+public class ScorePaneController extends SelfBuildingController implements Initializable {
 
 	@FXML
 	private Pane scorePane;
@@ -49,28 +48,26 @@ public class ScorePaneController implements Initializable {
 	@FXML
 	private Label whiteScore;
 
-	private BoardScorer scorer;
+	private Scorer scorer;
 
-	static FXMLLoader getScorePaneLoader() {
-		FXMLLoader loader = new FXMLLoader(ScorePaneController.class.getResource("/scorePane.fxml"));
-
-		try {
-			loader.load();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return loader;
+	ScorePaneController() {
+		scorer = null;
 	}
 
-	public void setScorer(BoardScorer scorer) {
+	@Override
+	protected String getResourcePath() {
+		return "/scorePane.fxml";
+	}
+
+	public void setScorer(Scorer scorer) {
 		this.scorer = scorer;
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		scorePane.widthProperty().addListener(this::resizeScore);
+		enableButtons();
+		setButtonActions();
 		setVisible(false);
 
 		EventBus.addEventHandler(ScoreEvent.ANY, this::updateScore);
@@ -85,18 +82,48 @@ public class ScorePaneController implements Initializable {
 		whiteDone.setDisable(false);
 	}
 
-	void setDoneScoring(Runnable callback) {
+	private void setButtonActions() {
 		blackDone.setOnAction(event -> {
 			blackDone.setDisable(true);
 			if ( whiteDone.isDisabled() )
-				callback.run();
+				endScoring();
 		});
 
 		whiteDone.setOnAction(event -> {
 			whiteDone.setDisable(true);
 			if ( blackDone.isDisabled() )
-				callback.run();
+				endScoring();
 		});
+	}
+
+	private void endScoring() {
+		ScoreEvent.fireScoreEvent(scorer, ScoreEvent.DONE);
+
+		displayFinalScore(scorer.getScore());
+	}
+
+	private void displayFinalScore(double finalScore) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Game Over");
+		if ( finalScore == 0 ) {
+			alert.setContentText("Game ends in a draw.");
+			alert.showAndWait();
+			return;
+		}
+
+		String message;
+
+		if ( finalScore > 0 )
+			message = "Black";
+		else
+			message = "White";
+
+		finalScore = Math.abs(finalScore);
+
+		message += " wins by " + Double.toString(finalScore) + " points.";
+
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 	private void updateScore(ScoreEvent event) {

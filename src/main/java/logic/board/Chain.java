@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.board;
 
 import util.Coords;
 
@@ -47,7 +47,7 @@ public class Chain {
 		}
 	}
 
-	boolean contains(Coords stone) {
+	public boolean contains(Coords stone) {
 		return stones.contains(stone);
 	}
 
@@ -66,7 +66,7 @@ public class Chain {
 		return liberties.contains(coords);
 	}
 
-	int size() {
+	public int size() {
 		return stones.size();
 	}
 
@@ -98,7 +98,7 @@ public class Chain {
 		liberties.clear();
 	}
 
-	Collection<Coords> getStones() {
+	public Collection<Coords> getStones() {
 		return stones;
 	}
 

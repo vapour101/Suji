@@ -18,8 +18,8 @@
 package event;
 
 import javafx.event.EventHandler;
-import logic.BoardScorer;
-import logic.BoardScorerTest;
+import logic.score.BoardScorer;
+import logic.score.BoardScorerTest;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -32,20 +32,18 @@ public class ScoreEventTest {
 
 	@Test
 	public void scoreEvent() {
-		EventBus bus = EventBus.getInstance();
 		BoardScorer scorer = new BoardScorer(BoardScorerTest.buildTestBoard(BoardScorerTest.testBoard2), 0);
-		ScoreEvent event = new ScoreEvent(scorer, bus);
 
 		ScoreEventConsumer dummy = new ScoreEventConsumer();
 
 		EventHandler<ScoreEvent> handler = dummy::consume;
 
 		EventBus.addEventHandler(ScoreEvent.ANY, handler);
-		bus.fireEvent(event);
+		ScoreEvent.fireScoreEvent(scorer);
 		assertThat(dummy.hits, is(1));
 
 		EventBus.removeEventHandler(ScoreEvent.ANY, handler);
-		bus.fireEvent(event);
+		ScoreEvent.fireScoreEvent(scorer);
 		assertThat(dummy.hits, is(1));
 	}
 
@@ -55,25 +53,21 @@ public class ScoreEventTest {
 		scorer.markGroupDead(getCoords("L7"));
 		scorer.markGroupDead(getCoords("L18"));
 
-		EventBus bus = EventBus.getInstance();
-		ScoreEvent event = new ScoreEvent(scorer, bus);
-
 		ScoreEventConsumer dummy = new ScoreEventConsumer();
 		EventBus.addEventHandler(ScoreEvent.ANY, dummy::consume);
 
-		bus.fireEvent(event);
+		ScoreEvent.fireScoreEvent(scorer);
 
 		assertThat(dummy.scoreEvent.getScore(BLACK), is(scorer.getScore(BLACK)));
-		assertThat(dummy.scoreEvent.getDeadStones(WHITE), is(scorer.getDeadStones(WHITE)));
-		assertThat(dummy.scoreEvent.getTerritory(BLACK), is(scorer.getTerritory(BLACK)));
+		assertThat(dummy.scoreEvent.getScore(WHITE), is(scorer.getScore(WHITE)));
 	}
 
 	private class ScoreEventConsumer {
 
-		public int hits = 0;
-		public ScoreEvent scoreEvent;
+		int hits = 0;
+		ScoreEvent scoreEvent;
 
-		public void consume(ScoreEvent event) {
+		void consume(ScoreEvent event) {
 			hits++;
 			scoreEvent = event;
 		}

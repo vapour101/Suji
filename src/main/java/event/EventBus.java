@@ -32,8 +32,7 @@ public final class EventBus implements EventTarget {
 		handlers = HashMultimap.create();
 	}
 
-	public static <T extends Event> void addEventHandler(EventType<T> eventType, EventHandler<? super T>
-																						 eventHandler) {
+	public static <T extends Event> void addEventHandler(EventType<T> eventType, EventHandler<? super T> eventHandler) {
 		getInstance().handlers.put(eventType, eventHandler);
 	}
 

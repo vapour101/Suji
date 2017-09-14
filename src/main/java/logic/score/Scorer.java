@@ -15,16 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.dialog;
+package logic.score;
 
-import org.dockfx.DockNode;
-import ui.controller.NewLocalGameController;
+import util.Coords;
+import util.StoneColour;
 
-public class LocalGameDialog {
+import java.util.Set;
 
-	public static DockNode build() {
-		NewLocalGameController controller = new NewLocalGameController();
+public interface Scorer {
 
-		return controller.getNode();
-	}
+	double getScore();
+
+	double getScore(StoneColour colour);
+
+	void markGroupDead(Coords coords);
+
+	void unmarkGroupDead(Coords coords);
+
+	Set<Coords> getDeadStones(StoneColour colour);
+
+	Set<Coords> getTerritory(StoneColour colour);
 }

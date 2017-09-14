@@ -15,46 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package event.decorators;
 
 import event.GameEvent;
-import util.Coords;
+import logic.board.Board;
+import logic.gamehandler.GameHandler;
+import logic.gamehandler.GameHandlerDecorator;
+import logic.gametree.GameTree;
+import logic.score.Scorer;
 import util.Move;
-import util.StoneColour;
 
-import java.util.Collection;
-
-public class GameHandlerEventDecorator implements GameHandler {
-
-	private GameHandler instance;
+public class GameHandlerEventDecorator extends GameHandlerDecorator {
 
 	public GameHandlerEventDecorator(GameHandler game) {
-		instance = game;
-	}
-
-	@Override
-	public boolean isLegalMove(Move move) {
-		return instance.isLegalMove(move);
-	}
-
-	@Override
-	public void playMove(Move move) {
-		Board previousPosition = instance.getBoard();
-		instance.playMove(move);
-
-		if ( !previousPosition.equals(instance.getBoard()) )
-			fireGameEvent();
+		super(game);
 	}
 
 	@Override
 	public void pass() {
 
-		GameTree tree = instance.getGameTree();
+		GameTree tree = getGameTree();
 		boolean gameOver = false;
-		if ( tree.getMoveNumber() > 0 && tree.getLastMove().getType() == Move.Type.PASS )
+		if ( tree.getNumMoves() > 0 && tree.getLastMove().getType() == Move.Type.PASS )
 			gameOver = true;
 
-		instance.pass();
+		super.pass();
 
 		if ( gameOver )
 			fireGameOverEvent();
@@ -64,31 +49,25 @@ public class GameHandlerEventDecorator implements GameHandler {
 
 	@Override
 	public void undo() {
-		Board previousPosition = instance.getBoard();
-		instance.undo();
+		Board previousPosition = getBoard();
+		super.undo();
 
-		if ( !previousPosition.equals(instance.getBoard()) )
+		if ( !previousPosition.equals(getBoard()) )
 			fireGameEvent();
 	}
 
 	@Override
-	public Collection<Coords> getStones(StoneColour colour) {
-		return instance.getStones(colour);
+	public void playMove(Move move) {
+		Board previousPosition = getBoard();
+		super.playMove(move);
+
+		if ( !previousPosition.equals(getBoard()) )
+			fireGameEvent();
 	}
 
 	@Override
-	public Board getBoard() {
-		return instance.getBoard();
-	}
-
-	@Override
-	public StoneColour getTurnPlayer() {
-		return instance.getTurnPlayer();
-	}
-
-	@Override
-	public GameTree getGameTree() {
-		return instance.getGameTree();
+	public Scorer getScorer() {
+		return new ScorerEventDecorator(super.getScorer());
 	}
 
 	private void fireGameOverEvent() {

@@ -15,29 +15,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package ui.controller;
 
-import util.Coords;
-import util.Move;
-import util.StoneColour;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.util.Builder;
 
-import java.util.Collection;
+import java.io.IOException;
 
-public interface GameHandler {
+public abstract class SelfBuildingController implements Builder<Parent> {
 
-	boolean isLegalMove(Move move);
+	private Parent root;
 
-	void playMove(Move move);
+	SelfBuildingController() {
+		root = null;
+	}
 
-	void pass();
+	public final Parent build() {
+		if ( root == null )
+			constructRoot();
 
-	void undo();
+		return root;
+	}
 
-	Collection<Coords> getStones(StoneColour colour);
+	private void constructRoot() {
+		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(getResourcePath()));
+		loader.setControllerFactory(type -> this);
 
-	Board getBoard();
+		try {
+			root = loader.load();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-	StoneColour getTurnPlayer();
-
-	GameTree getGameTree();
+	abstract protected String getResourcePath();
 }

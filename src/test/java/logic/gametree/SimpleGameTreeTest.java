@@ -15,9 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.gametree;
 
+import logic.board.Board;
 import org.junit.Test;
+import util.Move;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -34,8 +36,8 @@ public class SimpleGameTreeTest {
 		SimpleGameTree tree = new SimpleGameTree();
 		Board board = new Board();
 
-		tree.playMove(play(getCoords("D4"), BLACK));
-		tree.playMove(play(getCoords("C3"), WHITE));
+		tree.stepForward(play(getCoords("D4"), BLACK));
+		tree.stepForward(play(getCoords("C3"), WHITE));
 
 		board.playStone(getCoords("D4"), BLACK);
 		board.playStone(getCoords("C3"), WHITE);
@@ -48,11 +50,11 @@ public class SimpleGameTreeTest {
 		SimpleGameTree tree = new SimpleGameTree();
 		Board board = new Board();
 
-		tree.playMove(play(getCoords("D4"), BLACK));
-		tree.playMove(play(getCoords("C4"), WHITE));
-		tree.playMove(play(getCoords("M17"), BLACK));
-		tree.playMove(play(getCoords("R4"), WHITE));
-		tree.playMove(play(getCoords("B14"), BLACK));
+		tree.stepForward(play(getCoords("D4"), BLACK));
+		tree.stepForward(play(getCoords("C4"), WHITE));
+		tree.stepForward(play(getCoords("M17"), BLACK));
+		tree.stepForward(play(getCoords("R4"), WHITE));
+		tree.stepForward(play(getCoords("B14"), BLACK));
 
 		tree.stepBack();
 
@@ -68,16 +70,44 @@ public class SimpleGameTreeTest {
 	public void passing() {
 		SimpleGameTree tree = new SimpleGameTree();
 
-		tree.playMove(play(getCoords("D4"), BLACK));
-		tree.playMove(play(getCoords("C4"), WHITE));
-		tree.playMove(play(getCoords("M17"), BLACK));
-		tree.playMove(play(getCoords("R4"), WHITE));
-		tree.playMove(play(getCoords("B14"), BLACK));
+		tree.stepForward(play(getCoords("D4"), BLACK));
+		tree.stepForward(play(getCoords("C4"), WHITE));
+		tree.stepForward(play(getCoords("M17"), BLACK));
+		tree.stepForward(play(getCoords("R4"), WHITE));
+		tree.stepForward(play(getCoords("B14"), BLACK));
 
 		Board board = tree.getPosition();
 
-		tree.playMove(pass(WHITE));
+		tree.stepForward(pass(WHITE));
 
 		assertThat(tree.getPosition(), is(board));
+	}
+
+	@Test
+	public void isRoot() {
+		GameTree tree = new SimpleGameTree();
+
+		tree.stepForward(0);
+		assertThat(tree.isRoot(), is(true));
+
+		tree.stepForward(pass(BLACK));
+		assertThat(tree.isRoot(), is(true));
+
+		tree.stepForward(pass(WHITE));
+		assertThat(tree.isRoot(), is(false));
+	}
+
+	@Test
+	public void getLastMove() {
+		Move move = play(getCoords("A1"), BLACK);
+		GameTree tree = new SimpleGameTree();
+
+		tree.stepForward(move);
+
+		assertThat(tree.getLastMove(), is(move));
+
+		assertThat(tree.getNumMoves(), is(1));
+
+		assertThat(tree.getLastPosition(), is(new Board()));
 	}
 }

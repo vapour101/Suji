@@ -15,16 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.dialog;
+package logic.gamehandler;
 
-import org.dockfx.DockNode;
-import ui.controller.NewLocalGameController;
+import logic.board.BoardProvider;
+import logic.gametree.GameTreeProvider;
+import logic.score.ScoreProvider;
+import sgf.SGFProvider;
+import util.StoneColour;
 
-public class LocalGameDialog {
+public interface GameHandler extends SGFProvider, GameTreeProvider, BoardProvider, ScoreProvider {
 
-	public static DockNode build() {
-		NewLocalGameController controller = new NewLocalGameController();
+	void pass();
 
-		return controller.getNode();
-	}
+	void undo();
+
+	StoneColour getTurnPlayer();
+
+	void setKomi(double komi);
 }

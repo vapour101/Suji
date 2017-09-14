@@ -15,16 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.dialog;
+package logic.gametree;
 
-import org.dockfx.DockNode;
-import ui.controller.NewLocalGameController;
+import logic.board.Board;
+import util.Move;
 
-public class LocalGameDialog {
+import java.util.List;
 
-	public static DockNode build() {
-		NewLocalGameController controller = new NewLocalGameController();
+public interface GameTree {
 
-		return controller.getNode();
-	}
+	boolean isRoot();
+
+	int getNumChildren();
+
+	void stepForward(int child);
+
+	void stepForward(Move move);
+
+	void stepBack();
+
+	Move getLastMove();
+
+	int getNumMoves();
+
+	List<Move> getSequence();
+
+	Board getPosition();
+
+	Board getLastPosition();
 }

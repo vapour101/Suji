@@ -15,25 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.board;
 
+import util.Coords;
 import util.Move;
+import util.StoneColour;
 
-import java.util.List;
+import java.util.Collection;
 
-public interface GameTree {
+public interface BoardProvider {
+
+	Board getBoard();
+
+	boolean isLegalMove(Move move);
 
 	void playMove(Move move);
 
-	Board getPosition();
-
-	void stepBack();
-
-	Board getLastPosition();
-
-	int getMoveNumber();
-
-	Move getLastMove();
-
-	List<Move> getSequence();
+	Collection<Coords> getStones(StoneColour colour);
 }

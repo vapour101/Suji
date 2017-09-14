@@ -22,8 +22,8 @@ import event.EventBus;
 import event.ScoreEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import logic.BoardScorer;
-import logic.GameHandler;
+import logic.gamehandler.GameHandler;
+import logic.score.Scorer;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
@@ -33,9 +33,9 @@ import java.util.Collection;
 
 public class BoardScoreDrawer extends BoardDrawer {
 
-	private BoardScorer scorer;
+	private Scorer scorer;
 
-	public BoardScoreDrawer(Canvas canvas, GameHandler game, BoardScorer scorer) {
+	public BoardScoreDrawer(Canvas canvas, GameHandler game, Scorer scorer) {
 		super(canvas, game);
 		this.scorer = scorer;
 
@@ -43,6 +43,8 @@ public class BoardScoreDrawer extends BoardDrawer {
 	}
 
 	private void onScoreChange(ScoreEvent event) {
+		if ( event.getScorer() != scorer )
+			return;
 		draw();
 	}
 

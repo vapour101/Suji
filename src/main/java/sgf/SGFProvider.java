@@ -15,16 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.dialog;
+package sgf;
 
-import org.dockfx.DockNode;
-import ui.controller.NewLocalGameController;
+public interface SGFProvider {
 
-public class LocalGameDialog {
-
-	public static DockNode build() {
-		NewLocalGameController controller = new NewLocalGameController();
-
-		return controller.getNode();
-	}
+	SGFWriter getSGFWriter();
 }

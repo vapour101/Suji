@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.score;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import event.EventBus;
-import event.ScoreEvent;
+import logic.board.Board;
+import logic.board.Chain;
 import util.Coords;
 import util.StoneColour;
 
@@ -28,7 +28,7 @@ import java.util.*;
 
 import static util.Coords.getCoords;
 
-public class BoardScorer {
+public class BoardScorer implements Scorer {
 
 	private Board board;
 	private double komi;
@@ -38,20 +38,15 @@ public class BoardScorer {
 		this.board = board;
 		this.komi = komi;
 		deadChains = HashMultimap.create();
-
-		fireScoreEvent();
 	}
 
-	private void fireScoreEvent() {
-		EventBus bus = EventBus.getInstance();
-		ScoreEvent event = new ScoreEvent(this, bus);
-		bus.fireEvent(event);
-	}
 
+	@Override
 	public double getScore() {
 		return getScore(StoneColour.BLACK) - getScore(StoneColour.WHITE);
 	}
 
+	@Override
 	public double getScore(StoneColour colour) {
 		double score = countTerritory(colour);
 		score += board.getCaptures(colour);
@@ -67,6 +62,61 @@ public class BoardScorer {
 		return score;
 	}
 
+	@Override
+	public void markGroupDead(Coords coords) {
+		Chain deadChain = board.getChainAtCoords(coords);
+
+		if ( deadChain == null )
+			return;
+
+		for (StoneColour colour : StoneColour.values())
+			if ( board.getStones(colour).contains(coords) ) {
+				getDeadChains(colour).add(deadChain);
+				break;
+			}
+	}
+
+	private Collection<Chain> getDeadChains(StoneColour colour) {
+		return deadChains.get(colour);
+	}
+
+	@Override
+	public void unmarkGroupDead(Coords coords) {
+		Chain undeadChain = null;
+
+		for (Chain deadChain : getDeadChains(StoneColour.WHITE))
+			if ( deadChain.contains(coords) ) {
+				undeadChain = deadChain;
+				break;
+			}
+
+		if ( undeadChain != null ) {
+			getDeadChains(StoneColour.WHITE).remove(undeadChain);
+			return;
+		}
+
+		for (Chain deadChain : getDeadChains(StoneColour.BLACK))
+			if ( deadChain.contains(coords) ) {
+				undeadChain = deadChain;
+				break;
+			}
+
+		if ( undeadChain != null ) {
+			getDeadChains(StoneColour.BLACK).remove(undeadChain);
+		}
+	}
+
+	@Override
+	public Set<Coords> getDeadStones(StoneColour colour) {
+		Set<Coords> deadStones = new HashSet<>();
+
+		for (Chain chain : getDeadChains(colour))
+			deadStones.addAll(chain.getStones());
+
+		return deadStones;
+	}
+
+	@Override
 	public Set<Coords> getTerritory(StoneColour colour) {
 		Collection<Coords> potentialTerritory = getEmptyIntersections();
 
@@ -94,60 +144,6 @@ public class BoardScorer {
 			territory.removeAll(getContiguousEmptySection(potentialTerritory, c));
 
 		return territory;
-	}
-
-	public void markGroupDead(Coords coords) {
-		Chain deadChain = board.getChainAtCoords(coords);
-
-		if ( deadChain == null )
-			return;
-
-		for (StoneColour colour : StoneColour.values())
-			if ( board.getStones(colour).contains(coords) ) {
-				getDeadChains(colour).add(deadChain);
-				fireScoreEvent();
-				break;
-			}
-	}
-
-	private Collection<Chain> getDeadChains(StoneColour colour) {
-		return deadChains.get(colour);
-	}
-
-	public void unmarkGroupDead(Coords coords) {
-		Chain undeadChain = null;
-
-		for (Chain deadChain : getDeadChains(StoneColour.WHITE))
-			if ( deadChain.contains(coords) ) {
-				undeadChain = deadChain;
-				break;
-			}
-
-		if ( undeadChain != null ) {
-			getDeadChains(StoneColour.WHITE).remove(undeadChain);
-			fireScoreEvent();
-			return;
-		}
-
-		for (Chain deadChain : getDeadChains(StoneColour.BLACK))
-			if ( deadChain.contains(coords) ) {
-				undeadChain = deadChain;
-				break;
-			}
-
-		if ( undeadChain != null ) {
-			getDeadChains(StoneColour.BLACK).remove(undeadChain);
-			fireScoreEvent();
-		}
-	}
-
-	public Set<Coords> getDeadStones(StoneColour colour) {
-		Set<Coords> deadStones = new HashSet<>();
-
-		for (Chain chain : getDeadChains(colour))
-			deadStones.addAll(chain.getStones());
-
-		return deadStones;
 	}
 
 	Collection<Coords> getEmptyIntersections() {

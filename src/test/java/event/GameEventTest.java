@@ -17,8 +17,8 @@
 
 package event;
 
-import logic.GameHandler;
-import logic.LocalGameHandler;
+import logic.gamehandler.GameHandler;
+import logic.gamehandler.LocalGameHandler;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -37,7 +37,7 @@ public class GameEventTest {
 		GameEventConsumer dummy = new GameEventConsumer();
 		EventBus.addEventHandler(GameEvent.ANY, dummy::consume);
 
-		EventBus.getInstance().fireEvent(new GameEvent(game, EventBus.getInstance()));
+		GameEvent.fireGameEvent(game);
 		assertThat(dummy.hits, is(1));
 
 		GameEvent.fireGameEvent(game, GameEvent.START);
@@ -46,13 +46,13 @@ public class GameEventTest {
 
 		dummy = new GameEventConsumer();
 
-		GameEvent.fireGameEvent(game, GameEvent.ANY);
+		GameEvent.fireGameEvent(game);
 		assertThat(dummy.hits, is(0));
 
 		EventBus.addEventHandler(GameEvent.START, dummy::consume);
 
 		GameEvent.fireGameEvent(game, GameEvent.GAMEOVER);
-		GameEvent.fireGameEvent(game, GameEvent.ANY);
+		GameEvent.fireGameEvent(game);
 		GameEvent.fireGameEvent(game, GameEvent.START);
 		assertThat(dummy.hits, is(1));
 	}

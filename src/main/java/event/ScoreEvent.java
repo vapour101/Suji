@@ -20,35 +20,33 @@ package event;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
-import logic.BoardScorer;
-import util.Coords;
+import logic.score.Scorer;
 import util.StoneColour;
-
-import java.util.Collection;
 
 public class ScoreEvent extends Event {
 
 	public static final EventType<ScoreEvent> ANY = new EventType<ScoreEvent>("SCORE");
-	private BoardScorer scorer;
+	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(ANY, "DONE");
 
-	public ScoreEvent(BoardScorer source, EventTarget eventTarget) {
-		this(source, eventTarget, ANY);
+	private ScoreEvent(Scorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
+		super(source, eventTarget, eventType);
 	}
 
-	public ScoreEvent(BoardScorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
-		super(source, eventTarget, eventType);
-		scorer = source;
+	public static void fireScoreEvent(Scorer scorer) {
+		fireScoreEvent(scorer, ANY);
+	}
+
+	public static void fireScoreEvent(Scorer scorer, EventType<? extends ScoreEvent> eventType) {
+		EventBus bus = EventBus.getInstance();
+		ScoreEvent event = new ScoreEvent(scorer, bus, eventType);
+		bus.fireEvent(event);
 	}
 
 	public double getScore(StoneColour colour) {
-		return scorer.getScore(colour);
+		return getScorer().getScore(colour);
 	}
 
-	public Collection<Coords> getTerritory(StoneColour colour) {
-		return scorer.getTerritory(colour);
-	}
-
-	public Collection<Coords> getDeadStones(StoneColour colour) {
-		return scorer.getDeadStones(colour);
+	public Scorer getScorer() {
+		return (Scorer) getSource();
 	}
 }
