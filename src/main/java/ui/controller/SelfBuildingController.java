@@ -19,25 +19,26 @@ package ui.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.util.Builder;
 
 import java.io.IOException;
 
-public abstract class BuildableController {
+public abstract class SelfBuildingController implements Builder<Parent> {
 
 	private Parent root;
 
-	BuildableController() {
+	SelfBuildingController() {
 		root = null;
 	}
 
-	Parent getRoot() {
+	public final Parent build() {
 		if ( root == null )
-			build();
+			constructRoot();
 
 		return root;
 	}
 
-	private void build() {
+	private void constructRoot() {
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(getResourcePath()));
 		loader.setControllerFactory(type -> this);
 

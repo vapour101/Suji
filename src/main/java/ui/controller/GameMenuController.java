@@ -29,7 +29,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GameMenuController extends BuildableController implements Initializable {
+public class GameMenuController extends SelfBuildingController implements Initializable {
 
 	@FXML
 	private Button saveButton;

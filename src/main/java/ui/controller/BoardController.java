@@ -32,7 +32,7 @@ import ui.drawer.BoardDrawer;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public abstract class BoardController implements Initializable {
+public abstract class BoardController extends SelfBuildingController implements Initializable {
 
 	@FXML
 	Pane boardPane;

@@ -20,7 +20,6 @@ package ui.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -31,12 +30,11 @@ import javafx.util.StringConverter;
 import org.dockfx.DockNode;
 import util.KomiSpinnerFactory;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class NewLocalGameController extends BuildableController implements Initializable {
+public class NewLocalGameController extends SelfBuildingController implements Initializable {
 
 	public Spinner<Integer> handicapSpinner;
 	public Button startButton;
@@ -49,7 +47,7 @@ public class NewLocalGameController extends BuildableController implements Initi
 	}
 
 	public DockNode getNode() {
-		dockNode = new DockNode(getRoot(), "New Local Game");
+		dockNode = new DockNode(build(), "New Local Game");
 
 		return dockNode;
 	}
@@ -93,30 +91,14 @@ public class NewLocalGameController extends BuildableController implements Initi
 	}
 
 	private Parent buildLocalGame() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/localGame.fxml"));
-		loader.setControllerFactory(this::buildController);
-
-		Parent root = null;
-		try {
-			root = loader.load();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		if ( root == null )
-			return null;
-
-		return root;
-	}
-
-	private BoardController buildController(Class<?> type) {
 		LocalGameController controller = new LocalGameController();
 
 		controller.setHandicap(handicapSpinner.getValue());
 		controller.setKomi(komiSpinner.getValue());
 
-		return controller;
+		return controller.build();
 	}
+
 
 	@Override
 	protected String getResourcePath() {

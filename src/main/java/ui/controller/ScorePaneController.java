@@ -35,7 +35,7 @@ import util.StoneColour;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ScorePaneController extends BuildableController implements Initializable {
+public class ScorePaneController extends SelfBuildingController implements Initializable {
 
 	@FXML
 	private Pane scorePane;

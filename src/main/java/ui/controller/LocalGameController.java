@@ -50,6 +50,11 @@ public class LocalGameController extends BoardController {
 	}
 
 	@Override
+	protected String getResourcePath() {
+		return "/localGame.fxml";
+	}
+
+	@Override
 	protected GameHandler buildGameHandler() {
 		return buildGameHandler(0);
 	}
@@ -149,14 +154,14 @@ public class LocalGameController extends BoardController {
 	private void loadScorePane() {
 		scorePaneController = new ScorePaneController();
 
-		sideBar.getChildren().add(scorePaneController.getRoot());
+		sideBar.getChildren().add(scorePaneController.build());
 	}
 
 	private void loadGameMenu() {
 		gameMenuController = new GameMenuController();
 		gameMenuController.setGameHandler(game);
 
-		sideBar.getChildren().add(gameMenuController.getRoot());
+		sideBar.getChildren().add(gameMenuController.build());
 	}
 
 	private void doneScoring(ScoreEvent event) {
