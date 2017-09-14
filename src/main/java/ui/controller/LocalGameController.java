@@ -42,6 +42,7 @@ public class LocalGameController extends BoardController {
 
 	private ScorePaneController scorePaneController;
 	private GameMenuController gameMenuController;
+	private ReviewPanelController reviewPanelController;
 
 	private GameState gameState;
 
@@ -79,6 +80,7 @@ public class LocalGameController extends BoardController {
 		super.setupPanes();
 		loadGameMenu();
 		loadScorePane();
+		loadReviewPanel();
 	}
 
 	@Override
@@ -141,6 +143,12 @@ public class LocalGameController extends BoardController {
 		ScoreEvent.fireScoreEvent(boardScorer);
 	}
 
+	@Override
+	void reviewStart(GameEvent event) {
+		gameState = GameState.REVIEW;
+		boardDrawer = buildBoardDrawer();
+	}
+
 	private StoneColour getTurnPlayer() {
 		return game.getTurnPlayer();
 	}
@@ -164,13 +172,19 @@ public class LocalGameController extends BoardController {
 		sideBar.getChildren().add(gameMenuController.build());
 	}
 
+	private void loadReviewPanel() {
+		reviewPanelController = new ReviewPanelController(game);
+
+		sideBar.getChildren().add(reviewPanelController.build());
+	}
+
 	private void doneScoring(ScoreEvent event) {
 		if ( event.getSource() != boardScorer )
 			return;
 
 		gameState = GameState.GAMEOVER;
 
-		gameMenuController.enableSaveButton();
+		gameMenuController.enableEndGameButtons();
 	}
 
 	void setHandicap(int handicap) {
@@ -187,6 +201,6 @@ public class LocalGameController extends BoardController {
 	}
 
 	private enum GameState {
-		PLAYING, SCORING, GAMEOVER
+		PLAYING, SCORING, GAMEOVER, REVIEW
 	}
 }

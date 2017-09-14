@@ -42,6 +42,11 @@ public class SimpleGameTree implements GameTree {
 	}
 
 	@Override
+	public void stepForward(int child) {
+
+	}
+
+	@Override
 	public void stepForward(Move move) {
 		moveList.add(move);
 	}

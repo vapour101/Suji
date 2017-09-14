@@ -28,6 +28,8 @@ public interface GameTree {
 
 	int getNumChildren();
 
+	void stepForward(int child);
+
 	void stepForward(Move move);
 
 	void stepBack();

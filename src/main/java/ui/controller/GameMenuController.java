@@ -17,6 +17,7 @@
 
 package ui.controller;
 
+import event.GameEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,6 +32,7 @@ import java.util.ResourceBundle;
 
 public class GameMenuController extends SelfBuildingController implements Initializable {
 
+	public Button reviewButton;
 	@FXML
 	private Button saveButton;
 	@FXML
@@ -63,11 +65,14 @@ public class GameMenuController extends SelfBuildingController implements Initia
 		passButton.setOnAction(this::pass);
 		undoButton.setOnAction(this::undo);
 		saveButton.setOnAction(this::save);
+		reviewButton.setOnAction(this::startReview);
 		saveButton.setVisible(false);
+		reviewButton.setVisible(false);
 	}
 
-	void enableSaveButton() {
+	void enableEndGameButtons() {
 		saveButton.setVisible(true);
+		reviewButton.setVisible(true);
 	}
 
 	void enterScoring() {
@@ -79,6 +84,9 @@ public class GameMenuController extends SelfBuildingController implements Initia
 		game.pass();
 	}
 
+	private void startReview(ActionEvent event) {
+		GameEvent.fireGameEvent(game, GameEvent.REVIEWSTART);
+	}
 
 	private void save(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();

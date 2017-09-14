@@ -19,7 +19,6 @@ package logic.gametree;
 
 import util.Move;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -36,7 +35,7 @@ class TreeNode {
 		properties = new HashMap<>();
 	}
 
-	public Collection<TreeNode> getChildren() {
+	public Vector<TreeNode> getChildren() {
 		return children;
 	}
 

@@ -45,6 +45,14 @@ public class ComplexGameTree implements GameTree {
 	}
 
 	@Override
+	public void stepForward(int child) {
+		if ( child >= getNumChildren() )
+			return;
+
+		current = current.getChildren().get(child);
+	}
+
+	@Override
 	public void stepForward(Move move) {
 		for (TreeNode node : current.getChildren()) {
 			if ( node.hasMove() && node.getMove().equals(move) ) {
