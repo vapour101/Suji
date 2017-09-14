@@ -18,8 +18,8 @@
 package event;
 
 import javafx.event.EventHandler;
-import logic.BoardScorer;
-import logic.BoardScorerTest;
+import logic.board.BoardScorer;
+import logic.board.BoardScorerTest;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

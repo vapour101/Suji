@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.board;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

@@ -17,6 +17,7 @@
 
 package logic;
 
+import logic.board.Board;
 import org.junit.Test;
 import util.Move;
 

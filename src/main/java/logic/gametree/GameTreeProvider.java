@@ -15,18 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.gametree;
 
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+public interface GameTreeProvider {
 
-public interface GameHandler extends SGFProvider, GameTreeProvider, BoardProvider {
-
-	void pass();
-
-	void undo();
-
-	StoneColour getTurnPlayer();
+	GameTree getGameTree();
 }

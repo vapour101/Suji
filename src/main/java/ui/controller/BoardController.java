@@ -33,12 +33,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import logic.BoardScorer;
 import logic.GameHandler;
 import logic.GameHandlerEventDecorator;
 import logic.LocalGameHandler;
+import logic.board.BoardScorer;
 import sgf.SGFWriter;
-import sgf.SimpleSGFWriter;
 import ui.drawer.BoardDrawer;
 import ui.drawer.BoardScoreDrawer;
 import util.*;
@@ -148,7 +147,7 @@ public class BoardController implements Initializable {
 
 				Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 
-				SGFWriter sgf = new SimpleSGFWriter(game.getGameTree().getSequence());
+				SGFWriter sgf = game.getSGFWriter();
 
 				writer.write(sgf.getSGFString());
 				writer.close();

@@ -18,7 +18,9 @@
 package logic;
 
 import event.GameEvent;
+import logic.board.Board;
 import logic.gametree.GameTree;
+import sgf.SGFWriter;
 import util.Coords;
 import util.Move;
 import util.StoneColour;
@@ -31,20 +33,6 @@ public class GameHandlerEventDecorator implements GameHandler {
 
 	public GameHandlerEventDecorator(GameHandler game) {
 		instance = game;
-	}
-
-	@Override
-	public boolean isLegalMove(Move move) {
-		return instance.isLegalMove(move);
-	}
-
-	@Override
-	public void playMove(Move move) {
-		Board previousPosition = instance.getBoard();
-		instance.playMove(move);
-
-		if ( !previousPosition.equals(instance.getBoard()) )
-			fireGameEvent();
 	}
 
 	@Override
@@ -73,8 +61,12 @@ public class GameHandlerEventDecorator implements GameHandler {
 	}
 
 	@Override
-	public Collection<Coords> getStones(StoneColour colour) {
-		return instance.getStones(colour);
+	public StoneColour getTurnPlayer() {
+		return instance.getTurnPlayer();
+	}
+
+	private void fireGameOverEvent() {
+		GameEvent.fireGameEvent(this, GameEvent.GAMEOVER);
 	}
 
 	@Override
@@ -83,8 +75,26 @@ public class GameHandlerEventDecorator implements GameHandler {
 	}
 
 	@Override
-	public StoneColour getTurnPlayer() {
-		return instance.getTurnPlayer();
+	public boolean isLegalMove(Move move) {
+		return instance.isLegalMove(move);
+	}
+
+	@Override
+	public void playMove(Move move) {
+		Board previousPosition = instance.getBoard();
+		instance.playMove(move);
+
+		if ( !previousPosition.equals(instance.getBoard()) )
+			fireGameEvent();
+	}
+
+	@Override
+	public Collection<Coords> getStones(StoneColour colour) {
+		return instance.getStones(colour);
+	}
+
+	private void fireGameEvent() {
+		GameEvent.fireGameEvent(this, GameEvent.ANY);
 	}
 
 	@Override
@@ -92,11 +102,8 @@ public class GameHandlerEventDecorator implements GameHandler {
 		return instance.getGameTree();
 	}
 
-	private void fireGameOverEvent() {
-		GameEvent.fireGameEvent(this, GameEvent.GAMEOVER);
-	}
-
-	private void fireGameEvent() {
-		GameEvent.fireGameEvent(this, GameEvent.ANY);
+	@Override
+	public SGFWriter getSGFWriter() {
+		return instance.getSGFWriter();
 	}
 }

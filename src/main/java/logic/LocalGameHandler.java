@@ -17,8 +17,11 @@
 
 package logic;
 
+import logic.board.Board;
 import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
+import sgf.SGFWriter;
+import sgf.SimpleSGFWriter;
 import util.Coords;
 import util.Move;
 import util.StoneColour;
@@ -40,6 +43,9 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
+	public void pass() {
+		playMove(Move.pass(getTurnPlayer()));
+	}	@Override
 	public boolean isLegalMove(Move move) {
 		if ( move.getType() == Move.Type.PASS )
 			return true; //Passing is never illegal
@@ -61,28 +67,11 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
-	public void playMove(Move move) {
-		gameTree.stepForward(move);
-	}
-
-	@Override
-	public void pass() {
-		playMove(Move.pass(getTurnPlayer()));
-	}
-
-	@Override
 	public void undo() {
 		gameTree.stepBack();
-	}
-
-	@Override
-	public Collection<Coords> getStones(StoneColour colour) {
-		return getBoard().getStones(colour);
-	}
-
-	@Override
-	public Board getBoard() {
-		return gameTree.getPosition();
+	}	@Override
+	public void playMove(Move move) {
+		gameTree.stepForward(move);
 	}
 
 	@Override
@@ -97,4 +86,23 @@ public class LocalGameHandler implements GameHandler {
 	public GameTree getGameTree() {
 		return gameTree;
 	}
+
+	@Override
+	public SGFWriter getSGFWriter() {
+		return new SimpleSGFWriter(gameTree.getSequence());
+	}	@Override
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getBoard().getStones(colour);
+	}
+
+	@Override
+	public Board getBoard() {
+		return gameTree.getPosition();
+	}
+
+
+
+
+
+
 }

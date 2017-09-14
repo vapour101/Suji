@@ -17,7 +17,7 @@
 
 package logic.gametree;
 
-import logic.Board;
+import logic.board.Board;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

@@ -15,18 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic;
+package logic.board;
 
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import sgf.SGFProvider;
+import util.Coords;
+import util.Move;
 import util.StoneColour;
 
-public interface GameHandler extends SGFProvider, GameTreeProvider, BoardProvider {
+import java.util.Collection;
 
-	void pass();
+public interface BoardProvider {
 
-	void undo();
+	Board getBoard();
 
-	StoneColour getTurnPlayer();
+	boolean isLegalMove(Move move);
+
+	void playMove(Move move);
+
+	Collection<Coords> getStones(StoneColour colour);
 }
