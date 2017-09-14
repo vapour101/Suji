@@ -86,20 +86,18 @@ public class ScorePaneController extends BuildableController implements Initiali
 		blackDone.setOnAction(event -> {
 			blackDone.setDisable(true);
 			if ( whiteDone.isDisabled() )
-				fireDoneScoring();
+				endScoring();
 		});
 
 		whiteDone.setOnAction(event -> {
 			whiteDone.setDisable(true);
 			if ( blackDone.isDisabled() )
-				fireDoneScoring();
+				endScoring();
 		});
 	}
 
-	private void fireDoneScoring() {
-		EventBus bus = EventBus.getInstance();
-		ScoreEvent doneScoring = new ScoreEvent(scorer, bus, ScoreEvent.DONE);
-		bus.fireEvent(doneScoring);
+	private void endScoring() {
+		ScoreEvent.fireScoreEvent(scorer, ScoreEvent.DONE);
 
 		displayFinalScore(scorer.getScore());
 	}

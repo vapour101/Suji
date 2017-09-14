@@ -17,7 +17,6 @@
 
 package event.decorators;
 
-import event.EventBus;
 import event.ScoreEvent;
 import logic.score.Scorer;
 import logic.score.ScorerDecorator;
@@ -37,9 +36,7 @@ public class ScorerEventDecorator extends ScorerDecorator {
 	}
 
 	private void fireScoreEvent() {
-		EventBus bus = EventBus.getInstance();
-		ScoreEvent event = new ScoreEvent(this, bus);
-		bus.fireEvent(event);
+		ScoreEvent.fireScoreEvent(this);
 	}
 
 	@Override

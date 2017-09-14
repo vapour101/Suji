@@ -133,7 +133,7 @@ public class LocalGameController extends BoardController {
 
 		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
 		boardDrawer.draw();
-		ScoreEvent.fireEvent(EventBus.getInstance(), new ScoreEvent(boardScorer, EventBus.getInstance()));
+		ScoreEvent.fireScoreEvent(boardScorer);
 	}
 
 	private StoneColour getTurnPlayer() {

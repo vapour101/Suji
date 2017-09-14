@@ -43,6 +43,8 @@ public class BoardScoreDrawer extends BoardDrawer {
 	}
 
 	private void onScoreChange(ScoreEvent event) {
+		if ( event.getScorer() != scorer )
+			return;
 		draw();
 	}
 
