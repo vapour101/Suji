@@ -36,7 +36,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class NewLocalGameController implements Initializable {
+public class NewLocalGameController extends BuildableController implements Initializable {
 
 	public Spinner<Integer> handicapSpinner;
 	public Button startButton;
@@ -44,8 +44,14 @@ public class NewLocalGameController implements Initializable {
 
 	private DockNode dockNode;
 
-	public void setNode(DockNode dockNode) {
-		this.dockNode = dockNode;
+	public NewLocalGameController() {
+		dockNode = null;
+	}
+
+	public DockNode getNode() {
+		dockNode = new DockNode(getRoot(), "New Local Game");
+
+		return dockNode;
 	}
 
 	@Override
@@ -110,6 +116,11 @@ public class NewLocalGameController implements Initializable {
 		controller.setKomi(komiSpinner.getValue());
 
 		return controller;
+	}
+
+	@Override
+	protected String getResourcePath() {
+		return "/newLocalGame.fxml";
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {
