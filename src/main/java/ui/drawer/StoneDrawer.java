@@ -19,11 +19,7 @@ package ui.drawer;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.util.Builder;
-import util.CoordProjector;
-import util.Coords;
-import util.DrawCoords;
-import util.StoneColour;
+import util.*;
 
 import java.util.Collection;
 
@@ -31,19 +27,9 @@ import java.util.Collection;
 public abstract class StoneDrawer {
 
 	private Canvas canvas;
-	private Builder<CoordProjector> projectorBuilder;
-	private Builder<Double> radiusBuilder;
 
 	StoneDrawer(Canvas canvas) {
 		this.canvas = canvas;
-	}
-
-	public void setProjectorBuilder(Builder<CoordProjector> projectorBuilder) {
-		this.projectorBuilder = projectorBuilder;
-	}
-
-	public void setRadiusBuilder(Builder<Double> radiusBuilder) {
-		this.radiusBuilder = radiusBuilder;
 	}
 
 	public void drawGhostStone(DrawCoords position, StoneColour colour) {
@@ -73,8 +59,8 @@ public abstract class StoneDrawer {
 			draw(getProjector().fromBoardCoords(stone), colour);
 	}
 
-	protected CoordProjector getProjector() {
-		return projectorBuilder.build();
+	private CoordProjector getProjector() {
+		return DimensionHelper.getProjector(canvas);
 	}
 
 	public void drawStones(Collection<Coords> stones, StoneColour colour, double scale) {
@@ -84,7 +70,7 @@ public abstract class StoneDrawer {
 
 	public abstract void draw(DrawCoords position, StoneColour colour, double scale);
 
-	protected double getRadius() {
-		return radiusBuilder.build();
+	double getRadius() {
+		return DimensionHelper.getStoneRadius(canvas);
 	}
 }

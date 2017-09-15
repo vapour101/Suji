@@ -21,6 +21,10 @@ import javafx.scene.canvas.Canvas;
 
 public class DimensionHelper {
 
+	public static CoordProjector getProjector(Canvas canvas) {
+		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
+	}
+
 	public static DrawCoords getTopLeftCorner(Canvas canvas) {
 		double length = getBoardLength(canvas);
 		double canvasWidth = canvas.getWidth();
@@ -42,5 +46,9 @@ public class DimensionHelper {
 		double canvasHeight = canvas.getHeight();
 
 		return Math.min(canvasHeight, canvasWidth);
+	}
+
+	public static double getStoneRadius(Canvas canvas) {
+		return getBoardLength(canvas) / (19 + 1) / 2;
 	}
 }

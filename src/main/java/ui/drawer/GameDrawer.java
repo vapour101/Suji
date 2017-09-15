@@ -26,18 +26,14 @@ import util.*;
 
 import java.util.Collection;
 
-import static util.Coords.getCoords;
-import static util.DimensionHelper.getBoardLength;
-import static util.DimensionHelper.getTopLeftCorner;
-import static util.HandicapHelper.getHandicapStones;
 import static util.Move.play;
-import static util.StoneColour.BLACK;
 
 public class GameDrawer {
 
 	private Canvas canvas;
 	private GameHandler game;
 	private StoneDrawer stoneDrawer;
+	private BoardDrawer boardDrawer;
 	private Move hoverStone;
 
 	public GameDrawer(Canvas canvas, GameHandler game) {
@@ -47,9 +43,14 @@ public class GameDrawer {
 		hoverStone = null;
 
 		setStoneDrawer(new SimpleStoneDrawer(canvas));
+		setBoardDrawer(new SimpleBoardDrawer(canvas));
 
 		canvas.widthProperty().addListener(this::onCanvasResize);
 		canvas.heightProperty().addListener(this::onCanvasResize);
+	}
+
+	public void setBoardDrawer(BoardDrawer boardDrawer) {
+		this.boardDrawer = boardDrawer;
 	}
 
 	StoneDrawer getStoneDrawer() {
@@ -58,12 +59,6 @@ public class GameDrawer {
 
 	public void setStoneDrawer(StoneDrawer stoneDrawer) {
 		this.stoneDrawer = stoneDrawer;
-		stoneDrawer.setRadiusBuilder(this::getStoneRadius);
-		stoneDrawer.setProjectorBuilder(this::getProjector);
-	}
-
-	double getStoneRadius() {
-		return getBoardLength(canvas) / (19 + 1) / 2;
 	}
 
 	private void onCanvasResize(Observable observable) {
@@ -72,8 +67,7 @@ public class GameDrawer {
 
 	public void draw() {
 		drawBackground();
-		drawBoardTexture();
-		drawBoardLines();
+		boardDrawer.draw();
 		drawStones();
 	}
 
@@ -102,45 +96,6 @@ public class GameDrawer {
 		return canvas.getGraphicsContext2D();
 	}
 
-	private void drawBoardTexture() {
-		DrawCoords topLeft = getTopLeftCorner(canvas);
-		GraphicsContext context = getGraphicsContext();
-		double length = getBoardLength(canvas);
-
-		context.setFill(Color.web("0xB78600"));
-		context.fillRect(topLeft.getX(), topLeft.getY(), length, length);
-	}
-
-	private void drawBoardLines() {
-		CoordProjector projector = getProjector();
-
-		GraphicsContext context = getGraphicsContext();
-
-		for (int i = 1; i < 20; i++) {
-			//Horizontal Lines
-			DrawCoords start = projector.fromBoardCoords(getCoords(1, i));
-			DrawCoords end = projector.fromBoardCoords(getCoords(19, i));
-
-			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-
-			//Vertical Lines
-			start = projector.fromBoardCoords(getCoords(i, 1));
-			end = projector.fromBoardCoords(getCoords(i, 19));
-
-			context.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-		}
-
-		StoneDrawer drawer = new SimpleStoneDrawer(canvas);
-		drawer.setProjectorBuilder(() -> projector);
-		drawer.setRadiusBuilder(() -> context.getLineWidth() * 4);
-
-		drawer.drawStones(getHandicapStones(9), BLACK);
-	}
-
-	private CoordProjector getProjector() {
-		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
-	}
-
 	public void setHoverStone(DrawCoords position, StoneColour colour) {
 		CoordProjector projector = getProjector();
 
@@ -162,5 +117,9 @@ public class GameDrawer {
 			stoneDrawer.drawGhostStone(pos, colour);
 			hoverStone = move;
 		}
+	}
+
+	private CoordProjector getProjector() {
+		return DimensionHelper.getProjector(canvas);
 	}
 }
