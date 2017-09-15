@@ -44,6 +44,22 @@ public class CoordProjector {
 		return inBounds;
 	}
 
+	private double xLowerBound() {
+		return topLeft.getX();
+	}
+
+	private double xUpperBound() {
+		return topLeft.getX() + boardLength - 1;
+	}
+
+	private double yLowerBound() {
+		return topLeft.getY();
+	}
+
+	private double yUpperBound() {
+		return topLeft.getY() + boardLength - 1;
+	}
+
 	public DrawCoords fromBoardCoords(Coords boardCoords) {
 		double spacing = boardLength / BOARD_SIZE;
 
@@ -85,21 +101,5 @@ public class CoordProjector {
 			snapY = yUpperBound();
 
 		return new DrawCoords(snapX, snapY);
-	}
-
-	private double xLowerBound() {
-		return topLeft.getX();
-	}
-
-	private double xUpperBound() {
-		return topLeft.getX() + boardLength - 1;
-	}
-
-	private double yLowerBound() {
-		return topLeft.getY();
-	}
-
-	private double yUpperBound() {
-		return topLeft.getY() + boardLength - 1;
 	}
 }

@@ -17,10 +17,10 @@
 
 package logic.score;
 
+import event.decorators.ScorerEventDecorator;
 import logic.board.Board;
 import org.junit.Test;
 import util.Coords;
-import util.StoneColour;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,6 +30,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 import static util.HandicapHelper.getHandicapStones;
+import static util.StoneColour.BLACK;
+import static util.StoneColour.WHITE;
 
 public class BoardScorerTest {
 
@@ -92,8 +94,8 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board, 0);
 
-		assertThat(scorer.getScore(StoneColour.BLACK), is(0.0));
-		assertThat(scorer.getScore(StoneColour.WHITE), is(0.0));
+		assertThat(scorer.getScore(BLACK), is(0.0));
+		assertThat(scorer.getScore(WHITE), is(0.0));
 		assertThat(scorer.getScore(), is(0.0));
 	}
 
@@ -102,8 +104,8 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board, 6.5);
 
-		assertThat(scorer.getScore(StoneColour.BLACK), is(0.0));
-		assertThat(scorer.getScore(StoneColour.WHITE), is(6.5));
+		assertThat(scorer.getScore(BLACK), is(0.0));
+		assertThat(scorer.getScore(WHITE), is(6.5));
 		assertThat(scorer.getScore(), is(-6.5));
 	}
 
@@ -112,8 +114,8 @@ public class BoardScorerTest {
 		Board board = new Board();
 		BoardScorer scorer = new BoardScorer(board, -6.5);
 
-		assertThat(scorer.getScore(StoneColour.BLACK), is(6.5));
-		assertThat(scorer.getScore(StoneColour.WHITE), is(0.0));
+		assertThat(scorer.getScore(BLACK), is(6.5));
+		assertThat(scorer.getScore(WHITE), is(0.0));
 		assertThat(scorer.getScore(), is(6.5));
 	}
 
@@ -156,9 +158,9 @@ public class BoardScorerTest {
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 0 )
-				testBoard.playStone(getCoords(sequence[i]), StoneColour.BLACK);
+				testBoard.playStone(getCoords(sequence[i]), BLACK);
 			else
-				testBoard.playStone(getCoords(sequence[i]), StoneColour.WHITE);
+				testBoard.playStone(getCoords(sequence[i]), WHITE);
 		}
 
 		return testBoard;
@@ -172,8 +174,8 @@ public class BoardScorerTest {
 		scorer.markGroupDead(getCoords("L7"));
 		scorer.markGroupDead(getCoords("L18"));
 
-		assertThat(scorer.getScore(StoneColour.WHITE), is(82.5));
-		assertThat(scorer.getScore(StoneColour.BLACK), is(85.0));
+		assertThat(scorer.getScore(WHITE), is(82.5));
+		assertThat(scorer.getScore(BLACK), is(85.0));
 		assertThat(scorer.getScore(), is(2.5));
 	}
 
@@ -184,13 +186,13 @@ public class BoardScorerTest {
 		Board testBoard = new Board();
 
 		for (Coords stone : getHandicapStones(handicap))
-			testBoard.playStone(stone, StoneColour.BLACK);
+			testBoard.playStone(stone, BLACK);
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 1 )
-				testBoard.playStone(getCoords(sequence[i]), StoneColour.BLACK);
+				testBoard.playStone(getCoords(sequence[i]), BLACK);
 			else
-				testBoard.playStone(getCoords(sequence[i]), StoneColour.WHITE);
+				testBoard.playStone(getCoords(sequence[i]), WHITE);
 		}
 
 		return testBoard;
@@ -199,13 +201,13 @@ public class BoardScorerTest {
 	@Test
 	public void realGameScore2() {
 		Board board = buildTestBoard(testBoard4, 3);
-		board.playStone(getCoords("N11"), StoneColour.WHITE);
+		board.playStone(getCoords("N11"), WHITE);
 
 		BoardScorer scorer = new BoardScorer(board, -4.5);
 		scorer.markGroupDead(getCoords("K5"));
 
-		assertThat(scorer.getScore(StoneColour.WHITE), is(112.0));
-		assertThat(scorer.getScore(StoneColour.BLACK), is(57.5));
+		assertThat(scorer.getScore(WHITE), is(112.0));
+		assertThat(scorer.getScore(BLACK), is(57.5));
 
 		assertThat(scorer.getScore(), is(-54.5));
 	}
@@ -216,26 +218,26 @@ public class BoardScorerTest {
 		BoardScorer scorer = new BoardScorer(board, 0);
 
 		scorer.markGroupDead(getCoords("K10"));
-		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(0));
-		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(0));
+		assertThat(scorer.getDeadStones(WHITE).size(), is(0));
+		assertThat(scorer.getDeadStones(BLACK).size(), is(0));
 
-		assertThat(board.getCaptures(StoneColour.BLACK), is(3));
-		assertThat(board.getCaptures(StoneColour.WHITE), is(0));
+		assertThat(board.getCaptures(BLACK), is(3));
+		assertThat(board.getCaptures(WHITE), is(0));
 
 		scorer.markGroupDead(getCoords("M18"));
 		scorer.markGroupDead(getCoords("T19"));
 
-		assertThat(scorer.getDeadStones(StoneColour.BLACK),
+		assertThat(scorer.getDeadStones(BLACK),
 				   hasItems(getCoords("S16"),
 							getCoords("T15"),
 							getCoords("T16"),
 							getCoords("T17"),
 							getCoords("T18"),
 							getCoords("T19")));
-		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(6));
+		assertThat(scorer.getDeadStones(BLACK).size(), is(6));
 
-		assertThat(scorer.getDeadStones(StoneColour.WHITE), hasItems(getCoords("M18")));
-		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(1));
+		assertThat(scorer.getDeadStones(WHITE), hasItems(getCoords("M18")));
+		assertThat(scorer.getDeadStones(WHITE).size(), is(1));
 	}
 
 	@Test
@@ -243,15 +245,16 @@ public class BoardScorerTest {
 		Board board = buildTestBoard(testBoard2);
 		BoardScorer scorer = new BoardScorer(board, 0);
 
-		assertThat(scorer.getScore(StoneColour.BLACK), is(152.0));
-		assertThat(scorer.getScore(StoneColour.WHITE), is(171.0));
+		assertThat(scorer.getScore(BLACK), is(152.0));
+		assertThat(scorer.getScore(WHITE), is(171.0));
 		assertThat(scorer.getScore(), is(-19.0));
 	}
 
 	@Test
 	public void complexScore() {
 		Board board = buildTestBoard(testBoard1);
-		BoardScorer scorer = new BoardScorer(board, 0);
+		BoardScorer boardScorer = new BoardScorer(board, 0);
+		Scorer scorer = new ScorerEventDecorator(boardScorer);
 
 		scorer.markGroupDead(getCoords("M18"));
 		scorer.markGroupDead(getCoords("T19"));
@@ -273,12 +276,14 @@ public class BoardScorerTest {
 		scorer.unmarkGroupDead(getCoords("K10"));
 		scorer.unmarkGroupDead(getCoords("T19"));
 
-		assertThat(scorer.getDeadStones(StoneColour.BLACK).size(), is(0));
-		assertThat(scorer.getDeadStones(StoneColour.WHITE).size(), is(0));
+		assertThat(scorer.getDeadStones(BLACK).size(), is(0));
+		assertThat(scorer.getDeadStones(WHITE).size(), is(0));
 
-		assertThat(scorer.getScore(StoneColour.BLACK), is(18.0));
-		assertThat(scorer.getScore(StoneColour.WHITE), is(239.0));
+		assertThat(scorer.getScore(BLACK), is(18.0));
+		assertThat(scorer.getScore(WHITE), is(239.0));
 
 		assertThat(scorer.getScore(), is(-221.0));
+
+		assertThat(scorer.getTerritory(BLACK), is(boardScorer.getTerritory(BLACK)));
 	}
 }
