@@ -120,14 +120,7 @@ public class Coords {
 	}
 
 	public boolean equals(Object other) {
-		if ( this == other )
-			return true;
-		else if ( !(other instanceof Coords) )
-			return false;
-		else {
-			Coords compare = (Coords) other;
-			return this.coordinates.equals(compare.coordinates);
-		}
+		return this == other;
 	}
 
 	public String toString() {

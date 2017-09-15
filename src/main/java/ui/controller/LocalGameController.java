@@ -142,7 +142,7 @@ public class LocalGameController extends BoardController {
 	void canvasExit(MouseEvent mouseEvent) {
 		if ( gameState != GameState.PLAYING )
 			return;
-		
+
 		boardDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
 	}
 
