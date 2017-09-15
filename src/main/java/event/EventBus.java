@@ -37,8 +37,12 @@ public final class EventBus implements EventTarget {
 	}
 
 	public static EventBus getInstance() {
-		if ( instance == null )
-			instance = new EventBus();
+		if ( instance == null ) {
+			synchronized (EventBus.class) {
+				if ( instance == null )
+					instance = new EventBus();
+			}
+		}
 
 		return instance;
 	}
