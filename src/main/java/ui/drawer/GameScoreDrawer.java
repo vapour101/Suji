@@ -28,11 +28,11 @@ import util.StoneColour;
 
 import java.util.Collection;
 
-public class BoardScoreDrawer extends BoardDrawer {
+public class GameScoreDrawer extends GameDrawer {
 
 	private Scorer scorer;
 
-	public BoardScoreDrawer(Canvas canvas, GameHandler game, Scorer scorer) {
+	public GameScoreDrawer(Canvas canvas, GameHandler game, Scorer scorer) {
 		super(canvas, game);
 		this.scorer = scorer;
 

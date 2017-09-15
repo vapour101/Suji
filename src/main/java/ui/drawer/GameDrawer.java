@@ -33,14 +33,14 @@ import static util.HandicapHelper.getHandicapStones;
 import static util.Move.play;
 import static util.StoneColour.BLACK;
 
-public class BoardDrawer {
+public class GameDrawer {
 
 	private Canvas canvas;
 	private GameHandler game;
 	private StoneDrawer stoneDrawer;
 	private Move hoverStone;
 
-	public BoardDrawer(Canvas canvas, GameHandler game) {
+	public GameDrawer(Canvas canvas, GameHandler game) {
 		this.canvas = canvas;
 		this.game = game;
 

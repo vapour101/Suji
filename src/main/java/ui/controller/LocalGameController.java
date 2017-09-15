@@ -27,8 +27,8 @@ import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGameHandler;
 import logic.score.Scorer;
-import ui.drawer.BoardDrawer;
-import ui.drawer.BoardScoreDrawer;
+import ui.drawer.GameDrawer;
+import ui.drawer.GameScoreDrawer;
 import ui.drawer.StoneDrawer;
 import ui.drawer.TexturedStoneDrawer;
 import util.*;
@@ -87,8 +87,8 @@ public class LocalGameController extends BoardController {
 	}
 
 	@Override
-	BoardDrawer buildBoardDrawer() {
-		BoardDrawer drawer = new BoardDrawer(boardCanvas, game);
+	GameDrawer buildGameDrawer() {
+		GameDrawer drawer = new GameDrawer(boardCanvas, game);
 
 		Image blackStone = new Image("/black.png", false);
 		Image whiteStone = new Image("/white.png", false);
@@ -135,7 +135,7 @@ public class LocalGameController extends BoardController {
 			return;
 
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		boardDrawer.setHoverStone(mousePosition, getTurnPlayer());
+		gameDrawer.setHoverStone(mousePosition, getTurnPlayer());
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class LocalGameController extends BoardController {
 		if ( gameState != GameState.PLAYING )
 			return;
 
-		boardDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
+		gameDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
 	}
 
 
@@ -158,13 +158,13 @@ public class LocalGameController extends BoardController {
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
-		boardDrawer = buildBoardScoreDrawer();
-		boardDrawer.draw();
+		gameDrawer = buildBoardScoreDrawer();
+		gameDrawer.draw();
 		ScoreEvent.fireScoreEvent(boardScorer);
 	}
 
-	private BoardScoreDrawer buildBoardScoreDrawer() {
-		BoardScoreDrawer drawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
+	private GameScoreDrawer buildBoardScoreDrawer() {
+		GameScoreDrawer drawer = new GameScoreDrawer(boardCanvas, game, boardScorer);
 
 		Image blackStone = new Image("/black.png", false);
 		Image whiteStone = new Image("/white.png", false);
@@ -178,7 +178,7 @@ public class LocalGameController extends BoardController {
 	@Override
 	void reviewStart(GameEvent event) {
 		gameState = GameState.REVIEW;
-		boardDrawer = buildBoardDrawer();
+		gameDrawer = buildGameDrawer();
 	}
 
 	private StoneColour getTurnPlayer() {
@@ -188,7 +188,7 @@ public class LocalGameController extends BoardController {
 	private void drawBoard() {
 		if ( gameState == GameState.SCORING )
 			return;
-		boardDrawer.draw();
+		gameDrawer.draw();
 	}
 
 	private void loadScorePane() {
