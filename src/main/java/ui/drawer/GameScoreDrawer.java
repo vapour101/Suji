@@ -70,10 +70,7 @@ public class GameScoreDrawer extends GameDrawer {
 
 	private void drawTerritory(StoneColour colour) {
 		StoneDrawer drawer = getStoneDrawer();
-		drawer.setRadius(getStoneRadius() / 2);
 
-		drawer.drawStones(scorer.getTerritory(colour), colour);
-
-		drawer.setRadius(getStoneRadius());
+		drawer.drawStones(scorer.getTerritory(colour), colour, 0.5);
 	}
 }

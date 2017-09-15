@@ -58,22 +58,16 @@ public class GameDrawer {
 
 	public void setStoneDrawer(StoneDrawer stoneDrawer) {
 		this.stoneDrawer = stoneDrawer;
-		stoneDrawer.setRadius(getStoneRadius());
-		stoneDrawer.setProjector(getProjector());
+		stoneDrawer.setRadiusBuilder(this::getStoneRadius);
+		stoneDrawer.setProjectorBuilder(this::getProjector);
 	}
 
 	double getStoneRadius() {
 		return getBoardLength(canvas) / (19 + 1) / 2;
 	}
 
-	private CoordProjector getProjector() {
-		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
-	}
-
 	private void onCanvasResize(Observable observable) {
 		draw();
-		stoneDrawer.setProjector(getProjector());
-		stoneDrawer.setRadius(getStoneRadius());
 	}
 
 	public void draw() {
@@ -137,10 +131,14 @@ public class GameDrawer {
 		}
 
 		StoneDrawer drawer = new SimpleStoneDrawer(canvas);
-		drawer.setProjector(projector);
-		drawer.setRadius(context.getLineWidth() * 4);
+		drawer.setProjectorBuilder(() -> projector);
+		drawer.setRadiusBuilder(() -> context.getLineWidth() * 4);
 
 		drawer.drawStones(getHandicapStones(9), BLACK);
+	}
+
+	private CoordProjector getProjector() {
+		return new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
 	}
 
 	public void setHoverStone(DrawCoords position, StoneColour colour) {

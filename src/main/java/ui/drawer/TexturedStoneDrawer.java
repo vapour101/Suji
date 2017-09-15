@@ -37,11 +37,20 @@ public class TexturedStoneDrawer extends StoneDrawer {
 
 	@Override
 	public void draw(DrawCoords position, StoneColour colour) {
+		drawStone(position, colour, getRadius());
+	}
+
+	@Override
+	public void draw(DrawCoords position, StoneColour colour, double scale) {
+		drawStone(position, colour, getRadius() * scale);
+	}
+
+	private void drawStone(DrawCoords position, StoneColour colour, double radius) {
 		Image texture = colour == BLACK ? black : white;
 
 		double x = position.getX();
 		double y = position.getY();
-		double r = getRadius();
+		double r = radius;
 		x -= r;
 		y -= r;
 		r *= 2;

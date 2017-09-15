@@ -33,6 +33,10 @@ public class SimpleStoneDrawer extends StoneDrawer {
 
 	@Override
 	public void draw(DrawCoords position, StoneColour colour) {
+		drawStone(position, colour, getRadius());
+	}
+
+	private void drawStone(DrawCoords position, StoneColour colour, double radius) {
 		GraphicsContext context = getGraphicsContext();
 
 		if ( colour == BLACK )
@@ -40,7 +44,7 @@ public class SimpleStoneDrawer extends StoneDrawer {
 		else
 			context.setFill(Paint.valueOf("#FFFFFF"));
 
-		drawCircle(position, getRadius());
+		drawCircle(position, radius);
 	}
 
 	private void drawCircle(DrawCoords position, double radius) {
@@ -49,5 +53,10 @@ public class SimpleStoneDrawer extends StoneDrawer {
 		double diameter = 2 * radius;
 
 		getGraphicsContext().fillOval(left, top, diameter, diameter);
+	}
+
+	@Override
+	public void draw(DrawCoords position, StoneColour colour, double scale) {
+		drawStone(position, colour, getRadius() * scale);
 	}
 }
