@@ -70,6 +70,7 @@ public abstract class BoardController extends SelfBuildingController implements 
 		boardCanvas = new Canvas();
 		boardCanvas.setOnMouseMoved(this::canvasHover);
 		boardCanvas.setOnMouseClicked(this::canvasClicked);
+		boardCanvas.setOnMouseExited(this::canvasExit);
 
 		boardPane.getChildren().add(boardCanvas);
 
@@ -88,6 +89,8 @@ public abstract class BoardController extends SelfBuildingController implements 
 	abstract void canvasClicked(MouseEvent mouseEvent);
 
 	abstract void canvasHover(MouseEvent mouseEvent);
+
+	abstract void canvasExit(MouseEvent mouseEvent);
 
 	abstract void enterScoring(GameEvent event);
 

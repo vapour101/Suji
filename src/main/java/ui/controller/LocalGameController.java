@@ -107,11 +107,13 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	void canvasClicked(MouseEvent mouseEvent) {
-
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
 		CoordProjector projector = new CoordProjector(getBoardLength(boardCanvas),
 													  DimensionHelper.getTopLeftCorner(boardCanvas));
 		Coords boardPos = projector.nearestCoords(mousePosition);
+
+		if ( !projector.isWithinBounds(mousePosition) )
+			return;
 
 		if ( gameState == LocalGameController.GameState.SCORING ) {
 			scorePaneController.enableButtons();
@@ -133,8 +135,15 @@ public class LocalGameController extends BoardController {
 			return;
 
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		drawBoard();
-		boardDrawer.drawGhostStone(mousePosition, getTurnPlayer());
+		boardDrawer.setHoverStone(mousePosition, getTurnPlayer());
+	}
+
+	@Override
+	void canvasExit(MouseEvent mouseEvent) {
+		if ( gameState != GameState.PLAYING )
+			return;
+		
+		boardDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
 	}
 
 

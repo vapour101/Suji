@@ -22,10 +22,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import logic.gamehandler.GameHandler;
-import util.CoordProjector;
-import util.Coords;
-import util.DrawCoords;
-import util.StoneColour;
+import util.*;
 
 import java.util.Collection;
 
@@ -41,10 +38,13 @@ public class BoardDrawer {
 	private Canvas canvas;
 	private GameHandler game;
 	private StoneDrawer stoneDrawer;
+	private Move hoverStone;
 
 	public BoardDrawer(Canvas canvas, GameHandler game) {
 		this.canvas = canvas;
 		this.game = game;
+
+		hoverStone = null;
 
 		setStoneDrawer(new SimpleStoneDrawer(canvas));
 
@@ -143,21 +143,26 @@ public class BoardDrawer {
 		drawer.drawStones(getHandicapStones(9), BLACK);
 	}
 
-	public void drawGhostStone(DrawCoords position, StoneColour colour) {
-		CoordProjector projector = new CoordProjector(getBoardLength(canvas), getTopLeftCorner(canvas));
+	public void setHoverStone(DrawCoords position, StoneColour colour) {
+		CoordProjector projector = getProjector();
+
+		if ( !projector.isWithinBounds(position) ) {
+			hoverStone = null;
+			draw();
+			return;
+		}
+
 		Coords boardPos = projector.nearestCoords(position);
 		DrawCoords pos = projector.fromBoardCoords(boardPos);
+		Move move = play(boardPos, colour);
 
-		if ( game.isLegalMove(play(boardPos, colour)) ) {
+		if ( hoverStone == move )
+			return;
+
+		if ( game.isLegalMove(move) ) {
+			draw();
 			stoneDrawer.drawGhostStone(pos, colour);
+			hoverStone = move;
 		}
-	}
-
-	private void drawCircle(DrawCoords position, double radius) {
-		double left = position.getX() - radius;
-		double top = position.getY() - radius;
-		double diameter = 2 * radius;
-
-		getGraphicsContext().fillOval(left, top, diameter, diameter);
 	}
 }

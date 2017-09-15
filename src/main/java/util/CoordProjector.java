@@ -35,6 +35,15 @@ public class CoordProjector {
 		this.topLeft = topLeft;
 	}
 
+	public boolean isWithinBounds(DrawCoords position) {
+		boolean inBounds = position.getX() >= xLowerBound();
+		inBounds &= position.getX() <= xUpperBound();
+		inBounds &= position.getY() >= yLowerBound();
+		inBounds &= position.getY() <= yUpperBound();
+
+		return inBounds;
+	}
+
 	public DrawCoords fromBoardCoords(Coords boardCoords) {
 		double spacing = boardLength / BOARD_SIZE;
 
