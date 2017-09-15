@@ -27,10 +27,7 @@ import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGameHandler;
 import logic.score.Scorer;
-import ui.drawer.GameDrawer;
-import ui.drawer.GameScoreDrawer;
-import ui.drawer.StoneDrawer;
-import ui.drawer.TexturedStoneDrawer;
+import ui.drawer.*;
 import util.*;
 
 import java.net.URL;
@@ -95,6 +92,11 @@ public class LocalGameController extends BoardController {
 
 		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
 		drawer.setStoneDrawer(stoneDrawer);
+
+		Image wood = new Image("/wood.jpg", false);
+
+		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, true);
+		drawer.setBoardDrawer(boardDrawer);
 
 		return drawer;
 	}
