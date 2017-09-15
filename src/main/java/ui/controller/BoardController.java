@@ -27,7 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.gamehandler.GameHandler;
-import ui.drawer.BoardDrawer;
+import ui.drawer.GameDrawer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -41,7 +41,7 @@ public abstract class BoardController extends SelfBuildingController implements 
 
 	GameHandler game;
 	Canvas boardCanvas;
-	BoardDrawer boardDrawer;
+	GameDrawer gameDrawer;
 
 	BoardController() {
 		game = buildGameHandler();
@@ -70,13 +70,14 @@ public abstract class BoardController extends SelfBuildingController implements 
 		boardCanvas = new Canvas();
 		boardCanvas.setOnMouseMoved(this::canvasHover);
 		boardCanvas.setOnMouseClicked(this::canvasClicked);
+		boardCanvas.setOnMouseExited(this::canvasExit);
 
 		boardPane.getChildren().add(boardCanvas);
 
-		boardDrawer = buildBoardDrawer();
+		gameDrawer = buildGameDrawer();
 	}
 
-	abstract BoardDrawer buildBoardDrawer();
+	abstract GameDrawer buildGameDrawer();
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		boardCanvas.setHeight(boardPane.getHeight());
@@ -88,6 +89,8 @@ public abstract class BoardController extends SelfBuildingController implements 
 	abstract void canvasClicked(MouseEvent mouseEvent);
 
 	abstract void canvasHover(MouseEvent mouseEvent);
+
+	abstract void canvasExit(MouseEvent mouseEvent);
 
 	abstract void enterScoring(GameEvent event);
 

@@ -19,11 +19,14 @@ package util;
 
 import javafx.util.Pair;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Coords {
 
+	private static Map<Pair<Integer, Integer>, Coords> coordsPool = new HashMap<Pair<Integer, Integer>, Coords>();
 	private Pair<Integer, Integer> coordinates;
 
 	private Coords(int x, int y) {
@@ -37,10 +40,6 @@ public class Coords {
 		coordinates = new Pair<>(x, y);
 	}
 
-	public static Coords getCoords(int x, int y) {
-		return new Coords(x, y);
-	}
-
 	public static Coords getCoords(String coords) {
 		if ( !coords.matches("[a-hj-tA-HJ-T]((1?[1-9])|(10))") )
 			throw new IllegalArgumentException("String: '" + coords + "' is not recognizable as Go coordinates.");
@@ -50,7 +49,16 @@ public class Coords {
 			x++;
 		int y = Integer.parseInt(coords.replaceAll("[a-tA-T]", ""));
 
-		return new Coords(x, y);
+		return getCoords(x, y);
+	}
+
+	public static Coords getCoords(int x, int y) {
+		Pair<Integer, Integer> key = new Pair<>(x, y);
+
+		if ( !coordsPool.containsKey(key) )
+			coordsPool.put(key, new Coords(x, y));
+
+		return coordsPool.get(key);
 	}
 
 	public Set<Coords> getNeighbours() {
@@ -75,7 +83,7 @@ public class Coords {
 		if ( getY() == 19 )
 			return null;
 
-		return new Coords(getX(), getY() + 1);
+		return getCoords(getX(), getY() + 1);
 	}
 
 	public final int getY() {
@@ -90,21 +98,21 @@ public class Coords {
 		if ( getY() == 1 )
 			return null;
 
-		return new Coords(getX(), getY() - 1);
+		return getCoords(getX(), getY() - 1);
 	}
 
 	private Coords west() {
 		if ( getX() == 1 )
 			return null;
 
-		return new Coords(getX() - 1, getY());
+		return getCoords(getX() - 1, getY());
 	}
 
 	private Coords east() {
 		if ( getX() == 19 )
 			return null;
 
-		return new Coords(getX() + 1, getY());
+		return getCoords(getX() + 1, getY());
 	}
 
 	public int hashCode() {
@@ -112,14 +120,7 @@ public class Coords {
 	}
 
 	public boolean equals(Object other) {
-		if ( this == other )
-			return true;
-		else if ( !(other instanceof Coords) )
-			return false;
-		else {
-			Coords compare = (Coords) other;
-			return this.coordinates.equals(compare.coordinates);
-		}
+		return this == other;
 	}
 
 	public String toString() {

@@ -51,4 +51,20 @@ public class CoordProjectorTest {
 		projection = proj.nearestCoords(new DrawCoords(40, 40));
 		assertThat(projection, is(getCoords("T19")));
 	}
+
+	@Test
+	public void boundsChecking() {
+		CoordProjector projector = new CoordProjector(20, new DrawCoords(3.4, 5.6));
+		DrawCoords check1 = new DrawCoords(10, 10);
+		DrawCoords check2 = new DrawCoords(3, 10);
+		DrawCoords check3 = new DrawCoords(5, 0);
+		DrawCoords check4 = new DrawCoords(27, 10);
+		DrawCoords check5 = new DrawCoords(8, 30);
+
+		assertThat(projector.isWithinBounds(check1), is(true));
+		assertThat(projector.isWithinBounds(check2), is(false));
+		assertThat(projector.isWithinBounds(check3), is(false));
+		assertThat(projector.isWithinBounds(check4), is(false));
+		assertThat(projector.isWithinBounds(check5), is(false));
+	}
 }

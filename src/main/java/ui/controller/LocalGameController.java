@@ -21,13 +21,13 @@ import event.EventBus;
 import event.GameEvent;
 import event.ScoreEvent;
 import event.decorators.GameHandlerEventDecorator;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGameHandler;
 import logic.score.Scorer;
-import ui.drawer.BoardDrawer;
-import ui.drawer.BoardScoreDrawer;
+import ui.drawer.*;
 import util.*;
 
 import java.net.URL;
@@ -84,8 +84,22 @@ public class LocalGameController extends BoardController {
 	}
 
 	@Override
-	BoardDrawer buildBoardDrawer() {
-		return new BoardDrawer(boardCanvas, game);
+	GameDrawer buildGameDrawer() {
+		GameDrawer drawer = new GameDrawer(boardCanvas, game);
+
+		Image blackStone = new Image("/black.png", false);
+		Image whiteStone = new Image("/white.png", false);
+
+		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
+		drawer.setStoneDrawer(stoneDrawer);
+
+		Image wood = new Image("/wood.jpg", false);
+		Image lines = new Image("/grid.png", false);
+
+		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
+		drawer.setBoardDrawer(boardDrawer);
+
+		return drawer;
 	}
 
 	@Override
@@ -96,11 +110,13 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	void canvasClicked(MouseEvent mouseEvent) {
-
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
 		CoordProjector projector = new CoordProjector(getBoardLength(boardCanvas),
 													  DimensionHelper.getTopLeftCorner(boardCanvas));
 		Coords boardPos = projector.nearestCoords(mousePosition);
+
+		if ( !projector.isWithinBounds(mousePosition) )
+			return;
 
 		if ( gameState == LocalGameController.GameState.SCORING ) {
 			scorePaneController.enableButtons();
@@ -122,8 +138,15 @@ public class LocalGameController extends BoardController {
 			return;
 
 		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		drawBoard();
-		boardDrawer.drawGhostStone(mousePosition, getTurnPlayer());
+		gameDrawer.setHoverStone(mousePosition, getTurnPlayer());
+	}
+
+	@Override
+	void canvasExit(MouseEvent mouseEvent) {
+		if ( gameState != GameState.PLAYING )
+			return;
+
+		gameDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
 	}
 
 
@@ -138,15 +161,27 @@ public class LocalGameController extends BoardController {
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
-		boardDrawer = new BoardScoreDrawer(boardCanvas, game, boardScorer);
-		boardDrawer.draw();
+		gameDrawer = buildBoardScoreDrawer();
+		gameDrawer.draw();
 		ScoreEvent.fireScoreEvent(boardScorer);
+	}
+
+	private GameScoreDrawer buildBoardScoreDrawer() {
+		GameScoreDrawer drawer = new GameScoreDrawer(boardCanvas, game, boardScorer);
+
+		Image blackStone = new Image("/black.png", false);
+		Image whiteStone = new Image("/white.png", false);
+
+		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
+		drawer.setStoneDrawer(stoneDrawer);
+
+		return drawer;
 	}
 
 	@Override
 	void reviewStart(GameEvent event) {
 		gameState = GameState.REVIEW;
-		boardDrawer = buildBoardDrawer();
+		gameDrawer = buildGameDrawer();
 	}
 
 	private StoneColour getTurnPlayer() {
@@ -156,7 +191,7 @@ public class LocalGameController extends BoardController {
 	private void drawBoard() {
 		if ( gameState == GameState.SCORING )
 			return;
-		boardDrawer.draw();
+		gameDrawer.draw();
 	}
 
 	private void loadScorePane() {
