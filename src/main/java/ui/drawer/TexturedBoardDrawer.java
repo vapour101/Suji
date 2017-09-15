@@ -41,6 +41,10 @@ public class TexturedBoardDrawer extends SimpleBoardDrawer {
 		simpleLines = useSimpleLines;
 	}
 
+	public TexturedBoardDrawer(Canvas canvas, Image backgroundTexture, Image lineTexture) {
+		this(canvas, backgroundTexture, lineTexture, false);
+	}
+
 	@Override
 	public void drawBackground() {
 		if ( background == null )

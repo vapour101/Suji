@@ -94,8 +94,9 @@ public class LocalGameController extends BoardController {
 		drawer.setStoneDrawer(stoneDrawer);
 
 		Image wood = new Image("/wood.jpg", false);
+		Image lines = new Image("/grid.png", false);
 
-		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, true);
+		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
 		drawer.setBoardDrawer(boardDrawer);
 
 		return drawer;
