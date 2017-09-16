@@ -2,11 +2,13 @@
 
 [![Build Status](https://travis-ci.org/GoSuji/Suji.png?branch=master)](https://travis-ci.org/GoSuji/Suji) [![Coverage Status](https://coveralls.io/repos/github/GoSuji/Suji/badge.png?branch=master)](https://coveralls.io/github/GoSuji/Suji?branch=master)
 
-Suji is a modern [Go](https://en.wikipedia.org/wiki/Go_(game)) client and study tool.
+Suji is a modern [Go](https://en.wikipedia.org/wiki/Go_(game)) client and study tool. It is currently very much a work-in-progress.
 
-## Features
+## Current Features
 
-
+- Dockable interface
+- Local play
+- Export to SGF
 
 ## Download
 
