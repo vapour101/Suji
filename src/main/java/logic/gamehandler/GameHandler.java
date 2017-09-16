@@ -23,7 +23,11 @@ import logic.score.ScoreProvider;
 import sgf.SGFProvider;
 import util.StoneColour;
 
-public interface GameHandler extends SGFProvider, GameTreeProvider, BoardProvider, ScoreProvider {
+/**
+ * Common interface for any class that tracks a game of Go from
+ * start to finish.
+ */
+public interface GameHandler extends BoardProvider, GameTreeProvider, SGFProvider, ScoreProvider {
 
 	void pass();
 

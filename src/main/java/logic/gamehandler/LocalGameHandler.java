@@ -69,21 +69,6 @@ public class LocalGameHandler implements GameHandler {
 	}
 
 	@Override
-	public GameTree getGameTree() {
-		return gameTree;
-	}
-
-	@Override
-	public SGFWriter getSGFWriter() {
-		return new SimpleSGFWriter(gameTree.getSequence());
-	}
-
-	@Override
-	public BoardScorer getScorer() {
-		return new BoardScorer(getBoard(), komi);
-	}
-
-	@Override
 	public Board getBoard() {
 		return gameTree.getPosition();
 	}
@@ -120,5 +105,20 @@ public class LocalGameHandler implements GameHandler {
 	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return getBoard().getStones(colour);
+	}
+
+	@Override
+	public GameTree getGameTree() {
+		return gameTree;
+	}
+
+	@Override
+	public SGFWriter getSGFWriter() {
+		return new SimpleSGFWriter(gameTree.getSequence());
+	}
+
+	@Override
+	public BoardScorer getScorer() {
+		return new BoardScorer(getBoard(), komi);
 	}
 }
