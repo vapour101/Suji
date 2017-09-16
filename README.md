@@ -14,8 +14,8 @@ The latest builds can be found on the [Releases](https://github.com/GoSuji/Suji/
 
 ## Contribute
 
-- Issue Tracker: [[github.com/GoSuji/Suji/issues]]
-- Source Code: [[github.com/GoSuji/Suji]]
+- Issue Tracker: [github.com/GoSuji/Suji/issues]
+- Source Code: [github.com/GoSuji/Suji]
 
 ## License
 
