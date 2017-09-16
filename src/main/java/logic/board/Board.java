@@ -25,6 +25,13 @@ import java.util.Collection;
 
 import static util.Move.Type.PLAY;
 
+/**
+ * Tracks the state of the game at any particular point in time. Specifically, Board
+ * knows what stones are on the board, how many stones have been captured and how to
+ * advance the game one move into the future. It does not know how the game reached
+ * this position, which player has the next turn, details of the game, if ko is in
+ * effect, etc.
+ */
 public class Board {
 
 	private ChainSet stones[];

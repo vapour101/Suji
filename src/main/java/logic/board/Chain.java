@@ -22,6 +22,15 @@ import util.Coords;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Holds a collection of contiguous stones of the same colour. Due to the nature
+ * of a Go, this stones will either live or die as a unit, therefore we don't
+ * worry about tracking the liberties of individual stones and instead track
+ * chains.
+ *
+ * @see <a href="https://senseis.xmp.net/?Chain">Definition of chain at SL</a>
+ * @see ChainSet
+ */
 public class Chain {
 
 	private Collection<Coords> stones;
