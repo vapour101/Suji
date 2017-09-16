@@ -18,9 +18,12 @@
 package logic.board;
 
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 import java.util.Collection;
+
+import static util.Move.Type.PLAY;
 
 public class Board {
 
@@ -42,7 +45,19 @@ public class Board {
 		}
 	}
 
-	public void playStone(Coords coords, StoneColour colour) {
+	/**
+	 * Play a stone on the board.
+	 *
+	 * @param move The move to add to the board.
+	 * @throws IllegalArgumentException if the move is illegal
+	 */
+	public void playStone(Move move) {
+		if ( move.getType() != PLAY )
+			return;
+
+		StoneColour colour = move.getPlayer();
+		Coords coords = move.getPosition();
+
 		if ( isOccupied(coords) )
 			throwIllegalMove(coords);
 
@@ -71,7 +86,13 @@ public class Board {
 		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
-	public boolean isSuicide(Coords coords, StoneColour colour) {
+	public boolean isSuicide(Move move) {
+		if ( move.getType() != PLAY )
+			return false;
+
+		StoneColour colour = move.getPlayer();
+		Coords coords = move.getPosition();
+
 		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
@@ -105,6 +126,12 @@ public class Board {
 		return getChainSet(colour).getStones();
 	}
 
+	/**
+	 * Gets the number of stones captured by a particular player
+	 *
+	 * @param colour The player
+	 * @return The number of stones captured by that player
+	 */
 	public int getCaptures(StoneColour colour) {
 		return captures[colour.ordinal()];
 	}

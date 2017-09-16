@@ -122,7 +122,7 @@ public class ComplexGameTree implements GameTree {
 
 		for (Move m : getSequenceAt(node))
 			if ( m.getType() == Move.Type.PLAY )
-				position.playStone(m.getPosition(), m.getPlayer());
+				position.playStone(m);
 
 		return position;
 	}

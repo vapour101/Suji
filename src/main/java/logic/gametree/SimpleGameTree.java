@@ -81,7 +81,7 @@ public class SimpleGameTree implements GameTree {
 
 		for (int i = 0; i < moveNumber; ++i) {
 			if ( moveList.get(i).getType() == Move.Type.PLAY )
-				board.playStone(moveList.get(i).getPosition(), moveList.get(i).getPlayer());
+				board.playStone(moveList.get(i));
 		}
 
 		return board;
