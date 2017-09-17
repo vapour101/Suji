@@ -22,18 +22,18 @@ import event.GameEvent;
 import event.ScoreEvent;
 import event.decorators.GameHandlerEventDecorator;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGameHandler;
 import logic.score.Scorer;
 import ui.drawer.*;
-import util.*;
+import util.Coords;
+import util.HandicapHelper;
+import util.StoneColour;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static util.DimensionHelper.getBoardLength;
 import static util.Move.play;
 
 public class LocalGameController extends BoardController {
@@ -44,11 +44,7 @@ public class LocalGameController extends BoardController {
 	private GameMenuController gameMenuController;
 	private ReviewPanelController reviewPanelController;
 
-	private GameState gameState;
-
-	public LocalGameController() {
-		gameState = GameState.PLAYING;
-	}
+	private BoardStrategy strategy;
 
 	@Override
 	protected String getResourcePath() {
@@ -68,6 +64,7 @@ public class LocalGameController extends BoardController {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		super.initialize(url, resourceBundle);
+		strategy = new GamePlay(boardCanvas, game, gameDrawer);
 		setupEventHandlers();
 	}
 
@@ -103,50 +100,21 @@ public class LocalGameController extends BoardController {
 	}
 
 	@Override
-	void gameEventHandler(GameEvent event) {
-		if ( event.getHandler() == game )
-			drawBoard();
-	}
-
-	@Override
 	void canvasClicked(MouseEvent mouseEvent) {
-		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		CoordProjector projector = new CoordProjector(getBoardLength(boardCanvas),
-													  DimensionHelper.getTopLeftCorner(boardCanvas));
-		Coords boardPos = projector.nearestCoords(mousePosition);
-
-		if ( !projector.isWithinBounds(mousePosition) )
-			return;
-
-		if ( gameState == LocalGameController.GameState.SCORING ) {
-			scorePaneController.enableButtons();
-			if ( mouseEvent.getButton() == MouseButton.PRIMARY )
-				boardScorer.markGroupDead(boardPos);
-			else if ( mouseEvent.getButton() == MouseButton.SECONDARY )
-				boardScorer.unmarkGroupDead(boardPos);
-		}
-		else if ( gameState == LocalGameController.GameState.PLAYING ) {
-			if ( game.isLegalMove(play(boardPos, getTurnPlayer())) ) {
-				game.playMove(play(boardPos, getTurnPlayer()));
-			}
-		}
+		if ( strategy != null )
+			strategy.canvasClicked(mouseEvent);
 	}
 
 	@Override
 	void canvasHover(MouseEvent mouseEvent) {
-		if ( gameState != GameState.PLAYING )
-			return;
-
-		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		gameDrawer.setHoverStone(mousePosition, getTurnPlayer());
+		if ( strategy != null )
+			strategy.canvasHover(mouseEvent);
 	}
 
 	@Override
 	void canvasExit(MouseEvent mouseEvent) {
-		if ( gameState != GameState.PLAYING )
-			return;
-
-		gameDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
+		if ( strategy != null )
+			strategy.canvasExit(mouseEvent);
 	}
 
 
@@ -155,43 +123,24 @@ public class LocalGameController extends BoardController {
 		if ( event.getHandler() != game )
 			return;
 
-		gameState = GameState.SCORING;
 		boardScorer = game.getScorer();
 		gameMenuController.enterScoring();
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
 		gameDrawer = buildBoardScoreDrawer();
+		strategy = new Scoring(boardCanvas, boardScorer, scorePaneController);
 		gameDrawer.draw();
 		ScoreEvent.fireScoreEvent(boardScorer);
 	}
 
 	private GameScoreDrawer buildBoardScoreDrawer() {
-		GameScoreDrawer drawer = new GameScoreDrawer(boardCanvas, game, boardScorer);
-
-		Image blackStone = new Image("/black.png", false);
-		Image whiteStone = new Image("/white.png", false);
-
-		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
-		drawer.setStoneDrawer(stoneDrawer);
-
-		return drawer;
+		return new GameScoreDrawer(buildGameDrawer(), boardScorer);
 	}
 
 	@Override
 	void reviewStart(GameEvent event) {
-		gameState = GameState.REVIEW;
 		gameDrawer = buildGameDrawer();
-	}
-
-	private StoneColour getTurnPlayer() {
-		return game.getTurnPlayer();
-	}
-
-	private void drawBoard() {
-		if ( gameState == GameState.SCORING )
-			return;
-		gameDrawer.draw();
 	}
 
 	private void loadScorePane() {
@@ -217,7 +166,7 @@ public class LocalGameController extends BoardController {
 		if ( event.getSource() != boardScorer )
 			return;
 
-		gameState = GameState.GAMEOVER;
+		strategy = null;
 
 		gameMenuController.enableEndGameButtons();
 	}
@@ -233,9 +182,5 @@ public class LocalGameController extends BoardController {
 
 	void setKomi(double komi) {
 		game.setKomi(komi);
-	}
-
-	private enum GameState {
-		PLAYING, SCORING, GAMEOVER, REVIEW
 	}
 }

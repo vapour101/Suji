@@ -45,7 +45,6 @@ public abstract class BoardController extends SelfBuildingController implements 
 
 	BoardController() {
 		game = buildGameHandler();
-		EventBus.addEventHandler(GameEvent.ANY, this::gameEventHandler);
 		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
 		EventBus.addEventHandler(GameEvent.REVIEWSTART, this::reviewStart);
 	}
@@ -83,8 +82,6 @@ public abstract class BoardController extends SelfBuildingController implements 
 		boardCanvas.setHeight(boardPane.getHeight());
 		boardCanvas.setWidth(boardPane.getWidth());
 	}
-
-	abstract void gameEventHandler(GameEvent event);
 
 	abstract void canvasClicked(MouseEvent mouseEvent);
 

@@ -34,9 +34,18 @@ public class GameScoreDrawer extends GameDrawer {
 
 	public GameScoreDrawer(Canvas canvas, GameHandler game, Scorer scorer) {
 		super(canvas, game);
+		setUpScorer(scorer);
+	}
+
+	private void setUpScorer(Scorer scorer) {
 		this.scorer = scorer;
 
 		EventBus.addEventHandler(ScoreEvent.ANY, this::onScoreChange);
+	}
+
+	public GameScoreDrawer(GameDrawer clone, Scorer scorer) {
+		super(clone);
+		setUpScorer(scorer);
 	}
 
 	private void onScoreChange(ScoreEvent event) {
