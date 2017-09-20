@@ -17,6 +17,8 @@
 
 package ui.drawer;
 
+import event.EventBus;
+import event.GameEvent;
 import javafx.beans.Observable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -36,6 +38,14 @@ public class GameDrawer {
 	private BoardDrawer boardDrawer;
 	private Move hoverStone;
 
+
+	GameDrawer(GameDrawer clone) {
+		this(clone.canvas, clone.game);
+
+		setStoneDrawer(clone.stoneDrawer);
+		setBoardDrawer(clone.boardDrawer);
+	}
+
 	public GameDrawer(Canvas canvas, GameHandler game) {
 		this.canvas = canvas;
 		this.game = game;
@@ -45,6 +55,7 @@ public class GameDrawer {
 		setStoneDrawer(new SimpleStoneDrawer(canvas));
 		setBoardDrawer(new SimpleBoardDrawer(canvas));
 
+		EventBus.addEventHandler(GameEvent.ANY, this::onGameUpdate);
 		canvas.widthProperty().addListener(this::onCanvasResize);
 		canvas.heightProperty().addListener(this::onCanvasResize);
 	}
@@ -94,6 +105,12 @@ public class GameDrawer {
 
 	private GraphicsContext getGraphicsContext() {
 		return canvas.getGraphicsContext2D();
+	}
+
+	private void onGameUpdate(GameEvent event) {
+		if ( event.getHandler() != game )
+			return;
+		draw();
 	}
 
 	public void setHoverStone(DrawCoords position, StoneColour colour) {

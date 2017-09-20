@@ -96,12 +96,12 @@ public class LocalGameHandler implements GameHandler {
 		boolean isLegal;
 
 		isLegal = !gameTree.getPosition().isOccupied(move.getPosition());
-		isLegal &= !gameTree.getPosition().isSuicide(move.getPosition(), move.getPlayer());
+		isLegal &= !gameTree.getPosition().isSuicide(move);
 
 		if ( isLegal && gameTree.getNumMoves() > 2 ) {
 			Board previous = gameTree.getLastPosition();
 			Board future = gameTree.getPosition();
-			future.playStone(move.getPosition(), move.getPlayer());
+			future.playStone(move);
 
 			isLegal = !previous.equals(future);
 		}

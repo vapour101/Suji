@@ -39,8 +39,8 @@ public class SimpleGameTreeTest {
 		tree.stepForward(play(getCoords("D4"), BLACK));
 		tree.stepForward(play(getCoords("C3"), WHITE));
 
-		board.playStone(getCoords("D4"), BLACK);
-		board.playStone(getCoords("C3"), WHITE);
+		board.playStone(play(getCoords("D4"), BLACK));
+		board.playStone(play(getCoords("C3"), WHITE));
 
 		assertThat(tree.getPosition(), is(board));
 	}
@@ -58,10 +58,10 @@ public class SimpleGameTreeTest {
 
 		tree.stepBack();
 
-		board.playStone(getCoords("D4"), BLACK);
-		board.playStone(getCoords("M17"), BLACK);
-		board.playStone(getCoords("C4"), WHITE);
-		board.playStone(getCoords("R4"), WHITE);
+		board.playStone(play(getCoords("D4"), BLACK));
+		board.playStone(play(getCoords("M17"), BLACK));
+		board.playStone(play(getCoords("C4"), WHITE));
+		board.playStone(play(getCoords("R4"), WHITE));
 
 		assertThat(tree.getPosition(), is(board));
 	}

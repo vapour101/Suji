@@ -18,10 +18,20 @@
 package logic.board;
 
 import util.Coords;
+import util.Move;
 import util.StoneColour;
 
 import java.util.Collection;
 
+import static util.Move.Type.PLAY;
+
+/**
+ * Tracks the state of the game at any particular point in time. Specifically, Board
+ * knows what stones are on the board, how many stones have been captured and how to
+ * advance the game one move into the future. It does not know how the game reached
+ * this position, which player has the next turn, details of the game, if ko is in
+ * effect, etc.
+ */
 public class Board {
 
 	private ChainSet stones[];
@@ -42,7 +52,19 @@ public class Board {
 		}
 	}
 
-	public void playStone(Coords coords, StoneColour colour) {
+	/**
+	 * Play a stone on the board.
+	 *
+	 * @param move The move to add to the board.
+	 * @throws IllegalArgumentException if the move is illegal
+	 */
+	public void playStone(Move move) {
+		if ( move.getType() != PLAY )
+			return;
+
+		StoneColour colour = move.getPlayer();
+		Coords coords = move.getPosition();
+
 		if ( isOccupied(coords) )
 			throwIllegalMove(coords);
 
@@ -71,7 +93,13 @@ public class Board {
 		throw new IllegalArgumentException(coords.toString() + " is an illegal move.");
 	}
 
-	public boolean isSuicide(Coords coords, StoneColour colour) {
+	public boolean isSuicide(Move move) {
+		if ( move.getType() != PLAY )
+			return false;
+
+		StoneColour colour = move.getPlayer();
+		Coords coords = move.getPosition();
+
 		return getChainSet(colour).isSuicide(coords, getChainSet(colour.other()));
 	}
 
@@ -105,6 +133,12 @@ public class Board {
 		return getChainSet(colour).getStones();
 	}
 
+	/**
+	 * Gets the number of stones captured by a particular player
+	 *
+	 * @param colour The player
+	 * @return The number of stones captured by that player
+	 */
 	public int getCaptures(StoneColour colour) {
 		return captures[colour.ordinal()];
 	}

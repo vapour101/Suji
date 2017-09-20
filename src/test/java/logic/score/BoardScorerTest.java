@@ -30,6 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 import static util.HandicapHelper.getHandicapStones;
+import static util.Move.play;
 import static util.StoneColour.BLACK;
 import static util.StoneColour.WHITE;
 
@@ -158,9 +159,9 @@ public class BoardScorerTest {
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 0 )
-				testBoard.playStone(getCoords(sequence[i]), BLACK);
+				testBoard.playStone(play(getCoords(sequence[i]), BLACK));
 			else
-				testBoard.playStone(getCoords(sequence[i]), WHITE);
+				testBoard.playStone(play(getCoords(sequence[i]), WHITE));
 		}
 
 		return testBoard;
@@ -186,13 +187,13 @@ public class BoardScorerTest {
 		Board testBoard = new Board();
 
 		for (Coords stone : getHandicapStones(handicap))
-			testBoard.playStone(stone, BLACK);
+			testBoard.playStone(play(stone, BLACK));
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 1 )
-				testBoard.playStone(getCoords(sequence[i]), BLACK);
+				testBoard.playStone(play(getCoords(sequence[i]), BLACK));
 			else
-				testBoard.playStone(getCoords(sequence[i]), WHITE);
+				testBoard.playStone(play(getCoords(sequence[i]), WHITE));
 		}
 
 		return testBoard;
@@ -201,7 +202,7 @@ public class BoardScorerTest {
 	@Test
 	public void realGameScore2() {
 		Board board = buildTestBoard(testBoard4, 3);
-		board.playStone(getCoords("N11"), WHITE);
+		board.playStone(play(getCoords("N11"), WHITE));
 
 		BoardScorer scorer = new BoardScorer(board, -4.5);
 		scorer.markGroupDead(getCoords("K5"));

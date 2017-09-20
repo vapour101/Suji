@@ -22,6 +22,13 @@ import util.Coords;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * A collection of chains of the same colour. A single ChainSet should hold all of the
+ * stones of a given colour that are on the board.
+ *
+ * @see Chain
+ * @see Board
+ */
 public class ChainSet {
 
 	private Collection<Chain> chains;
@@ -51,7 +58,9 @@ public class ChainSet {
 		return stones;
 	}
 
-	//Returns true if the opponent's move would capture one of our chains
+	/**
+	 * @return Whether the given move captures one or more chains
+	 */
 	boolean chainIsCaptured(Coords opponentMove, ChainSet opponentStones) {
 		for (Chain chain : chains)
 			if ( chain.getLiberties().contains(opponentMove) ) {
@@ -64,7 +73,11 @@ public class ChainSet {
 		return false;
 	}
 
-	//Remove any chains captured by the opponent's move and return the number of stones that were captured.
+	/**
+	 * Remove any chains captured by the opponent's move and return the number of stones that were captured.
+	 *
+	 * @return The number of stones captured by the move.
+	 */
 	int captureStones(Coords opponentMove, ChainSet opponentStone) {
 		Collection<Chain> deadChains = new HashSet<>();
 

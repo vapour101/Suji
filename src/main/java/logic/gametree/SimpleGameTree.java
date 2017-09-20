@@ -23,6 +23,10 @@ import util.Move;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * An implementation of GameTree that can only track a single sequence and forgets about any move
+ * it steps back from.
+ */
 public class SimpleGameTree implements GameTree {
 
 	private LinkedList<Move> moveList;
@@ -81,7 +85,7 @@ public class SimpleGameTree implements GameTree {
 
 		for (int i = 0; i < moveNumber; ++i) {
 			if ( moveList.get(i).getType() == Move.Type.PLAY )
-				board.playStone(moveList.get(i).getPosition(), moveList.get(i).getPlayer());
+				board.playStone(moveList.get(i));
 		}
 
 		return board;
