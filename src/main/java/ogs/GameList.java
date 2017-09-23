@@ -28,7 +28,7 @@ import java.util.logging.Level;
 
 public class GameList {
 
-	private Vector<String> games;
+	private Vector<GameMeta> games;
 
 	private GameList(JSONObject jsonGame) {
 		games = new Vector<>();
@@ -37,12 +37,7 @@ public class GameList {
 			JSONArray gameArray = jsonGame.getJSONArray("results");
 
 			for (int i = 0; i < gameArray.length(); i++) {
-				JSONObject game = gameArray.getJSONObject(i);
-
-				String black = game.getJSONObject("black").getString("username");
-				String white = game.getJSONObject("white").getString("username");
-
-				games.add(black + " vs " + white);
+				games.add(new GameMeta(gameArray.getJSONObject(i)));
 			}
 		}
 		catch (JSONException e) {
@@ -56,7 +51,7 @@ public class GameList {
 		Connection.getGameList(args, jsonObject -> callback.accept(new GameList(jsonObject)));
 	}
 
-	public Vector<String> getGames() {
+	public Vector<GameMeta> getGames() {
 		return games;
 	}
 

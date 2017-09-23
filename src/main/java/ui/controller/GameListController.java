@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import ogs.GameList;
+import ogs.GameMeta;
 import util.LogHelper;
 
 import java.net.URL;
@@ -44,7 +45,12 @@ public class GameListController extends SelfBuildingController implements Initia
 	}
 
 	private void populateTable(GameList gameList) {
-		ObservableList<String> items = FXCollections.observableArrayList(gameList.getGames());
+		ObservableList<String> items = FXCollections.observableArrayList();
+
+		for (GameMeta game : gameList.getGames()) {
+			String gameInfo = game.getBlackName() + " vs " + game.getWhiteName();
+			items.add(gameInfo);
+		}
 
 		list.setItems(items);
 
