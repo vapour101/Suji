@@ -29,11 +29,9 @@ import java.util.function.Consumer;
 
 public class OGSConnection {
 
-	private static OGSConnection instance = null;
 	private static final Object monitor = new Object();
-	
 	private static final String GAMELIST = "gamelist/query";
-
+	private static OGSConnection instance = null;
 	private Socket connection;
 
 	private OGSConnection() {
@@ -68,11 +66,9 @@ public class OGSConnection {
 		return prefix;
 	}
 
-	public static void disconnect() {
+	public static synchronized void disconnect() {
 		if ( getInstance().connection.connected() ) {
-			synchronized (monitor) {
-				getInstance().connection.disconnect();
-			}
+			getInstance().connection.disconnect();
 		}
 	}
 
@@ -113,14 +109,23 @@ public class OGSConnection {
 	}
 
 	private static OGSConnection getConnectedInstance() {
+		try {
+			return getConnectedInstanceWithExceptions();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
+		return null;
+	}
+
+	private static OGSConnection getConnectedInstanceWithExceptions() throws InterruptedException {
 		while (!getInstance().connection.connected()) {
 			synchronized (monitor) {
-				try {
+				if ( !getInstance().connection.connected() ) {
+					getInstance().connection.connect();
+
 					monitor.wait();
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 			}
 		}

@@ -25,10 +25,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import netcode.OGSConnection;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
+import ui.controller.GameListController;
 import ui.dialog.LocalGameDialog;
+import util.LogHelper;
 
 public class Main extends Application {
 
@@ -42,7 +45,12 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		LogHelper.finest("Starting");
 		window = primaryStage;
+		primaryStage.setOnHidden(event -> {
+			OGSConnection.disconnect();
+			System.exit(0);
+		});
 		buildWindow();
 	}
 
@@ -86,8 +94,16 @@ public class Main extends Application {
 			node.dock(dockPane, DockPos.CENTER);
 		});
 
+		MenuItem ogsGameList = new MenuItem("OGS Game List");
+		ogsGameList.setOnAction(event -> {
+			GameListController controller = new GameListController();
+			DockNode node = new DockNode(controller.build(), "OGS GameList");
+			node.dock(dockPane, DockPos.RIGHT);
+		});
+
 		//Home items
 		fileMenu.getItems().add(newLocalGame);
+		fileMenu.getItems().add(ogsGameList);
 
 		return fileMenu;
 	}
