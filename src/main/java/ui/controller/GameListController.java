@@ -23,7 +23,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import ogs.GameList;
 import ogs.GameMeta;
-import util.LogHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,9 +51,19 @@ public class GameListController extends SelfBuildingController implements Initia
 			items.add(gameInfo);
 		}
 
-		list.setItems(items);
+		items.add("");
 
-		LogHelper.info("Finished populating table");
+		StringBuilder sb = new StringBuilder();
+		sb.append("Displaying games ");
+		sb.append(gameList.getStartIndex() + 1);
+		sb.append(" to ");
+		sb.append(gameList.getEndIndex() + 1);
+		sb.append(" of ");
+		sb.append(gameList.getTotalGames());
+
+		items.add(sb.toString());
+
+		list.setItems(items);
 	}
 
 	@Override

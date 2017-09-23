@@ -19,6 +19,7 @@ package ogs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import util.LogHelper;
 
 public class PlayerMeta {
 
@@ -32,7 +33,7 @@ public class PlayerMeta {
 			build(player);
 		}
 		catch (JSONException e) {
-			e.printStackTrace();
+			LogHelper.jsonError(e);
 		}
 	}
 

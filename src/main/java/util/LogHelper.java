@@ -17,6 +17,8 @@
 
 package util;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -69,11 +71,15 @@ public class LogHelper {
 		return instance;
 	}
 
-	public static void finest(String message) {
-		getLogger().finest(message);
+	public static void jsonError(JSONException exception) {
+		log(Level.WARNING, "Error parsing JSON string", exception);
 	}
 
 	public static void log(Level level, String msg, Throwable thrown) {
 		getLogger().log(level, msg, thrown);
+	}
+
+	public static void finest(String message) {
+		getLogger().finest(message);
 	}
 }

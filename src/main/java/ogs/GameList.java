@@ -22,26 +22,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import util.LogHelper;
 
+import java.util.Collection;
 import java.util.Vector;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 public class GameList {
 
 	private Vector<GameMeta> games;
 
-	private GameList(JSONObject jsonGame) {
-		games = new Vector<>();
+	private int totalSize;
+	private int size;
+	private int start;
 
+	private GameList(JSONObject jsonGameList) {
 		try {
-			JSONArray gameArray = jsonGame.getJSONArray("results");
-
-			for (int i = 0; i < gameArray.length(); i++) {
-				games.add(new GameMeta(gameArray.getJSONObject(i)));
-			}
+			fromJSON(jsonGameList);
 		}
 		catch (JSONException e) {
-			e.printStackTrace();
+			LogHelper.jsonError(e);
+		}
+	}
+
+	private void fromJSON(JSONObject jsonGameList) throws JSONException {
+		totalSize = jsonGameList.getInt("size");
+		start = jsonGameList.getInt("from");
+		size = jsonGameList.getInt("limit");
+
+		games = new Vector<>();
+
+		JSONArray gameArray = jsonGameList.getJSONArray("results");
+
+		for (int i = 0; i < gameArray.length(); i++) {
+			games.add(new GameMeta(gameArray.getJSONObject(i)));
 		}
 	}
 
@@ -51,8 +63,20 @@ public class GameList {
 		Connection.getGameList(args, jsonObject -> callback.accept(new GameList(jsonObject)));
 	}
 
-	public Vector<GameMeta> getGames() {
+	public Collection<GameMeta> getGames() {
 		return games;
+	}
+
+	public int getTotalGames() {
+		return totalSize;
+	}
+
+	public int getStartIndex() {
+		return start;
+	}
+
+	public int getEndIndex() {
+		return start + size - 1;
 	}
 
 	public enum GameListType {
@@ -123,7 +147,7 @@ public class GameList {
 				request.put("limit", size);
 			}
 			catch (JSONException e) {
-				LogHelper.log(Level.WARNING, "Error creating JSONObject", e);
+				LogHelper.jsonError(e);
 			}
 
 			return request;
