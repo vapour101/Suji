@@ -21,15 +21,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
-import netcode.OGSConnection;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import ogs.GameList;
 import util.LogHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 public class GameListController extends SelfBuildingController implements Initializable {
 
@@ -37,27 +33,18 @@ public class GameListController extends SelfBuildingController implements Initia
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		OGSConnection.requestGameList(this::populateTable);
+		GameList.RequestOptions options = new GameList.RequestOptions();
+
+		options.setNumGames(10);
+		options.setPage(0);
+		options.setType(GameList.GameListType.LIVE);
+		options.sortBy(GameList.SortingOptions.RANK);
+
+		GameList.requestGameList(options, this::populateTable);
 	}
 
-	private void populateTable(JSONObject jsonObject) {
-		ObservableList<String> items = FXCollections.observableArrayList();
-
-		try {
-			JSONArray gameList = jsonObject.getJSONArray("results");
-
-			for (int i = 0; i < gameList.length(); ++i) {
-				JSONObject game = gameList.getJSONObject(i);
-				String black = game.getJSONObject("black").getString("username");
-				String white = game.getJSONObject("white").getString("username");
-
-				items.add(black + " vs " + white);
-			}
-		}
-		catch (JSONException e) {
-			LogHelper.log(Level.SEVERE, "Malformed JSONObject in GameListController::populateTable", e);
-			return;
-		}
+	private void populateTable(GameList gameList) {
+		ObservableList<String> items = FXCollections.observableArrayList(gameList.getGames());
 
 		list.setItems(items);
 

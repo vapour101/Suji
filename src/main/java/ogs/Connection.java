@@ -15,26 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package netcode;
+package ogs;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Consumer;
 
-public class OGSConnection {
+public class Connection {
 
 	private static final Object monitor = new Object();
 	private static final String GAMELIST = "gamelist/query";
-	private static OGSConnection instance = null;
+	private static Connection instance = null;
 	private Socket connection;
 
-	private OGSConnection() {
+	private Connection() {
 
 		URI prefix = getPrefix();
 		if ( prefix == null )
@@ -72,35 +71,23 @@ public class OGSConnection {
 		}
 	}
 
-	private static OGSConnection getInstance() {
+	private static Connection getInstance() {
 		if ( instance == null ) {
 			synchronized (monitor) {
 				if ( instance == null )
-					instance = new OGSConnection();
+					instance = new Connection();
 			}
 		}
 
 		return instance;
 	}
 
-	public static void requestGameList(Consumer<JSONObject> callback) {
-		Thread thread = new Thread(() -> getConnectedInstance().gameListRequest(callback));
+	public static void getGameList(JSONObject args, Consumer<JSONObject> callback) {
+		Thread thread = new Thread(() -> getConnectedInstance().gameListQuery(args, callback));
 		thread.run();
 	}
 
-	private void gameListRequest(Consumer<JSONObject> callback) {
-		JSONObject args = new JSONObject();
-
-		try {
-			args.put("list", "live");
-			args.put("sort_by", "rank");
-			args.put("from", 0);
-			args.put("limit", 10);
-		}
-		catch (JSONException e) {
-			e.printStackTrace();
-		}
-
+	private void gameListQuery(JSONObject args, Consumer<JSONObject> callback) {
 		connection.emit(GAMELIST, args, (Ack) res -> {
 			JSONObject gameList = (JSONObject) res[0];
 
@@ -108,7 +95,7 @@ public class OGSConnection {
 		});
 	}
 
-	private static OGSConnection getConnectedInstance() {
+	private static Connection getConnectedInstance() {
 		try {
 			return getConnectedInstanceWithExceptions();
 		}
@@ -119,7 +106,7 @@ public class OGSConnection {
 		return null;
 	}
 
-	private static OGSConnection getConnectedInstanceWithExceptions() throws InterruptedException {
+	private static Connection getConnectedInstanceWithExceptions() throws InterruptedException {
 		while (!getInstance().connection.connected()) {
 			synchronized (monitor) {
 				if ( !getInstance().connection.connected() ) {

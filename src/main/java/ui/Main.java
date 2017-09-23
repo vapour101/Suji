@@ -25,7 +25,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import netcode.OGSConnection;
+import ogs.Connection;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
@@ -48,7 +48,7 @@ public class Main extends Application {
 		LogHelper.finest("Starting");
 		window = primaryStage;
 		primaryStage.setOnHidden(event -> {
-			OGSConnection.disconnect();
+			Connection.disconnect();
 			System.exit(0);
 		});
 		buildWindow();
