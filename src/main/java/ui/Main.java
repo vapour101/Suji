@@ -78,11 +78,12 @@ public class Main extends Application {
 	private void buildMenuBar() {
 		//file menu, creating the main tabs
 		Menu fileMenu = getFileMenu();
+		Menu ogsMenu = getOGSMenu();
 		Menu exitMenu = getExitMenu();
 
 		//main menu bar
 		menuBar = new MenuBar();
-		menuBar.getMenus().addAll(fileMenu, exitMenu);
+		menuBar.getMenus().addAll(fileMenu, ogsMenu, exitMenu);
 	}
 
 	private Menu getFileMenu() {
@@ -94,16 +95,7 @@ public class Main extends Application {
 			node.dock(dockPane, DockPos.CENTER);
 		});
 
-		MenuItem ogsGameList = new MenuItem("OGS Game List");
-		ogsGameList.setOnAction(event -> {
-			GameListController controller = new GameListController();
-			DockNode node = new DockNode(controller.build(), "OGS GameList");
-			node.dock(dockPane, DockPos.RIGHT);
-		});
-
-		//Home items
 		fileMenu.getItems().add(newLocalGame);
-		fileMenu.getItems().add(ogsGameList);
 
 		return fileMenu;
 	}
@@ -116,6 +108,21 @@ public class Main extends Application {
 		exitMenu.setGraphic(exitLabel);
 
 		return exitMenu;
+	}
+
+	private Menu getOGSMenu() {
+		Menu ogsMenu = new Menu("OGS");
+
+		MenuItem ogsGameList = new MenuItem("Game List");
+		ogsGameList.setOnAction(event -> {
+			GameListController controller = new GameListController();
+			DockNode node = new DockNode(controller.build(), "OGS GameList");
+			node.dock(dockPane, DockPos.RIGHT);
+		});
+
+		ogsMenu.getItems().add(ogsGameList);
+
+		return ogsMenu;
 	}
 
 	private void buildDockPane() {

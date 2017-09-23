@@ -34,6 +34,7 @@ public class GameMeta {
 
 	private int turnPlayer;
 	private String phase;
+	private int moveNumber;
 
 	GameMeta(JSONObject game) {
 		try {
@@ -56,6 +57,7 @@ public class GameMeta {
 
 		turnPlayer = game.getInt("player_to_move");
 		phase = game.getString("phase");
+		moveNumber = game.getInt("move_number");
 	}
 
 	public int getId() {
@@ -96,5 +98,9 @@ public class GameMeta {
 
 	public boolean isPrivate() {
 		return isPrivate;
+	}
+
+	public int getMoveNumber() {
+		return moveNumber;
 	}
 }

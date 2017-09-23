@@ -17,10 +17,13 @@
 
 package ui.controller;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import ogs.GameList;
 import ogs.GameMeta;
 
@@ -29,13 +32,15 @@ import java.util.ResourceBundle;
 
 public class GameListController extends SelfBuildingController implements Initializable {
 
-	public ListView<String> list;
+	public TableView<GameMeta> table;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		buildTable();
+
 		GameList.RequestOptions options = new GameList.RequestOptions();
 
-		options.setNumGames(10);
+		options.setNumGames(1000);
 		options.setPage(0);
 		options.setType(GameList.GameListType.LIVE);
 		options.sortBy(GameList.SortingOptions.RANK);
@@ -43,27 +48,33 @@ public class GameListController extends SelfBuildingController implements Initia
 		GameList.requestGameList(options, this::populateTable);
 	}
 
+	private void buildTable() {
+		TableColumn<GameMeta, String> titleColumn = new TableColumn<>("Game");
+		titleColumn.setPrefWidth(125);
+		titleColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getGameName()));
+
+		TableColumn<GameMeta, String> blackColumn = new TableColumn<>("Black");
+		blackColumn.setPrefWidth(125);
+		blackColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackName()));
+
+		TableColumn<GameMeta, String> whiteColumn = new TableColumn<>("White");
+		whiteColumn.setPrefWidth(125);
+		whiteColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getWhiteName()));
+
+		TableColumn<GameMeta, Integer> moveColumn = new TableColumn<>("Move");
+		moveColumn.setPrefWidth(55);
+		moveColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getMoveNumber()));
+
+		table.getColumns().add(blackColumn);
+		table.getColumns().add(whiteColumn);
+		table.getColumns().add(titleColumn);
+		table.getColumns().add(moveColumn);
+	}
+
 	private void populateTable(GameList gameList) {
-		ObservableList<String> items = FXCollections.observableArrayList();
+		ObservableList<GameMeta> items = FXCollections.observableArrayList(gameList.getGames());
 
-		for (GameMeta game : gameList.getGames()) {
-			String gameInfo = game.getBlackName() + " vs " + game.getWhiteName();
-			items.add(gameInfo);
-		}
-
-		items.add("");
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("Displaying games ");
-		sb.append(gameList.getStartIndex() + 1);
-		sb.append(" to ");
-		sb.append(gameList.getEndIndex() + 1);
-		sb.append(" of ");
-		sb.append(gameList.getTotalGames());
-
-		items.add(sb.toString());
-
-		list.setItems(items);
+		table.setItems(items);
 	}
 
 	@Override

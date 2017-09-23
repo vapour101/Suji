@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
-            fx:controller="ui.controller.GameListController">
-    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="list" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"
-              AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"/>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="369.0" prefWidth="490.0"
+            xmlns="http://javafx.com/javafx/8.0.111" fx:controller="ui.controller.GameListController">
+    <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+    </TableView>
 </AnchorPane>
