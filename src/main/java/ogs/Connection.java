@@ -20,16 +20,21 @@ package ogs;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import org.json.JSONException;
 import org.json.JSONObject;
+import util.LogHelper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public class Connection {
 
 	private static final Object monitor = new Object();
 	private static final String GAMELIST = "gamelist/query";
+	private static final String GAMECONNECT = "game/connect";
 	private static Connection instance = null;
 	private Socket connection;
 
@@ -82,17 +87,60 @@ public class Connection {
 		return instance;
 	}
 
-	public static void getGameList(JSONObject args, Consumer<JSONObject> callback) {
-		Thread thread = new Thread(() -> getConnectedInstance().gameListQuery(args, callback));
+	public static void connectToGame(GameMeta game,
+									 Consumer<JSONObject> gamedataConsumer,
+									 Consumer<JSONObject> moveConsumer) {
+		Thread thread = new Thread(() -> getConnectedInstance().gameConnection(game, gamedataConsumer, moveConsumer));
 		thread.run();
 	}
 
-	private void gameListQuery(JSONObject args, Consumer<JSONObject> callback) {
-		connection.emit(GAMELIST, args, (Ack) res -> {
-			JSONObject gameList = (JSONObject) res[0];
-
-			callback.accept(gameList);
+	private void gameConnection(GameMeta game,
+								Consumer<JSONObject> gamedataConsumer,
+								Consumer<JSONObject> moveConsumer) {
+		connection.on(getGamedataEvent(game), new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				argsToJSON(gamedataConsumer, args);
+			}
 		});
+
+		connection.on(getGameMoveEvent(game), new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				argsToJSON(moveConsumer, args);
+			}
+		});
+
+		JSONObject options = getGameConnectOptions(game);
+
+		connection.emit(GAMECONNECT, options);
+	}
+
+	private JSONObject getGameConnectOptions(GameMeta game) {
+		JSONObject options = new JSONObject();
+
+		try {
+			options.put("game_id", game.getId());
+			options.put("chat", false);
+		}
+		catch (JSONException e) {
+			LogHelper.jsonError(e);
+		}
+
+		return options;
+	}
+
+	private void argsToJSON(Consumer<JSONObject> consumer, Object... args) {
+		JSONObject jsonObject = (JSONObject) args[0];
+		consumer.accept(jsonObject);
+	}
+
+	private String getGamedataEvent(GameMeta game) {
+		return "game/" + game.getId() + "/gamedata";
+	}
+
+	private String getGameMoveEvent(GameMeta game) {
+		return "game/" + game.getId() + "/move";
 	}
 
 	private static Connection getConnectedInstance() {
@@ -100,7 +148,7 @@ public class Connection {
 			return getConnectedInstanceWithExceptions();
 		}
 		catch (InterruptedException e) {
-			e.printStackTrace();
+			LogHelper.log(Level.SEVERE, "Interrupted", e);
 		}
 
 		return null;
@@ -117,7 +165,17 @@ public class Connection {
 			}
 		}
 
+		LogHelper.finest("Returning connected instance.");
 		return getInstance();
+	}
+
+	public static void getGameList(JSONObject args, Consumer<JSONObject> callback) {
+		Thread thread = new Thread(() -> getConnectedInstance().gameListQuery(args, callback));
+		thread.run();
+	}
+
+	private void gameListQuery(JSONObject args, Consumer<JSONObject> callback) {
+		connection.emit(GAMELIST, args, (Ack) res -> argsToJSON(callback, res));
 	}
 
 	private void onConnect(Object... objects) {

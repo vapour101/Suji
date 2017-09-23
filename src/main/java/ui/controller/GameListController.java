@@ -17,15 +17,20 @@
 
 package ui.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.util.Callback;
 import ogs.GameList;
 import ogs.GameMeta;
+import org.dockfx.DockNode;
+import org.dockfx.DockPos;
+import ui.Main;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,6 +74,30 @@ public class GameListController extends SelfBuildingController implements Initia
 		table.getColumns().add(whiteColumn);
 		table.getColumns().add(titleColumn);
 		table.getColumns().add(moveColumn);
+
+		table.setRowFactory(new Callback<TableView<GameMeta>, TableRow<GameMeta>>() {
+			@Override
+			public TableRow<GameMeta> call(TableView<GameMeta> param) {
+				final TableRow<GameMeta> row = new TableRow<>();
+				final ContextMenu rowMenu = new ContextMenu();
+
+				MenuItem spectateItem = new MenuItem("Watch Game");
+				spectateItem.setOnAction(event -> spectateGame(row.getItem()));
+
+				rowMenu.getItems().add(spectateItem);
+
+				row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty())).then(rowMenu).otherwise(
+						(ContextMenu) null));
+				return row;
+			}
+		});
+	}
+
+	private void spectateGame(GameMeta game) {
+		SpectatorController controller = new SpectatorController(game);
+		Parent root = controller.build();
+		DockNode node = new DockNode(root, game.getGameName());
+		node.dock(Main.instance.dockPane, DockPos.CENTER);
 	}
 
 	private void populateTable(GameList gameList) {

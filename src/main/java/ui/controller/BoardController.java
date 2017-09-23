@@ -44,15 +44,17 @@ public abstract class BoardController extends SelfBuildingController implements 
 	GameDrawer gameDrawer;
 
 	BoardController() {
-		game = buildGameHandler();
-		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
-		EventBus.addEventHandler(GameEvent.REVIEWSTART, this::reviewStart);
+
+
 	}
 
 	abstract GameHandler buildGameHandler();
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
+		EventBus.addEventHandler(GameEvent.REVIEWSTART, this::reviewStart);
+
 		setupPanes();
 		constructCanvas();
 
@@ -83,13 +85,18 @@ public abstract class BoardController extends SelfBuildingController implements 
 		boardCanvas.setWidth(boardPane.getWidth());
 	}
 
-	abstract void canvasClicked(MouseEvent mouseEvent);
+	void canvasClicked(MouseEvent mouseEvent) {
+	}
 
-	abstract void canvasHover(MouseEvent mouseEvent);
+	void canvasHover(MouseEvent mouseEvent) {
+	}
 
-	abstract void canvasExit(MouseEvent mouseEvent);
+	void canvasExit(MouseEvent mouseEvent) {
+	}
 
-	abstract void enterScoring(GameEvent event);
+	void enterScoring(GameEvent event) {
+	}
 
-	abstract void reviewStart(GameEvent event);
+	void reviewStart(GameEvent event) {
+	}
 }

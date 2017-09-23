@@ -82,4 +82,8 @@ public class LogHelper {
 	public static void finest(String message) {
 		getLogger().finest(message);
 	}
+
+	public static void severe(String message) {
+		getLogger().severe(message);
+	}
 }

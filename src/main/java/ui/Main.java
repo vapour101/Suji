@@ -35,8 +35,9 @@ import util.LogHelper;
 
 public class Main extends Application {
 
+	public static Main instance;
+	public DockPane dockPane;
 	private Stage window;
-	private DockPane dockPane;
 	private MenuBar menuBar;
 
 	public static void main(String[] args) {
@@ -45,8 +46,12 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		instance = this;
 		LogHelper.finest("Starting");
 		window = primaryStage;
+
+		primaryStage.setOnCloseRequest(event -> primaryStage.close());
+
 		primaryStage.setOnHidden(event -> {
 			Connection.disconnect();
 			System.exit(0);
@@ -93,6 +98,7 @@ public class Main extends Application {
 		newLocalGame.setOnAction(event -> {
 			DockNode node = LocalGameDialog.build();
 			node.dock(dockPane, DockPos.CENTER);
+			node.setFloating(true);
 		});
 
 		fileMenu.getItems().add(newLocalGame);

@@ -46,9 +46,8 @@ public class LocalGameController extends BoardController {
 
 	private BoardStrategy strategy;
 
-	@Override
-	protected String getResourcePath() {
-		return "/localGame.fxml";
+	public LocalGameController() {
+		game = buildGameHandler();
 	}
 
 	@Override
@@ -117,7 +116,6 @@ public class LocalGameController extends BoardController {
 			strategy.canvasExit(mouseEvent);
 	}
 
-
 	@Override
 	void enterScoring(GameEvent event) {
 		if ( event.getHandler() != game )
@@ -160,6 +158,11 @@ public class LocalGameController extends BoardController {
 		reviewPanelController = new ReviewPanelController(game);
 
 		sideBar.getChildren().add(reviewPanelController.build());
+	}
+
+	@Override
+	protected String getResourcePath() {
+		return "/localGame.fxml";
 	}
 
 	private void doneScoring(ScoreEvent event) {
