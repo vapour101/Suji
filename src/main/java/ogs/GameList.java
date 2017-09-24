@@ -88,7 +88,7 @@ public class GameList {
 				return "live";
 
 			if ( this == CORRESPONDENCE )
-				return "correspondence";
+				return "corr";
 
 			return "";
 		}

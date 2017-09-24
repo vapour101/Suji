@@ -49,8 +49,10 @@ public class SpectatorGameHandler implements GameHandler {
 	private void onGameData(Gamedata gamedata) {
 		LogHelper.info("Gamedata received");
 
-		if ( gamedata == null )
+		if ( gamedata == null ) {
 			LogHelper.severe("Gamedata is null");
+			return;
+		}
 
 		gameTree = new ComplexGameTree();
 

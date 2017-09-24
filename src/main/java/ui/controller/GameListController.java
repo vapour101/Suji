@@ -24,6 +24,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -33,25 +35,50 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPos;
 import ui.Main;
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GameListController extends SelfBuildingController implements Initializable {
 
-	public TableView<GameList.Game> table;
+	private boolean live = true;
+	@FXML
+	private TableView<GameList.Game> table;
+	@FXML
+	private Button corrButton;
+	@FXML
+	private Button liveButton;
+
+	private void onSwitch(ActionEvent event) {
+		live = !live;
+
+		liveButton.setDisable(live);
+		corrButton.setDisable(!live);
+
+		requestGameList();
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		buildTable();
+		requestGameList();
+		liveButton.setOnAction(this::onSwitch);
+		corrButton.setOnAction(this::onSwitch);
+	}
 
+	private void requestGameList() {
 		GameList.RequestOptions options = new GameList.RequestOptions();
 
 		options.setNumGames(1000);
 		options.setPage(0);
-		options.setType(GameList.GameListType.LIVE);
 		options.sortBy(GameList.SortingOptions.RANK);
 
-		GameList.requestGameList(options, this::populateTable);
+		if ( live )
+			options.setType(GameList.GameListType.LIVE);
+		else
+			options.setType(GameList.GameListType.CORRESPONDENCE);
+
+		GameList.requestGameList(options, this::populate);
 	}
 
 	private void buildTable() {
@@ -112,7 +139,7 @@ public class GameListController extends SelfBuildingController implements Initia
 		node.dock(Main.instance.dockPane, DockPos.CENTER);
 	}
 
-	private void populateTable(GameList gameList) {
+	private void populate(GameList gameList) {
 		ObservableList<GameList.Game> items = FXCollections.observableArrayList(gameList.getGames());
 
 		table.setItems(items);

@@ -241,6 +241,7 @@ public class Connection {
 	private void gameListQuery(JSONObject args, Consumer<JSONObject> callback) {
 		LogHelper.finest("Requesting gamelist");
 		connection.emit(GAMELIST, args, (Ack) res -> argsToJSON(callback, res));
+		LogHelper.finest("Requested gamelist");
 	}
 
 	private void onConnect(Object... objects) {
