@@ -91,7 +91,17 @@ public class Connection {
 	}
 
 	public static void connectToGame(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
-		Thread thread = new Thread(() -> getConnectedInstance().gameConnection(gameId, gamedataConsumer, moveConsumer));
+		Thread thread = new Thread(() -> {
+			Connection connection = getConnectedInstance();
+
+			if ( connection == null )
+			{
+				LogHelper.severe("Can't establish a connection.");
+				return;
+			}
+
+			connection.gameConnection(gameId, gamedataConsumer, moveConsumer);
+		});
 		thread.run();
 	}
 
@@ -176,8 +186,18 @@ public class Connection {
 		return getInstance();
 	}
 
-	public static void getGameList(JSONObject args, Consumer<JSONObject> callback) {
-		Thread thread = new Thread(() -> getConnectedInstance().gameListQuery(args, callback));
+	static void getGameList(JSONObject args, Consumer<JSONObject> callback) {
+		Thread thread = new Thread(() -> {
+			Connection connection = getConnectedInstance();
+
+			if ( connection == null )
+			{
+				LogHelper.severe("Can't establish a connection.");
+				return;
+			}
+
+			connection.gameListQuery(args, callback);
+		});
 		thread.run();
 	}
 
