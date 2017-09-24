@@ -90,40 +90,38 @@ public class Connection {
 		return instance;
 	}
 
-	public static void connectToGame(GameList.GameMeta game,
+	public static void connectToGame(int gameId,
 									 Consumer<JSONObject> gamedataConsumer,
 									 Consumer<JSONObject> moveConsumer) {
-		Thread thread = new Thread(() -> getConnectedInstance().gameConnection(game, gamedataConsumer, moveConsumer));
+		Thread thread = new Thread(() -> getConnectedInstance().gameConnection(gameId, gamedataConsumer, moveConsumer));
 		thread.run();
 	}
 
-	private void gameConnection(GameList.GameMeta game,
-								Consumer<JSONObject> gamedataConsumer,
-								Consumer<JSONObject> moveConsumer) {
-		connection.on(getGamedataEvent(game), new Emitter.Listener() {
+	private void gameConnection(int gameId, Consumer<JSONObject> gamedataConsumer, Consumer<JSONObject> moveConsumer) {
+		connection.on(getGamedataEvent(gameId), new Emitter.Listener() {
 			@Override
 			public void call(Object... args) {
 				argsToJSON(gamedataConsumer, args);
 			}
 		});
 
-		connection.on(getGameMoveEvent(game), new Emitter.Listener() {
+		connection.on(getGameMoveEvent(gameId), new Emitter.Listener() {
 			@Override
 			public void call(Object... args) {
 				argsToJSON(moveConsumer, args);
 			}
 		});
 
-		JSONObject options = getGameConnectOptions(game);
+		JSONObject options = getGameConnectOptions(gameId);
 
 		connection.emit(GAMECONNECT, options);
 	}
 
-	private JSONObject getGameConnectOptions(GameList.GameMeta game) {
+	private JSONObject getGameConnectOptions(int gameId) {
 		JSONObject options = new JSONObject();
 
 		try {
-			options.put("game_id", game.getId());
+			options.put("game_id", gameId);
 			options.put("chat", false);
 		}
 		catch (JSONException e) {
@@ -138,12 +136,12 @@ public class Connection {
 		consumer.accept(jsonObject);
 	}
 
-	private String getGamedataEvent(GameList.GameMeta game) {
-		return "game/" + game.getId() + "/gamedata";
+	private String getGamedataEvent(int gameId) {
+		return "game/" + gameId + "/gamedata";
 	}
 
-	private String getGameMoveEvent(GameList.GameMeta game) {
-		return "game/" + game.getId() + "/move";
+	private String getGameMoveEvent(int gameId) {
+		return "game/" + gameId + "/move";
 	}
 
 	private static Connection getConnectedInstance() {

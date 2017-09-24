@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class GameList {
 
-	private Vector<GameMeta> games;
+	private Vector<Game> games;
 
 	private int totalSize;
 	private int size;
@@ -53,7 +53,7 @@ public class GameList {
 		JSONArray gameArray = jsonGameList.getJSONArray("results");
 
 		for (int i = 0; i < gameArray.length(); i++) {
-			games.add(new GameMeta(gameArray.getJSONObject(i)));
+			games.add(new Game(gameArray.getJSONObject(i)));
 		}
 	}
 
@@ -63,7 +63,7 @@ public class GameList {
 		Connection.getGameList(args, jsonObject -> callback.accept(new GameList(jsonObject)));
 	}
 
-	public Collection<GameMeta> getGames() {
+	public Collection<Game> getGames() {
 		return games;
 	}
 
@@ -154,14 +154,14 @@ public class GameList {
 		}
 	}
 
-	public class PlayerMeta {
+	public class Player {
 
 		private int id;
 		private String name;
 		private int rank;
 		private boolean isProfessional;
 
-		PlayerMeta(JSONObject player) {
+		Player(JSONObject player) {
 			try {
 				build(player);
 			}
@@ -194,13 +194,13 @@ public class GameList {
 		}
 	}
 
-	public class GameMeta {
+	public class Game {
 
 		private int id;
 		private String name;
 
-		private PlayerMeta black;
-		private PlayerMeta white;
+		private Player black;
+		private Player white;
 
 		private int size;
 		private boolean isPrivate;
@@ -209,7 +209,7 @@ public class GameList {
 		private String phase;
 		private int moveNumber;
 
-		GameMeta(JSONObject game) {
+		Game(JSONObject game) {
 			try {
 				build(game);
 			}
@@ -222,8 +222,8 @@ public class GameList {
 			id = game.getInt("id");
 			name = game.getString("name");
 
-			black = new PlayerMeta(game.getJSONObject("black"));
-			white = new PlayerMeta(game.getJSONObject("white"));
+			black = new Player(game.getJSONObject("black"));
+			white = new Player(game.getJSONObject("white"));
 
 			size = game.getInt("height");
 			isPrivate = game.getBoolean("private");
@@ -245,7 +245,7 @@ public class GameList {
 			return turnPlayer;
 		}
 
-		public PlayerMeta getBlackPlayer() {
+		public Player getBlackPlayer() {
 			return black;
 		}
 
@@ -257,7 +257,7 @@ public class GameList {
 			return white.getName();
 		}
 
-		public PlayerMeta getWhitePlayer() {
+		public Player getWhitePlayer() {
 			return white;
 		}
 

@@ -43,11 +43,6 @@ public abstract class BoardController extends SelfBuildingController implements 
 	Canvas boardCanvas;
 	GameDrawer gameDrawer;
 
-	BoardController() {
-
-
-	}
-
 	abstract GameHandler buildGameHandler();
 
 	@Override

@@ -19,7 +19,6 @@ package ui.controller;
 
 import logic.gamehandler.GameHandler;
 import ogs.SpectatorGameHandler;
-import ogs.web.GameList;
 import ui.drawer.GameDrawer;
 
 import java.net.URL;
@@ -27,21 +26,16 @@ import java.util.ResourceBundle;
 
 public class SpectatorController extends BoardController {
 
-	private GameList.GameMeta gameMeta = null;
+	private int gameId;
 
-	public SpectatorController(GameList.GameMeta metaData) {
-		gameMeta = metaData;
+	public SpectatorController(int gameId) {
+		this.gameId = gameId;
 		game = buildGameHandler();
 	}
 
 	@Override
 	GameHandler buildGameHandler() {
-		if ( gameMeta == null )
-			return null;
-		SpectatorGameHandler handler = new SpectatorGameHandler(gameMeta);
-		handler.start();
-
-		return handler;
+		return new SpectatorGameHandler(gameId);
 	}
 
 	@Override

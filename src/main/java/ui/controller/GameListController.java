@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 
 public class GameListController extends SelfBuildingController implements Initializable {
 
-	public TableView<GameList.GameMeta> table;
+	public TableView<GameList.Game> table;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -53,19 +53,19 @@ public class GameListController extends SelfBuildingController implements Initia
 	}
 
 	private void buildTable() {
-		TableColumn<GameList.GameMeta, String> titleColumn = new TableColumn<>("Game");
+		TableColumn<GameList.Game, String> titleColumn = new TableColumn<>("Game");
 		titleColumn.setPrefWidth(125);
 		titleColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getGameName()));
 
-		TableColumn<GameList.GameMeta, String> blackColumn = new TableColumn<>("Black");
+		TableColumn<GameList.Game, String> blackColumn = new TableColumn<>("Black");
 		blackColumn.setPrefWidth(125);
 		blackColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackName()));
 
-		TableColumn<GameList.GameMeta, String> whiteColumn = new TableColumn<>("White");
+		TableColumn<GameList.Game, String> whiteColumn = new TableColumn<>("White");
 		whiteColumn.setPrefWidth(125);
 		whiteColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getWhiteName()));
 
-		TableColumn<GameList.GameMeta, Integer> moveColumn = new TableColumn<>("Move");
+		TableColumn<GameList.Game, Integer> moveColumn = new TableColumn<>("Move");
 		moveColumn.setPrefWidth(55);
 		moveColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getMoveNumber()));
 
@@ -74,10 +74,10 @@ public class GameListController extends SelfBuildingController implements Initia
 		table.getColumns().add(titleColumn);
 		table.getColumns().add(moveColumn);
 
-		table.setRowFactory(new Callback<TableView<GameList.GameMeta>, TableRow<GameList.GameMeta>>() {
+		table.setRowFactory(new Callback<TableView<GameList.Game>, TableRow<GameList.Game>>() {
 			@Override
-			public TableRow<GameList.GameMeta> call(TableView<GameList.GameMeta> param) {
-				final TableRow<GameList.GameMeta> row = new TableRow<>();
+			public TableRow<GameList.Game> call(TableView<GameList.Game> param) {
+				final TableRow<GameList.Game> row = new TableRow<>();
 				final ContextMenu rowMenu = new ContextMenu();
 
 				MenuItem spectateItem = new MenuItem("Watch Game");
@@ -92,15 +92,15 @@ public class GameListController extends SelfBuildingController implements Initia
 		});
 	}
 
-	private void spectateGame(GameList.GameMeta game) {
-		SpectatorController controller = new SpectatorController(game);
+	private void spectateGame(GameList.Game game) {
+		SpectatorController controller = new SpectatorController(game.getId());
 		Parent root = controller.build();
 		DockNode node = new DockNode(root, game.getGameName());
 		node.dock(Main.instance.dockPane, DockPos.CENTER);
 	}
 
 	private void populateTable(GameList gameList) {
-		ObservableList<GameList.GameMeta> items = FXCollections.observableArrayList(gameList.getGames());
+		ObservableList<GameList.Game> items = FXCollections.observableArrayList(gameList.getGames());
 
 		table.setItems(items);
 	}
