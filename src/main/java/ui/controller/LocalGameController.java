@@ -21,20 +21,13 @@ import event.EventBus;
 import event.GameEvent;
 import event.ScoreEvent;
 import event.decorators.GameHandlerEventDecorator;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
-import logic.gamehandler.LocalGameHandler;
 import logic.score.Scorer;
-import ui.drawer.*;
-import util.Coords;
-import util.HandicapHelper;
-import util.StoneColour;
+import ui.drawer.GameScoreDrawer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import static util.Move.play;
 
 public class LocalGameController extends BoardController {
 
@@ -46,24 +39,18 @@ public class LocalGameController extends BoardController {
 
 	private BoardStrategy strategy;
 
-	public LocalGameController() {
-		game = buildGameHandler();
+	public LocalGameController(GameHandler handler) {
+		super(processGameHandler(handler), "/localGame.fxml");
 	}
 
-	@Override
-	protected GameHandler buildGameHandler() {
-		return buildGameHandler(0);
-	}
-
-	private GameHandler buildGameHandler(int handicap) {
-		GameHandler result = new LocalGameHandler(handicap);
-		return new GameHandlerEventDecorator(result);
+	private static GameHandler processGameHandler(GameHandler handler) {
+		return new GameHandlerEventDecorator(handler);
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		super.initialize(url, resourceBundle);
-		strategy = new GamePlay(boardCanvas, game, gameDrawer);
+		strategy = new GamePlay(boardCanvas, getGameHandler(), gameDrawer);
 		setupEventHandlers();
 	}
 
@@ -77,25 +64,6 @@ public class LocalGameController extends BoardController {
 		loadGameMenu();
 		loadScorePane();
 		loadReviewPanel();
-	}
-
-	@Override
-	GameDrawer buildGameDrawer() {
-		GameDrawer drawer = new GameDrawer(boardCanvas, game);
-
-		Image blackStone = new Image("/black.png", false);
-		Image whiteStone = new Image("/white.png", false);
-
-		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
-		drawer.setStoneDrawer(stoneDrawer);
-
-		Image wood = new Image("/wood.jpg", false);
-		Image lines = new Image("/grid.png", false);
-
-		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
-		drawer.setBoardDrawer(boardDrawer);
-
-		return drawer;
 	}
 
 	@Override
@@ -118,10 +86,10 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	void enterScoring(GameEvent event) {
-		if ( event.getHandler() != game )
+		if ( event.getHandler() != getGameHandler() )
 			return;
 
-		boardScorer = game.getScorer();
+		boardScorer = getGameHandler().getScorer();
 		gameMenuController.enterScoring();
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
@@ -144,25 +112,20 @@ public class LocalGameController extends BoardController {
 	private void loadScorePane() {
 		scorePaneController = new ScorePaneController();
 
-		sideBar.getChildren().add(scorePaneController.build());
+		sideBar.getChildren().add(scorePaneController.getRoot());
 	}
 
 	private void loadGameMenu() {
 		gameMenuController = new GameMenuController();
-		gameMenuController.setGameHandler(game);
+		gameMenuController.setGameHandler(getGameHandler());
 
-		sideBar.getChildren().add(gameMenuController.build());
+		sideBar.getChildren().add(gameMenuController.getRoot());
 	}
 
 	private void loadReviewPanel() {
-		reviewPanelController = new ReviewPanelController(game);
+		reviewPanelController = new ReviewPanelController(getGameHandler());
 
-		sideBar.getChildren().add(reviewPanelController.build());
-	}
-
-	@Override
-	protected String getResourcePath() {
-		return "/localGame.fxml";
+		sideBar.getChildren().add(reviewPanelController.getRoot());
 	}
 
 	private void doneScoring(ScoreEvent event) {
@@ -172,18 +135,5 @@ public class LocalGameController extends BoardController {
 		strategy = null;
 
 		gameMenuController.enableEndGameButtons();
-	}
-
-	void setHandicap(int handicap) {
-		if ( game.getStones(StoneColour.BLACK).size() > 0 || game.getStones(StoneColour.WHITE).size() > 0 )
-			game = buildGameHandler(handicap);
-
-		if ( handicap > 0 )
-			for (Coords stone : HandicapHelper.getHandicapStones(handicap))
-				game.playMove(play(stone, StoneColour.BLACK));
-	}
-
-	void setKomi(double komi) {
-		game.setKomi(komi);
 	}
 }

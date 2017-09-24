@@ -23,9 +23,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import logic.gamehandler.GameHandler;
+import ogs.SpectatorGameHandler;
 import ogs.web.GameList;
 import org.dockfx.DockNode;
 import org.dockfx.DockPos;
@@ -93,9 +94,11 @@ public class GameListController extends SelfBuildingController implements Initia
 	}
 
 	private void spectateGame(GameList.Game game) {
-		SpectatorController controller = new SpectatorController(game.getId());
-		Parent root = controller.build();
-		DockNode node = new DockNode(root, game.getGameName());
+		GameHandler handler = new SpectatorGameHandler(game.getId());
+		SelfBuildingController controller = new BoardController(handler, "/localGame.fxml");
+
+		DockNode node = controller.build();
+		node.setTitle(game.getGameName());
 		node.dock(Main.instance.dockPane, DockPos.CENTER);
 	}
 

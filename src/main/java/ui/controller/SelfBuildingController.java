@@ -20,18 +20,36 @@ package ui.controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Builder;
+import org.dockfx.DockNode;
 
 import java.io.IOException;
 
-public abstract class SelfBuildingController implements Builder<Parent> {
+public abstract class SelfBuildingController implements Builder<DockNode> {
 
 	private Parent root;
+	private DockNode node;
 
 	SelfBuildingController() {
 		root = null;
 	}
 
-	public final Parent build() {
+	@Override
+	public final DockNode build() {
+		return getNode();
+	}
+
+	final DockNode getNode() {
+		if ( node == null )
+			constructNode();
+
+		return node;
+	}
+
+	private void constructNode() {
+		node = new DockNode(getRoot());
+	}
+
+	final Parent getRoot() {
 		if ( root == null )
 			constructRoot();
 

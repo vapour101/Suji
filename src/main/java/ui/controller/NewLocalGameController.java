@@ -21,13 +21,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
 import javafx.util.StringConverter;
+import logic.gamehandler.GameHandler;
+import logic.gamehandler.LocalGameHandler;
 import org.dockfx.DockNode;
+import org.dockfx.DockPos;
+import ui.Main;
 import util.KomiSpinnerFactory;
 
 import java.net.URL;
@@ -39,18 +42,6 @@ public class NewLocalGameController extends SelfBuildingController implements In
 	public Spinner<Integer> handicapSpinner;
 	public Button startButton;
 	public Spinner<Double> komiSpinner;
-
-	private DockNode dockNode;
-
-	public NewLocalGameController() {
-		dockNode = null;
-	}
-
-	public DockNode getNode() {
-		dockNode = new DockNode(build(), "New Local Game");
-
-		return dockNode;
-	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -81,20 +72,18 @@ public class NewLocalGameController extends SelfBuildingController implements In
 	}
 
 	private void start(ActionEvent event) {
-		Parent root = buildLocalGame();
+		DockNode node = buildLocalGame();
+		node.setTitle("Local Game");
+		node.dock(Main.instance.dockPane, DockPos.CENTER);
 
-		if ( root == null )
-			return;
-
-		dockNode.setTitle("Local Game");
-		dockNode.setContents(root);
+		getNode().close();
 	}
 
-	private Parent buildLocalGame() {
-		LocalGameController controller = new LocalGameController();
+	private DockNode buildLocalGame() {
+		GameHandler handler = new LocalGameHandler(handicapSpinner.getValue());
+		handler.setKomi(komiSpinner.getValue());
 
-		controller.setHandicap(handicapSpinner.getValue());
-		controller.setKomi(komiSpinner.getValue());
+		LocalGameController controller = new LocalGameController(handler);
 
 		return controller.build();
 	}

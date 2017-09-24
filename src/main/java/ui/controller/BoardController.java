@@ -23,27 +23,33 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.gamehandler.GameHandler;
-import ui.drawer.GameDrawer;
+import ui.drawer.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public abstract class BoardController extends SelfBuildingController implements Initializable {
+public class BoardController extends SelfBuildingController implements Initializable {
 
 	@FXML
 	Pane boardPane;
 	@FXML
 	VBox sideBar;
-
-	GameHandler game;
 	Canvas boardCanvas;
 	GameDrawer gameDrawer;
 
-	abstract GameHandler buildGameHandler();
+	private GameHandler game;
+	private String fxmlLocation;
+
+
+	BoardController(GameHandler gameHandler, String resourcePath) {
+		game = gameHandler;
+		fxmlLocation = resourcePath;
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -55,7 +61,6 @@ public abstract class BoardController extends SelfBuildingController implements 
 
 		GameEvent.fireGameEvent(game, GameEvent.START);
 	}
-
 
 	void setupPanes() {
 		boardPane.widthProperty().addListener(this::resizeCanvas);
@@ -73,7 +78,27 @@ public abstract class BoardController extends SelfBuildingController implements 
 		gameDrawer = buildGameDrawer();
 	}
 
-	abstract GameDrawer buildGameDrawer();
+	GameDrawer buildGameDrawer() {
+		GameDrawer drawer = new GameDrawer(boardCanvas, getGameHandler());
+
+		Image blackStone = new Image("/black.png", false);
+		Image whiteStone = new Image("/white.png", false);
+
+		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
+		drawer.setStoneDrawer(stoneDrawer);
+
+		Image wood = new Image("/wood.jpg", false);
+		Image lines = new Image("/grid.png", false);
+
+		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
+		drawer.setBoardDrawer(boardDrawer);
+
+		return drawer;
+	}
+
+	GameHandler getGameHandler() {
+		return game;
+	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		boardCanvas.setHeight(boardPane.getHeight());
@@ -93,5 +118,10 @@ public abstract class BoardController extends SelfBuildingController implements 
 	}
 
 	void reviewStart(GameEvent event) {
+	}
+
+	@Override
+	protected String getResourcePath() {
+		return fxmlLocation;
 	}
 }
