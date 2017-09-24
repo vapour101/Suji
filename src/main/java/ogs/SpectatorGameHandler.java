@@ -26,18 +26,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sgf.SGFWriter;
-import util.*;
+import util.Coords;
+import util.LogHelper;
+import util.Move;
+import util.StoneColour;
 
 import java.util.Collection;
 
 public class SpectatorGameHandler implements GameHandler {
 
-	private Board board;
-	private StoneColour turnPlayer;
+	private StoneColour initialPlayer;
 	private GameMeta gameMeta;
+	private SpectatorGameTree gameTree;
 
 	public SpectatorGameHandler(GameMeta meta) {
-		board = new Board();
+		initialPlayer = StoneColour.BLACK;
+		gameTree = new SpectatorGameTree();
 		gameMeta = meta;
 	}
 
@@ -54,27 +58,17 @@ public class SpectatorGameHandler implements GameHandler {
 
 		LogHelper.info(jsonGame.toString());
 
-		board = new Board();
 		try {
-			turnPlayer = jsonGame.getString("initial_player").equalsIgnoreCase("white") ? StoneColour.WHITE : StoneColour.BLACK;
+			initialPlayer = jsonGame.getString("initial_player").equalsIgnoreCase("white") ? StoneColour.WHITE : StoneColour.BLACK;
 			int handicap = jsonGame.getInt("handicap");
-
-			if ( handicap != 0 )
-				for (Coords c : HandicapHelper.getHandicapStones(handicap))
-					board.playStone(Move.play(c, StoneColour.BLACK));
 
 			LogHelper.finest("Getting moves");
 
 			JSONArray moveList = jsonGame.getJSONArray("moves");
 
-			for (int i = 0; i < moveList.length(); i++) {
-				JSONArray moveArray = moveList.getJSONArray(i);
-				Coords move = Coords.getCoords(moveArray.getInt(0) + 1, moveArray.getInt(1) + 1);
+			LogHelper.finest("Initialising gameTree");
 
-				board.playStone(Move.play(move, turnPlayer));
-
-				turnPlayer = turnPlayer.other();
-			}
+			gameTree = new SpectatorGameTree(moveList, initialPlayer, handicap);
 		}
 		catch (JSONException e) {
 			LogHelper.jsonError(e);
@@ -85,40 +79,14 @@ public class SpectatorGameHandler implements GameHandler {
 	}
 
 	private void onMove(JSONObject jsonMove) {
-		try {
-			JSONArray moveArray = jsonMove.getJSONArray("move");
-			Coords move = Coords.getCoords(moveArray.getInt(0) + 1, moveArray.getInt(1) + 1);
-
-			board.playStone(Move.play(move, turnPlayer));
-
-			turnPlayer = turnPlayer.other();
+		if ( gameTree == null ) {
+			LogHelper.severe("gameTree is null");
+			return;
 		}
 
-		catch (JSONException e) {
-			LogHelper.jsonError(e);
-		}
+		gameTree.stepForward(jsonMove, getTurnPlayer());
 
 		GameEvent.fireGameEvent(this);
-	}
-
-	@Override
-	public Board getBoard() {
-		return board;
-	}
-
-	@Override
-	public boolean isLegalMove(Move move) {
-		return false;
-	}
-
-	@Override
-	public void playMove(Move move) {
-
-	}
-
-	@Override
-	public Collection<Coords> getStones(StoneColour colour) {
-		return board.getStones(colour);
 	}
 
 	@Override
@@ -133,7 +101,10 @@ public class SpectatorGameHandler implements GameHandler {
 
 	@Override
 	public StoneColour getTurnPlayer() {
-		return turnPlayer;
+		if ( gameTree.getNumMoves() == 0 )
+			return initialPlayer;
+
+		return gameTree.getLastMove().getPlayer().other();
 	}
 
 	@Override
@@ -143,6 +114,11 @@ public class SpectatorGameHandler implements GameHandler {
 
 	@Override
 	public GameTree getGameTree() {
+		return gameTree;
+	}
+
+	@Override
+	public SGFWriter getSGFWriter() {
 		return null;
 	}
 
@@ -152,7 +128,22 @@ public class SpectatorGameHandler implements GameHandler {
 	}
 
 	@Override
-	public SGFWriter getSGFWriter() {
-		return null;
+	public Board getBoard() {
+		return gameTree.getPosition();
+	}
+
+	@Override
+	public boolean isLegalMove(Move move) {
+		return false;
+	}
+
+	@Override
+	public void playMove(Move move) {
+
+	}
+
+	@Override
+	public Collection<Coords> getStones(StoneColour colour) {
+		return getBoard().getStones(colour);
 	}
 }

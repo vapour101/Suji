@@ -35,6 +35,9 @@ public class Connection {
 	private static final Object monitor = new Object();
 	private static final String GAMELIST = "gamelist/query";
 	private static final String GAMECONNECT = "game/connect";
+	private static final String PREFIX = "https://online-go.com";
+	private static final String WEBSOCKET = "websocket";
+
 	private static Connection instance = null;
 	private Socket connection;
 
@@ -48,7 +51,7 @@ public class Connection {
 		options.reconnection = true;
 		options.reconnectionDelay = 500;
 		options.reconnectionDelayMax = 60000;
-		options.transports = new String[]{"websocket"};
+		options.transports = new String[]{WEBSOCKET};
 
 		connection = IO.socket(prefix, options);
 
@@ -61,7 +64,7 @@ public class Connection {
 		URI prefix = null;
 
 		try {
-			prefix = new URI("https://online-go.com");
+			prefix = new URI(PREFIX);
 		}
 		catch (URISyntaxException e) {
 			e.printStackTrace();
