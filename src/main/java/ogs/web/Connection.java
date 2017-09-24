@@ -90,14 +90,14 @@ public class Connection {
 		return instance;
 	}
 
-	public static void connectToGame(GameMeta game,
+	public static void connectToGame(GameList.GameMeta game,
 									 Consumer<JSONObject> gamedataConsumer,
 									 Consumer<JSONObject> moveConsumer) {
 		Thread thread = new Thread(() -> getConnectedInstance().gameConnection(game, gamedataConsumer, moveConsumer));
 		thread.run();
 	}
 
-	private void gameConnection(GameMeta game,
+	private void gameConnection(GameList.GameMeta game,
 								Consumer<JSONObject> gamedataConsumer,
 								Consumer<JSONObject> moveConsumer) {
 		connection.on(getGamedataEvent(game), new Emitter.Listener() {
@@ -119,7 +119,7 @@ public class Connection {
 		connection.emit(GAMECONNECT, options);
 	}
 
-	private JSONObject getGameConnectOptions(GameMeta game) {
+	private JSONObject getGameConnectOptions(GameList.GameMeta game) {
 		JSONObject options = new JSONObject();
 
 		try {
@@ -138,11 +138,11 @@ public class Connection {
 		consumer.accept(jsonObject);
 	}
 
-	private String getGamedataEvent(GameMeta game) {
+	private String getGamedataEvent(GameList.GameMeta game) {
 		return "game/" + game.getId() + "/gamedata";
 	}
 
-	private String getGameMoveEvent(GameMeta game) {
+	private String getGameMoveEvent(GameList.GameMeta game) {
 		return "game/" + game.getId() + "/move";
 	}
 

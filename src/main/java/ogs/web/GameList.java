@@ -153,4 +153,128 @@ public class GameList {
 			return request;
 		}
 	}
+
+	public class PlayerMeta {
+
+		private int id;
+		private String name;
+		private int rank;
+		private boolean isProfessional;
+
+		PlayerMeta(JSONObject player) {
+			try {
+				build(player);
+			}
+			catch (JSONException e) {
+				LogHelper.jsonError(e);
+			}
+		}
+
+		private void build(JSONObject player) throws JSONException {
+			id = player.getInt("id");
+			name = player.getString("username");
+			rank = player.getInt("rank");
+			isProfessional = player.getBoolean("professional");
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public int getRank() {
+			return rank;
+		}
+
+		public boolean isProfessional() {
+			return isProfessional;
+		}
+	}
+
+	public class GameMeta {
+
+		private int id;
+		private String name;
+
+		private PlayerMeta black;
+		private PlayerMeta white;
+
+		private int size;
+		private boolean isPrivate;
+
+		private int turnPlayer;
+		private String phase;
+		private int moveNumber;
+
+		GameMeta(JSONObject game) {
+			try {
+				build(game);
+			}
+			catch (JSONException e) {
+				LogHelper.jsonError(e);
+			}
+		}
+
+		private void build(JSONObject game) throws JSONException {
+			id = game.getInt("id");
+			name = game.getString("name");
+
+			black = new PlayerMeta(game.getJSONObject("black"));
+			white = new PlayerMeta(game.getJSONObject("white"));
+
+			size = game.getInt("height");
+			isPrivate = game.getBoolean("private");
+
+			turnPlayer = game.getInt("player_to_move");
+			phase = game.getString("phase");
+			moveNumber = game.getInt("move_number");
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public int getBoardSize() {
+			return size;
+		}
+
+		public int getTurnPlayer() {
+			return turnPlayer;
+		}
+
+		public PlayerMeta getBlackPlayer() {
+			return black;
+		}
+
+		public String getBlackName() {
+			return black.getName();
+		}
+
+		public String getWhiteName() {
+			return white.getName();
+		}
+
+		public PlayerMeta getWhitePlayer() {
+			return white;
+		}
+
+		public String getGameName() {
+			return name;
+		}
+
+		public String getPhase() {
+			return phase;
+		}
+
+		public boolean isPrivate() {
+			return isPrivate;
+		}
+
+		public int getMoveNumber() {
+			return moveNumber;
+		}
+	}
 }

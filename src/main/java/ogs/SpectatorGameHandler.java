@@ -23,7 +23,7 @@ import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
 import logic.score.Scorer;
 import ogs.web.Connection;
-import ogs.web.GameMeta;
+import ogs.web.GameList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,10 +38,10 @@ import java.util.Collection;
 public class SpectatorGameHandler implements GameHandler {
 
 	private StoneColour initialPlayer;
-	private GameMeta gameMeta;
+	private GameList.GameMeta gameMeta;
 	private SpectatorGameTree gameTree;
 
-	public SpectatorGameHandler(GameMeta meta) {
+	public SpectatorGameHandler(GameList.GameMeta meta) {
 		initialPlayer = StoneColour.BLACK;
 		gameTree = new SpectatorGameTree();
 		gameMeta = meta;
