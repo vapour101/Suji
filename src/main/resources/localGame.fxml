@@ -7,7 +7,7 @@
            xmlns="http://javafx.com/javafx/8.0.111" fx:controller="ui.controller.BoardController">
 
     <Pane fx:id="boardPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"/>
-    <VBox fx:id="sideBar" prefHeight="200.0" prefWidth="100.0"/>
+    <VBox fx:id="sideBar" prefHeight="200.0" prefWidth="100.0" minWidth="10.0"/>
 
 </SplitPane>
 
