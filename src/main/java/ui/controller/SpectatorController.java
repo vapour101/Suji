@@ -18,7 +18,7 @@
 package ui.controller;
 
 import logic.gamehandler.GameHandler;
-import ogs.GameMeta;
+import ogs.web.GameMeta;
 import ogs.SpectatorGameHandler;
 import ui.drawer.GameDrawer;
 

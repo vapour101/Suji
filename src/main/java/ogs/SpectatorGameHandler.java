@@ -22,6 +22,8 @@ import logic.board.Board;
 import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
 import logic.score.Scorer;
+import ogs.web.Connection;
+import ogs.web.GameMeta;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
