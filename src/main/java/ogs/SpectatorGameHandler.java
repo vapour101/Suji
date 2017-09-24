@@ -33,11 +33,17 @@ public class SpectatorGameHandler implements GameHandler {
 
 	private StoneColour initialPlayer;
 	private GameTree gameTree;
+	private int gameId;
 
 	public SpectatorGameHandler(int gameId) {
+		this.gameId = gameId;
 		initialPlayer = StoneColour.BLACK;
 		gameTree = new ComplexGameTree();
 		Connection.connectToGame(gameId, this::onGameData, this::onMovedata);
+	}
+
+	public void disconnect() {
+		Connection.disconnectGame(gameId);
 	}
 
 	private void onGameData(Gamedata gamedata) {

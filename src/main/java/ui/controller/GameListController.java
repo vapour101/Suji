@@ -20,12 +20,13 @@ package ui.controller;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import logic.gamehandler.GameHandler;
 import ogs.GameList;
 import ogs.SpectatorGameHandler;
 import org.dockfx.DockNode;
@@ -94,10 +95,19 @@ public class GameListController extends SelfBuildingController implements Initia
 	}
 
 	private void spectateGame(GameList.Game game) {
-		GameHandler handler = new SpectatorGameHandler(game.getId());
-		SelfBuildingController controller = new BoardController(handler, "/localGame.fxml");
+		SpectatorGameHandler handler = new SpectatorGameHandler(game.getId());
+		BoardController controller = new BoardController(handler, "/localGame.fxml");
 
 		DockNode node = controller.build();
+		node.closedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if ( newValue ) {
+					handler.disconnect();
+					observable.removeListener(this);
+				}
+			}
+		});
 		node.setTitle(game.getGameName());
 		node.dock(Main.instance.dockPane, DockPos.CENTER);
 	}

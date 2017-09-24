@@ -35,6 +35,7 @@ public class Connection {
 	private static final Object monitor = new Object();
 	private static final String GAMELIST = "gamelist/query";
 	private static final String GAMECONNECT = "game/connect";
+	private static final String GAMEDISCONNECT = "game/disconnect";
 	private static final String PREFIX = "https://online-go.com";
 	private static final String WEBSOCKET = "websocket";
 
@@ -42,8 +43,8 @@ public class Connection {
 	private Socket connection;
 
 	private Connection() {
-
 		URI prefix = getPrefix();
+
 		if ( prefix == null )
 			return;
 
@@ -67,14 +68,14 @@ public class Connection {
 			prefix = new URI(PREFIX);
 		}
 		catch (URISyntaxException e) {
-			e.printStackTrace();
+			LogHelper.log(Level.SEVERE, "Can't get valid URI for OGS", e);
 		}
 
 		return prefix;
 	}
 
 	public static synchronized void disconnect() {
-		if ( getInstance().connection.connected() ) {
+		if ( instance != null && getInstance().connection.connected() ) {
 			getInstance().connection.disconnect();
 		}
 	}
@@ -90,7 +91,78 @@ public class Connection {
 		return instance;
 	}
 
-	public static void connectToGame(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
+	static void disconnectGame(int gameId) {
+		Thread thread = new Thread(() -> {
+			Connection connection = getConnectedInstance();
+
+			if ( connection == null ) {
+				LogHelper.severe("Can't establish a connection.");
+				return;
+			}
+
+			connection.gameDisconnect(gameId);
+		});
+		thread.run();
+	}
+
+	private void gameDisconnect(int gameId) {
+		LogHelper.finest("Disconnecting from game: " + gameId);
+
+		connection.off(getGamedataEvent(gameId));
+		connection.off(getGameMoveEvent(gameId));
+
+		JSONObject options = getGameDisconnectOptions(gameId);
+
+		connection.emit(GAMEDISCONNECT, options);
+	}
+
+	private JSONObject getGameDisconnectOptions(int gameId) {
+		JSONObject options = new JSONObject();
+
+		try {
+			options.put("game_id", gameId);
+		}
+		catch (JSONException e) {
+			LogHelper.jsonError(e);
+		}
+
+		return options;
+	}
+
+	private String getGamedataEvent(int gameId) {
+		return "game/" + gameId + "/gamedata";
+	}
+
+	private String getGameMoveEvent(int gameId) {
+		return "game/" + gameId + "/move";
+	}
+
+	private static Connection getConnectedInstance() {
+		try {
+			return getConnectedInstanceWithExceptions();
+		}
+		catch (InterruptedException e) {
+			LogHelper.log(Level.INFO, "Thread interrupted before a connection could be established.", e);
+		}
+
+		return null;
+	}
+
+	private static Connection getConnectedInstanceWithExceptions() throws InterruptedException {
+		while (!getInstance().connection.connected()) {
+			synchronized (monitor) {
+				if ( !getInstance().connection.connected() ) {
+					getInstance().connection.connect();
+
+					monitor.wait();
+				}
+			}
+		}
+
+		return getInstance();
+	}
+
+	static void connectToGame(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
 		Thread thread = new Thread(() -> {
 			Connection connection = getConnectedInstance();
 
@@ -105,6 +177,8 @@ public class Connection {
 	}
 
 	private void gameConnection(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
+		LogHelper.finest("Connecting to game: " + gameId);
+
 		connection.on(getGamedataEvent(gameId), new Emitter.Listener() {
 			@Override
 			public void call(Object... args) {
@@ -125,10 +199,9 @@ public class Connection {
 	}
 
 	private JSONObject getGameConnectOptions(int gameId) {
-		JSONObject options = new JSONObject();
+		JSONObject options = getGameDisconnectOptions(gameId);
 
 		try {
-			options.put("game_id", gameId);
 			options.put("chat", false);
 		}
 		catch (JSONException e) {
@@ -151,40 +224,6 @@ public class Connection {
 		consumer.accept(jsonObject);
 	}
 
-	private String getGamedataEvent(int gameId) {
-		return "game/" + gameId + "/gamedata";
-	}
-
-	private String getGameMoveEvent(int gameId) {
-		return "game/" + gameId + "/move";
-	}
-
-	private static Connection getConnectedInstance() {
-		try {
-			return getConnectedInstanceWithExceptions();
-		}
-		catch (InterruptedException e) {
-			LogHelper.log(Level.SEVERE, "Interrupted", e);
-		}
-
-		return null;
-	}
-
-	private static Connection getConnectedInstanceWithExceptions() throws InterruptedException {
-		while (!getInstance().connection.connected()) {
-			synchronized (monitor) {
-				if ( !getInstance().connection.connected() ) {
-					getInstance().connection.connect();
-
-					monitor.wait();
-				}
-			}
-		}
-
-		LogHelper.finest("Returning connected instance.");
-		return getInstance();
-	}
-
 	static void getGameList(JSONObject args, Consumer<JSONObject> callback) {
 		Thread thread = new Thread(() -> {
 			Connection connection = getConnectedInstance();
@@ -200,10 +239,12 @@ public class Connection {
 	}
 
 	private void gameListQuery(JSONObject args, Consumer<JSONObject> callback) {
+		LogHelper.finest("Requesting gamelist");
 		connection.emit(GAMELIST, args, (Ack) res -> argsToJSON(callback, res));
 	}
 
 	private void onConnect(Object... objects) {
+		LogHelper.finest("Connection established with OGS");
 		synchronized (monitor) {
 			monitor.notifyAll();
 		}
