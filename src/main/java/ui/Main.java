@@ -19,7 +19,6 @@ package ui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -51,9 +50,7 @@ public class Main extends Application {
 		LogHelper.finest("Starting");
 		window = primaryStage;
 
-		primaryStage.setOnCloseRequest(event -> primaryStage.close());
-
-		primaryStage.setOnHidden(event -> {
+		primaryStage.setOnCloseRequest(event -> {
 			Connection.disconnect();
 			System.exit(0);
 		});
@@ -85,11 +82,10 @@ public class Main extends Application {
 		//file menu, creating the main tabs
 		Menu fileMenu = getFileMenu();
 		Menu ogsMenu = getOGSMenu();
-		Menu exitMenu = getExitMenu();
 
 		//main menu bar
 		menuBar = new MenuBar();
-		menuBar.getMenus().addAll(fileMenu, ogsMenu, exitMenu);
+		menuBar.getMenus().addAll(fileMenu, ogsMenu);
 	}
 
 	private Menu getFileMenu() {
@@ -107,16 +103,6 @@ public class Main extends Application {
 		fileMenu.getItems().add(newLocalGame);
 
 		return fileMenu;
-	}
-
-	private Menu getExitMenu() {
-		Menu exitMenu = new Menu();
-
-		Label exitLabel = new Label("Exit");
-		exitLabel.setOnMouseClicked(event -> window.close());
-		exitMenu.setGraphic(exitLabel);
-
-		return exitMenu;
 	}
 
 	private Menu getOGSMenu() {
