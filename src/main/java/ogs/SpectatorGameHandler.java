@@ -23,9 +23,6 @@ import logic.gamehandler.GameHandler;
 import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
 import logic.score.Scorer;
-import ogs.web.Connection;
-import ogs.web.Gamedata;
-import ogs.web.Movedata;
 import sgf.SGFWriter;
 import util.*;
 

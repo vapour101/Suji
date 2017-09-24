@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ogs.web;
+package ogs;
 
 import org.json.JSONArray;
 import org.json.JSONException;

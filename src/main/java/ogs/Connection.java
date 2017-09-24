@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ogs.web;
+package ogs;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -94,8 +94,7 @@ public class Connection {
 		Thread thread = new Thread(() -> {
 			Connection connection = getConnectedInstance();
 
-			if ( connection == null )
-			{
+			if ( connection == null ) {
 				LogHelper.severe("Can't establish a connection.");
 				return;
 			}
@@ -190,8 +189,7 @@ public class Connection {
 		Thread thread = new Thread(() -> {
 			Connection connection = getConnectedInstance();
 
-			if ( connection == null )
-			{
+			if ( connection == null ) {
 				LogHelper.severe("Can't establish a connection.");
 				return;
 			}
