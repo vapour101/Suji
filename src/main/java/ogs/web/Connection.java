@@ -90,25 +90,23 @@ public class Connection {
 		return instance;
 	}
 
-	public static void connectToGame(int gameId,
-									 Consumer<JSONObject> gamedataConsumer,
-									 Consumer<JSONObject> moveConsumer) {
+	public static void connectToGame(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
 		Thread thread = new Thread(() -> getConnectedInstance().gameConnection(gameId, gamedataConsumer, moveConsumer));
 		thread.run();
 	}
 
-	private void gameConnection(int gameId, Consumer<JSONObject> gamedataConsumer, Consumer<JSONObject> moveConsumer) {
+	private void gameConnection(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
 		connection.on(getGamedataEvent(gameId), new Emitter.Listener() {
 			@Override
 			public void call(Object... args) {
-				argsToJSON(gamedataConsumer, args);
+				argsToGamedata(gamedataConsumer, args);
 			}
 		});
 
 		connection.on(getGameMoveEvent(gameId), new Emitter.Listener() {
 			@Override
 			public void call(Object... args) {
-				argsToJSON(moveConsumer, args);
+				argsToMovedata(moveConsumer, args);
 			}
 		});
 
@@ -129,6 +127,14 @@ public class Connection {
 		}
 
 		return options;
+	}
+
+	private void argsToMovedata(Consumer<Movedata> consumer, Object... args) {
+		argsToJSON(jsonObject -> consumer.accept(new Movedata(jsonObject)), args);
+	}
+
+	private void argsToGamedata(Consumer<Gamedata> consumer, Object... args) {
+		argsToJSON(jsonObject -> consumer.accept(new Gamedata(jsonObject)), args);
 	}
 
 	private void argsToJSON(Consumer<JSONObject> consumer, Object... args) {

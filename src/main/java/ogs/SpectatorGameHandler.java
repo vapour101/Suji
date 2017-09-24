@@ -20,66 +20,61 @@ package ogs;
 import event.GameEvent;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
+import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
 import logic.score.Scorer;
 import ogs.web.Connection;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import ogs.web.Gamedata;
+import ogs.web.Movedata;
 import sgf.SGFWriter;
-import util.Coords;
-import util.LogHelper;
-import util.Move;
-import util.StoneColour;
+import util.*;
 
 import java.util.Collection;
+import java.util.List;
 
 public class SpectatorGameHandler implements GameHandler {
 
 	private StoneColour initialPlayer;
-	private SpectatorGameTree gameTree;
+	private GameTree gameTree;
 
 	public SpectatorGameHandler(int gameId) {
 		initialPlayer = StoneColour.BLACK;
-		gameTree = new SpectatorGameTree();
-		Connection.connectToGame(gameId, this::onGameData, this::onMove);
+		gameTree = new ComplexGameTree();
+		Connection.connectToGame(gameId, this::onGameData, this::onMovedata);
 	}
 
-	private void onGameData(JSONObject jsonGame) {
+	private void onGameData(Gamedata gamedata) {
 		LogHelper.info("Gamedata received");
 
-		if ( jsonGame == null )
+		if ( gamedata == null )
 			LogHelper.severe("Gamedata is null");
 
-		LogHelper.info(jsonGame.toString());
+		gameTree = new ComplexGameTree();
 
-		try {
-			initialPlayer = jsonGame.getString("initial_player").equalsIgnoreCase("white") ? StoneColour.WHITE : StoneColour.BLACK;
-			int handicap = jsonGame.getInt("handicap");
+		initialPlayer = gamedata.getInitialPlayer();
+		int handicap = gamedata.getHandicap();
 
-			LogHelper.finest("Getting moves");
-
-			JSONArray moveList = jsonGame.getJSONArray("moves");
-
-			LogHelper.finest("Initialising gameTree");
-
-			gameTree = new SpectatorGameTree(moveList, initialPlayer, handicap);
+		for (Coords c : HandicapHelper.getHandicapStones(handicap)) {
+			gameTree.stepForward(Move.play(c, StoneColour.BLACK));
 		}
-		catch (JSONException e) {
-			LogHelper.jsonError(e);
+
+		List<Movedata> moveList = gamedata.getMoves();
+
+		for (Movedata move : moveList) {
+			gameTree.stepForward(move.getMove(getTurnPlayer()));
 		}
 
 		LogHelper.finest("Firing game event");
 		GameEvent.fireGameEvent(this);
 	}
 
-	private void onMove(JSONObject jsonMove) {
+	private void onMovedata(Movedata move) {
 		if ( gameTree == null ) {
 			LogHelper.severe("gameTree is null");
 			return;
 		}
 
-		gameTree.stepForward(jsonMove, getTurnPlayer());
+		gameTree.stepForward(move.getMove(getTurnPlayer()));
 
 		GameEvent.fireGameEvent(this);
 	}
