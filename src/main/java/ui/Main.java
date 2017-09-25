@@ -28,9 +28,9 @@ import ogs.Connection;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
+import ui.controller.DockNodeController;
 import ui.controller.GameListController;
 import ui.controller.NewLocalGameController;
-import ui.controller.DockNodeController;
 import util.LogHelper;
 
 public class Main extends Application {

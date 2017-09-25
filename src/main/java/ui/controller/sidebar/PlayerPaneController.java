@@ -22,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
 import ogs.REST;
-import ui.controller.DockNodeController;
 import ui.controller.SelfBuildingController;
 
 import java.net.URL;
@@ -55,6 +54,6 @@ public class PlayerPaneController extends SelfBuildingController implements Init
 
 	@Override
 	protected String getResourcePath() {
-		return "/playerInfoPane.fxml";
+		return "/fxml/playerInfoPane.fxml";
 	}
 }

@@ -17,11 +17,7 @@
 
 package ui.controller;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import org.dockfx.DockNode;
-
-import java.io.IOException;
 
 public abstract class DockNodeController extends SelfBuildingController {
 

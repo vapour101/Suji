@@ -91,7 +91,7 @@ public class NewLocalGameController extends DockNodeController implements Initia
 
 	@Override
 	protected String getResourcePath() {
-		return "/newLocalGame.fxml";
+		return "/fxml/newLocalGame.fxml";
 	}
 
 	private class HandicapConverter extends StringConverter<Integer> {

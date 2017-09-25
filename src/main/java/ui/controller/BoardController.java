@@ -92,14 +92,14 @@ public class BoardController extends DockNodeController implements Initializable
 	GameDrawer buildGameDrawer() {
 		GameDrawer drawer = new GameDrawer(boardCanvas, getGameHandler());
 
-		Image blackStone = new Image("/black.png", false);
-		Image whiteStone = new Image("/white.png", false);
+		Image blackStone = new Image("/images/black.png", false);
+		Image whiteStone = new Image("/images/white.png", false);
 
 		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
 		drawer.setStoneDrawer(stoneDrawer);
 
-		Image wood = new Image("/wood.jpg", false);
-		Image lines = new Image("/grid.png", false);
+		Image wood = new Image("/images/wood.jpg", false);
+		Image lines = new Image("/images/grid.png", false);
 
 		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
 		drawer.setBoardDrawer(boardDrawer);

@@ -46,7 +46,7 @@ public class LocalGameController extends BoardController {
 	private BoardStrategy strategy;
 
 	public LocalGameController(GameHandler handler) {
-		super(processGameHandler(handler), "/localGame.fxml");
+		super(processGameHandler(handler), "/fxml/localGame.fxml");
 	}
 
 	private static GameHandler processGameHandler(GameHandler handler) {

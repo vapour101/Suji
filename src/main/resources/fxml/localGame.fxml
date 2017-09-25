@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="ui.controller.BoardController">
-    <fx:script source="splitterHiderButton.js"/>
+    <fx:script source="../script/splitterHiderButton.js"/>
     <SplitPane fx:id="splitter" dividerPositions="0.7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <AnchorPane>

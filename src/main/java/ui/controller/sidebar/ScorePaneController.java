@@ -57,7 +57,7 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 
 	@Override
 	protected String getResourcePath() {
-		return "/scorePane.fxml";
+		return "/fxml/scorePane.fxml";
 	}
 
 	public void setScorer(Scorer scorer) {

@@ -26,7 +26,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
-import ui.controller.DockNodeController;
 import ui.controller.SelfBuildingController;
 
 import java.net.URL;
@@ -106,6 +105,6 @@ public class ReviewPaneController extends SelfBuildingController implements Init
 
 	@Override
 	protected String getResourcePath() {
-		return "/reviewPanel.fxml";
+		return "/fxml/reviewPanel.fxml";
 	}
 }

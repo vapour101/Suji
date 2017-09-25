@@ -123,7 +123,7 @@ public class GameListController extends DockNodeController implements Initializa
 
 	private void spectateGame(GameList.Game game) {
 		SpectatorGameHandler handler = new SpectatorGameHandler(game.getId());
-		BoardController controller = new BoardController(handler, "/localGame.fxml");
+		BoardController controller = new BoardController(handler, "/fxml/localGame.fxml");
 
 		PlayerPaneController playerInfo = new PlayerPaneController(game);
 		controller.addToSideBar(playerInfo.getRoot());
@@ -150,6 +150,6 @@ public class GameListController extends DockNodeController implements Initializa
 
 	@Override
 	protected String getResourcePath() {
-		return "/gameList.fxml";
+		return "/fxml/gameList.fxml";
 	}
 }
