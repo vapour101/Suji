@@ -34,6 +34,7 @@ import ogs.SpectatorGameHandler;
 import org.dockfx.DockNode;
 import org.dockfx.DockPos;
 import ui.Main;
+import ui.controller.sidebar.PlayerPaneController;
 
 import java.net.URL;
 import java.util.ResourceBundle;

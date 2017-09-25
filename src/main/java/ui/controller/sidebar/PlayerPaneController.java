@@ -15,13 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.controller;
+package ui.controller.sidebar;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
 import ogs.REST;
+import ui.controller.SelfBuildingController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,7 +36,7 @@ public class PlayerPaneController extends SelfBuildingController implements Init
 
 	private GameList.Game game;
 
-	PlayerPaneController(GameList.Game gameMeta) {
+	public PlayerPaneController(GameList.Game gameMeta) {
 		game = gameMeta;
 	}
 

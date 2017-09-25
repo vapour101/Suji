@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.PlayerPaneController"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.sidebar.PlayerPaneController"
           xmlns="http://javafx.com/javafx/8.0.111">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>

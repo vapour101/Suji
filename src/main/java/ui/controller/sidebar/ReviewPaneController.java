@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.controller;
+package ui.controller.sidebar;
 
 import event.EventBus;
 import event.GameEvent;
@@ -26,11 +26,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
+import ui.controller.SelfBuildingController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ReviewPanelController extends SelfBuildingController implements Initializable {
+public class ReviewPaneController extends SelfBuildingController implements Initializable {
 
 	public Label moveNumber;
 	@FXML
@@ -40,7 +41,7 @@ public class ReviewPanelController extends SelfBuildingController implements Ini
 
 	private GameHandler game;
 
-	public ReviewPanelController(GameHandler gameHandler) {
+	public ReviewPaneController(GameHandler gameHandler) {
 		game = gameHandler;
 	}
 

@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
-      fx:controller="ui.controller.ReviewPanelController">
+      fx:controller="ui.controller.sidebar.ReviewPaneController">
     <Label fx:id="moveNumber"/>
     <HBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <AnchorPane>

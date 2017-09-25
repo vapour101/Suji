@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.controller;
+package ui.controller.sidebar;
 
 import event.GameEvent;
 import javafx.event.ActionEvent;
@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import logic.gamehandler.GameHandler;
 import sgf.SGFWriter;
+import ui.controller.SelfBuildingController;
 
 import java.io.*;
 import java.net.URL;
@@ -42,7 +43,7 @@ public class GameMenuController extends SelfBuildingController implements Initia
 
 	private GameHandler game;
 
-	GameMenuController() {
+	public GameMenuController() {
 		game = null;
 	}
 
@@ -52,7 +53,7 @@ public class GameMenuController extends SelfBuildingController implements Initia
 	}
 
 
-	void setGameHandler(GameHandler gameHandler) {
+	public void setGameHandler(GameHandler gameHandler) {
 		game = gameHandler;
 	}
 
@@ -70,12 +71,12 @@ public class GameMenuController extends SelfBuildingController implements Initia
 		reviewButton.setVisible(false);
 	}
 
-	void enableEndGameButtons() {
+	public void enableEndGameButtons() {
 		saveButton.setVisible(true);
 		reviewButton.setVisible(true);
 	}
 
-	void enterScoring() {
+	public void enterScoring() {
 		passButton.setVisible(false);
 		undoButton.setVisible(false);
 	}

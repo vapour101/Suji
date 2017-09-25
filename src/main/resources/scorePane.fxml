@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <HBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121" fx:id="scorePane" prefHeight="46.0"
-      prefWidth="175.0" fx:controller="ui.controller.ScorePaneController">
+      prefWidth="175.0" fx:controller="ui.controller.sidebar.ScorePaneController">
     <VBox id="blackScoreBox" prefHeight="46.0" prefWidth="100.0">
         <Label text="Black Score"/>
         <Label fx:id="blackScore" text="0"/>

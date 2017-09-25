@@ -24,6 +24,9 @@ import event.decorators.GameHandlerEventDecorator;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
+import ui.controller.sidebar.GameMenuController;
+import ui.controller.sidebar.ReviewPaneController;
+import ui.controller.sidebar.ScorePaneController;
 import ui.drawer.GameScoreDrawer;
 
 import java.net.URL;
@@ -35,7 +38,7 @@ public class LocalGameController extends BoardController {
 
 	private ScorePaneController scorePaneController;
 	private GameMenuController gameMenuController;
-	private ReviewPanelController reviewPanelController;
+	private ReviewPaneController reviewPaneController;
 
 	private BoardStrategy strategy;
 
@@ -123,9 +126,9 @@ public class LocalGameController extends BoardController {
 	}
 
 	private void loadReviewPanel() {
-		reviewPanelController = new ReviewPanelController(getGameHandler());
+		reviewPaneController = new ReviewPaneController(getGameHandler());
 
-		sideBar.getChildren().add(reviewPanelController.getRoot());
+		sideBar.getChildren().add(reviewPaneController.getRoot());
 	}
 
 	private void doneScoring(ScoreEvent event) {

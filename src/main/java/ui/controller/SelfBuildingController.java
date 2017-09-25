@@ -29,7 +29,7 @@ public abstract class SelfBuildingController implements Builder<DockNode> {
 	private Parent root;
 	private DockNode node;
 
-	SelfBuildingController() {
+	public SelfBuildingController() {
 		root = null;
 	}
 
@@ -49,7 +49,7 @@ public abstract class SelfBuildingController implements Builder<DockNode> {
 		node = new DockNode(getRoot());
 	}
 
-	final Parent getRoot() {
+	public final Parent getRoot() {
 		if ( root == null )
 			constructRoot();
 

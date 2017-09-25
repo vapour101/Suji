@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.controller;
+package ui.controller.sidebar;
 
 import event.EventBus;
 import event.ScoreEvent;
@@ -30,6 +30,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.score.Scorer;
+import ui.controller.SelfBuildingController;
 import util.StoneColour;
 
 import java.net.URL;
@@ -50,7 +51,7 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 
 	private Scorer scorer;
 
-	ScorePaneController() {
+	public ScorePaneController() {
 		scorer = null;
 	}
 
@@ -73,11 +74,11 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 		EventBus.addEventHandler(ScoreEvent.ANY, this::updateScore);
 	}
 
-	void setVisible(boolean visible) {
+	public void setVisible(boolean visible) {
 		scorePane.setVisible(visible);
 	}
 
-	void enableButtons() {
+	public void enableButtons() {
 		blackDone.setDisable(false);
 		whiteDone.setDisable(false);
 	}

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
-      fx:controller="ui.controller.GameMenuController">
+      fx:controller="ui.controller.sidebar.GameMenuController">
     <AnchorPane>
         <Button fx:id="passButton" mnemonicParsing="false" text="Pass" AnchorPane.leftAnchor="0"
                 AnchorPane.rightAnchor="0"/>

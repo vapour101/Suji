@@ -21,6 +21,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import logic.score.Scorer;
+import ui.controller.sidebar.ScorePaneController;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
