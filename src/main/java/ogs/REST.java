@@ -48,26 +48,14 @@ public class REST {
 		@Override
 		public void run() {
 			Client client = ClientBuilder.newClient();
-
-			LogHelper.finest("Got client");
-
 			Response response = client.target(OGSReference.getAvatarURL(id)).request(MediaType.WILDCARD).get();
-
-			LogHelper.finest("Sent GET request");
 
 			if ( response.getStatus() != 200 ) {
 				LogHelper.severe("Failed : HTTP error code : " + response.getStatus());
 			}
 
-			LogHelper.finest("Got response");
-
 			InputStream output = response.readEntity(InputStream.class);
-
-			LogHelper.finest("Got InputStream");
-
 			Image image = new Image(output);
-
-			LogHelper.finest("Got Image");
 
 			response.close();
 			client.close();
