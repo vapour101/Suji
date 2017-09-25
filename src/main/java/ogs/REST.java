@@ -24,11 +24,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 public class REST {
 
@@ -50,31 +47,27 @@ public class REST {
 
 		@Override
 		public void run() {
-			try {
-				runWithExceptions();
-			}
-			catch (MalformedURLException e) {
-				LogHelper.log(Level.WARNING, "Player icon URL is malformed", e);
-			}
-			catch (IOException e) {
-				LogHelper.log(Level.WARNING, "IO exception", e);
-			}
-			catch (RuntimeException e) {
-				LogHelper.log(Level.WARNING, "Caught runtime exception", e);
-			}
-		}
-
-		private void runWithExceptions() throws IOException, RuntimeException {
 			Client client = ClientBuilder.newClient();
+
+			LogHelper.finest("Got client");
+
 			Response response = client.target(OGSReference.getAvatarURL(id)).request(MediaType.WILDCARD).get();
 
+			LogHelper.finest("Sent GET request");
+
 			if ( response.getStatus() != 200 ) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+				LogHelper.severe("Failed : HTTP error code : " + response.getStatus());
 			}
+
+			LogHelper.finest("Got response");
 
 			InputStream output = response.readEntity(InputStream.class);
 
+			LogHelper.finest("Got InputStream");
+
 			Image image = new Image(output);
+
+			LogHelper.finest("Got Image");
 
 			response.close();
 			client.close();
