@@ -30,14 +30,11 @@ import java.net.URISyntaxException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+import static ogs.OGSReference.*;
+
 public class Connection {
 
 	private static final Object monitor = new Object();
-	private static final String GAMELIST = "gamelist/query";
-	private static final String GAMECONNECT = "game/connect";
-	private static final String GAMEDISCONNECT = "game/disconnect";
-	private static final String PREFIX = "https://online-go.com";
-	private static final String WEBSOCKET = "websocket";
 
 	private static Connection instance = null;
 	private Socket connection;
