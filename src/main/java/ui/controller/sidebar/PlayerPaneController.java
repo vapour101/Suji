@@ -21,8 +21,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
-import ogs.REST;
+import ogs.Playerdata;
 import ui.controller.SelfBuildingController;
+import util.WebHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,6 +41,14 @@ public class PlayerPaneController extends SelfBuildingController implements Init
 		game = gameMeta;
 	}
 
+	private void loadBlack(Playerdata blackPlayer) {
+		WebHelper.requestImage(blackPlayer.getAvatarURL(64), blackAvatar::setImage);
+	}
+
+	private void loadWhite(Playerdata whitePlayer) {
+		WebHelper.requestImage(whitePlayer.getAvatarURL(64), whiteAvatar::setImage);
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		blackName.setText(game.getBlackName());
@@ -48,8 +57,8 @@ public class PlayerPaneController extends SelfBuildingController implements Init
 		int black = game.getBlackPlayer().getId();
 		int white = game.getWhitePlayer().getId();
 
-		REST.requestPlayerIcon(black, 64, blackAvatar::setImage);
-		REST.requestPlayerIcon(white, 64, whiteAvatar::setImage);
+		Playerdata.requestPlayerdata(black, this::loadBlack);
+		Playerdata.requestPlayerdata(white, this::loadWhite);
 	}
 
 	@Override

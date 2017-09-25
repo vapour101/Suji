@@ -15,12 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ogs;
+package util;
 
 import javafx.scene.image.Image;
 import org.json.JSONException;
 import org.json.JSONObject;
-import util.LogHelper;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -30,19 +29,11 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
-public class REST {
+public class WebHelper {
 
 	private static Client client = null;
 
-	public static void requestPlayerIcon(int playerID, int size, Consumer<Image> callback) {
-		requestPlayerIconURL(playerID, string -> {
-			string = string.replaceAll("-\\d+\\.png$", "-" + size + ".png");
-			string = string.replaceAll("s=\\d+", "s=" + size);
-			getImageFromURL(string, callback);
-		});
-	}
-
-	public static void getImageFromURL(String url, Consumer<Image> callback) {
+	public static void requestImage(String url, Consumer<Image> callback) {
 		Thread thread = new Thread(() -> {
 			WebTarget target = getClient().target(url);
 			Response response = target.request(MediaType.WILDCARD_TYPE).get();
@@ -61,9 +52,19 @@ public class REST {
 		thread.start();
 	}
 
-	public static void requestPlayerIconURL(int playerID, Consumer<String> callback) {
+	private static Client getClient() {
+		if ( client == null )
+			synchronized (WebHelper.class) {
+				if ( client == null )
+					client = ClientBuilder.newClient();
+			}
+
+		return client;
+	}
+
+	public static void requestJSON(String url, Consumer<JSONObject> callback) {
 		Thread thread = new Thread(() -> {
-			WebTarget target = getClient().target(OGSReference.getPlayerInfoURL(playerID));
+			WebTarget target = getClient().target(url);
 			Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
 
 			if ( response.getStatus() != 200 ) {
@@ -75,22 +76,12 @@ public class REST {
 
 			try {
 				JSONObject jsonObject = new JSONObject(output);
-				callback.accept(jsonObject.getString("icon"));
+				callback.accept(jsonObject);
 			}
 			catch (JSONException e) {
 				LogHelper.jsonError(e);
 			}
 		});
 		thread.start();
-	}
-
-	static Client getClient() {
-		if ( client == null )
-			synchronized (REST.class) {
-				if ( client == null )
-					client = ClientBuilder.newClient();
-			}
-
-		return client;
 	}
 }
