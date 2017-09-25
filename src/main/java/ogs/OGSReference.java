@@ -18,7 +18,8 @@
 package ogs;
 
 public final class OGSReference {
-	static final String PREFIX = "http://online-go.com";
+
+	static final String PREFIX = "https://online-go.com";
 	static final String WEBSOCKET = "websocket";
 
 	static final String GAMELIST = "gamelist/query";
@@ -30,6 +31,6 @@ public final class OGSReference {
 	private static final String PLAYER_AVATAR = "/icon";
 
 	public static String getAvatarURL(int playerID) {
-		return PREFIX + REST_API + REST_PLAYER + playerID + PLAYER_AVATAR;
+		return PREFIX + REST_API + REST_PLAYER + "/" + playerID + PLAYER_AVATAR;
 	}
 }

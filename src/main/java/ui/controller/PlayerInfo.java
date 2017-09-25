@@ -19,17 +19,15 @@ package ui.controller;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
-import ogs.OGSReference;
 import ogs.REST;
 import util.LogHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PlayerInfo extends SelfBuildingController implements Initializable{
+public class PlayerInfo extends SelfBuildingController implements Initializable {
 
 	public ImageView blackAvatar;
 	public ImageView whiteAvatar;
@@ -53,16 +51,8 @@ public class PlayerInfo extends SelfBuildingController implements Initializable{
 		LogHelper.finest("BlackID =  " + black);
 		LogHelper.finest("WhiteID =  " + white);
 
-		REST.requestPlayerIcon(black, s -> this.setBlackAvatar(s));
-		//REST.requestPlayerIcon(white, this::setWhiteAvatar);
-	}
-
-	private void setBlackAvatar(String url) {
-		blackAvatar.setImage(new Image(url, true));
-	}
-
-	private void setWhiteAvatar(String url) {
-		whiteAvatar.setImage(new Image(url, true));
+		REST.requestPlayerIcon(black, blackAvatar::setImage);
+		REST.requestPlayerIcon(white, whiteAvatar::setImage);
 	}
 
 	@Override

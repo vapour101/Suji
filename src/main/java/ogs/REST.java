@@ -17,20 +17,22 @@
 
 package ogs;
 
+import javafx.scene.image.Image;
 import util.LogHelper;
 
-import java.io.BufferedReader;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class REST {
 
-	public static void requestPlayerIcon(int playerID, Consumer<String> callback) {
+	public static void requestPlayerIcon(int playerID, Consumer<Image> callback) {
 		Runnable task = new IconRequest(playerID, callback);
 		Thread thread = new Thread(task);
 		thread.start();
@@ -39,9 +41,9 @@ public class REST {
 	private static class IconRequest implements Runnable {
 
 		private int id;
-		private Consumer<String> result;
+		private Consumer<Image> result;
 
-		IconRequest(int playerID, Consumer<String> callback) {
+		IconRequest(int playerID, Consumer<Image> callback) {
 			id = playerID;
 			result = callback;
 		}
@@ -57,35 +59,27 @@ public class REST {
 			catch (IOException e) {
 				LogHelper.log(Level.WARNING, "IO exception", e);
 			}
+			catch (RuntimeException e) {
+				LogHelper.log(Level.WARNING, "Caught runtime exception", e);
+			}
 		}
 
 		private void runWithExceptions() throws IOException, RuntimeException {
-			LogHelper.finest("Attempting to retrieve URL");
-			URL url = new URL(OGSReference.getAvatarURL(id));
+			Client client = ClientBuilder.newClient();
+			Response response = client.target(OGSReference.getAvatarURL(id)).request(MediaType.WILDCARD).get();
 
-			LogHelper.finest("Attempting connection");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Accept", "application/json");
-
-
-			if ( conn.getResponseCode() != 200 ) {
-				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			if ( response.getStatus() != 200 ) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 
-			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			InputStream output = response.readEntity(InputStream.class);
 
-			String output;
-			StringBuilder sb = new StringBuilder();
-			System.out.println("Output from Server .... \n");
-			while ((output = br.readLine()) != null) {
-				sb.append(output);
-			}
+			Image image = new Image(output);
 
-			LogHelper.finest(sb.toString());
+			response.close();
+			client.close();
 
-			conn.disconnect();
+			result.accept(image);
 		}
 	}
 }

@@ -35,7 +35,6 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPos;
 import ui.Main;
 
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -58,14 +57,6 @@ public class GameListController extends SelfBuildingController implements Initia
 		requestGameList();
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		buildTable();
-		requestGameList();
-		liveButton.setOnAction(this::onSwitch);
-		corrButton.setOnAction(this::onSwitch);
-	}
-
 	private void requestGameList() {
 		GameList.RequestOptions options = new GameList.RequestOptions();
 
@@ -79,6 +70,14 @@ public class GameListController extends SelfBuildingController implements Initia
 			options.setType(GameList.GameListType.CORRESPONDENCE);
 
 		GameList.requestGameList(options, this::populate);
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		buildTable();
+		requestGameList();
+		liveButton.setOnAction(this::onSwitch);
+		corrButton.setOnAction(this::onSwitch);
 	}
 
 	private void buildTable() {
