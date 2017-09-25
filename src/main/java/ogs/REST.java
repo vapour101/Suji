@@ -29,10 +29,22 @@ import java.util.function.Consumer;
 
 public class REST {
 
+	private static Client client = null;
+
 	public static void requestPlayerIcon(int playerID, Consumer<Image> callback) {
 		Runnable task = new IconRequest(playerID, callback);
 		Thread thread = new Thread(task);
 		thread.start();
+	}
+
+	static Client getClient() {
+		if ( client == null )
+			synchronized (REST.class) {
+				if ( client == null )
+					client = ClientBuilder.newClient();
+			}
+
+		return client;
 	}
 
 	private static class IconRequest implements Runnable {
@@ -47,7 +59,7 @@ public class REST {
 
 		@Override
 		public void run() {
-			Client client = ClientBuilder.newClient();
+			Client client = REST.getClient();
 			Response response = client.target(OGSReference.getAvatarURL(id)).request(MediaType.WILDCARD).get();
 
 			if ( response.getStatus() != 200 ) {
@@ -58,7 +70,6 @@ public class REST {
 			Image image = new Image(output);
 
 			response.close();
-			client.close();
 
 			result.accept(image);
 		}
