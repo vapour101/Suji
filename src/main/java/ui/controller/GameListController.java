@@ -86,20 +86,30 @@ public class GameListController extends DockNodeController implements Initializa
 		titleColumn.setPrefWidth(125);
 		titleColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getGameName()));
 
-		TableColumn<GameList.Game, String> blackColumn = new TableColumn<>("Black");
-		blackColumn.setPrefWidth(125);
-		blackColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackName()));
+		TableColumn<GameList.Game, String> blackName = new TableColumn<>("Black");
+		blackName.setPrefWidth(125);
+		blackName.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackName()));
 
-		TableColumn<GameList.Game, String> whiteColumn = new TableColumn<>("White");
-		whiteColumn.setPrefWidth(125);
-		whiteColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getWhiteName()));
+		TableColumn<GameList.Game, String> blackRank = new TableColumn<>();
+		blackRank.setPrefWidth(35);
+		blackRank.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackPlayer().getRankString()));
+
+		TableColumn<GameList.Game, String> whiteName = new TableColumn<>("White");
+		whiteName.setPrefWidth(125);
+		whiteName.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getWhiteName()));
+
+		TableColumn<GameList.Game, String> whiteRank = new TableColumn<>();
+		whiteRank.setPrefWidth(35);
+		whiteRank.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackPlayer().getRankString()));
 
 		TableColumn<GameList.Game, Integer> moveColumn = new TableColumn<>("Move");
 		moveColumn.setPrefWidth(55);
 		moveColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getMoveNumber()));
 
-		table.getColumns().add(blackColumn);
-		table.getColumns().add(whiteColumn);
+		table.getColumns().add(blackName);
+		table.getColumns().add(blackRank);
+		table.getColumns().add(whiteName);
+		table.getColumns().add(whiteRank);
 		table.getColumns().add(titleColumn);
 		table.getColumns().add(moveColumn);
 

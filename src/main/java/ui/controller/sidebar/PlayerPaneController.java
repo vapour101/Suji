@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
 import ogs.Playerdata;
+import ui.controller.OGSPlayer;
 import ui.controller.SelfBuildingController;
 import util.WebHelper;
 
@@ -51,14 +52,17 @@ public class PlayerPaneController extends SelfBuildingController implements Init
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		blackName.setText(game.getBlackName());
-		whiteName.setText(game.getWhiteName());
+		blackName.setText(game.getBlackName() + "[" + game.getBlackPlayer().getRankString() + "]");
+		whiteName.setText(game.getWhiteName() + "[" + game.getWhitePlayer().getRankString() + "]");
 
 		int black = game.getBlackPlayer().getId();
 		int white = game.getWhitePlayer().getId();
 
 		Playerdata.requestPlayerdata(black, this::loadBlack);
 		Playerdata.requestPlayerdata(white, this::loadWhite);
+
+		blackAvatar.setOnMouseClicked(event -> (new OGSPlayer(black)).dock());
+		whiteAvatar.setOnMouseClicked(event -> (new OGSPlayer(white)).dock());
 	}
 
 	@Override

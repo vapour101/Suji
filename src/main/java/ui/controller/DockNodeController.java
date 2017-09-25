@@ -28,7 +28,7 @@ public abstract class DockNodeController extends SelfBuildingController {
 		super();
 	}
 
-	public final DockNode getDockNode() {
+	public final synchronized DockNode getDockNode() {
 		if ( node == null )
 			constructNode();
 
@@ -37,5 +37,9 @@ public abstract class DockNodeController extends SelfBuildingController {
 
 	private void constructNode() {
 		node = new DockNode(getRoot());
+	}
+
+	public void dock() {
+
 	}
 }

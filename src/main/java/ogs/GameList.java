@@ -154,53 +154,13 @@ public class GameList {
 		}
 	}
 
-	public class Player {
-
-		private int id;
-		private String name;
-		private int rank;
-		private boolean isProfessional;
-
-		Player(JSONObject player) {
-			try {
-				build(player);
-			}
-			catch (JSONException e) {
-				LogHelper.jsonError(e);
-			}
-		}
-
-		private void build(JSONObject player) throws JSONException {
-			id = player.getInt("id");
-			name = player.getString("username");
-			rank = player.getInt("rank");
-			isProfessional = player.getBoolean("professional");
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public int getRank() {
-			return rank;
-		}
-
-		public boolean isProfessional() {
-			return isProfessional;
-		}
-	}
-
 	public class Game {
 
 		private int id;
 		private String name;
 
-		private Player black;
-		private Player white;
+		private Playerdata black;
+		private Playerdata white;
 
 		private int size;
 		private boolean isPrivate;
@@ -222,8 +182,8 @@ public class GameList {
 			id = game.getInt("id");
 			name = game.getString("name");
 
-			black = new Player(game.getJSONObject("black"));
-			white = new Player(game.getJSONObject("white"));
+			black = new Playerdata(game.getJSONObject("black"));
+			white = new Playerdata(game.getJSONObject("white"));
 
 			size = game.getInt("height");
 			isPrivate = game.getBoolean("private");
@@ -245,19 +205,19 @@ public class GameList {
 			return turnPlayer;
 		}
 
-		public Player getBlackPlayer() {
+		public Playerdata getBlackPlayer() {
 			return black;
 		}
 
 		public String getBlackName() {
-			return black.getName();
+			return black.getUsername();
 		}
 
 		public String getWhiteName() {
-			return white.getName();
+			return white.getUsername();
 		}
 
-		public Player getWhitePlayer() {
+		public Playerdata getWhitePlayer() {
 			return white;
 		}
 

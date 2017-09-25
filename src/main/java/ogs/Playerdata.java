@@ -61,32 +61,63 @@ public class Playerdata {
 		}
 	}
 
+	/*
+	"white": {
+        "ratings": {
+          "overall": {
+            "rating": 2710.3813831923917,
+            "deviation": 75.84836146479601,
+            "games_played": 1295,
+            "volatility": 0.060730921154513624
+          }
+        },
+        "rank": 32,
+        "accepted": false,
+        "id": 348580,
+        "username": "KDJ123",
+        "professional": false
+      },
+	 */
+
 	private void fromJSON(JSONObject jsonPlayer) throws JSONException {
 		id = jsonPlayer.getInt("id");
 		username = jsonPlayer.getString("username");
 		isPro = jsonPlayer.getBoolean("professional");
-		country = jsonPlayer.getString("country");
-		language = jsonPlayer.getString("language");
-		about = jsonPlayer.getString("about");
-		isSupporter = jsonPlayer.getBoolean("supporter");
-		isBot = jsonPlayer.getBoolean("is_bot");
-		website = jsonPlayer.getString("website");
-		registrationDate = Instant.parse(jsonPlayer.getString("registration_date"));
-		name = jsonPlayer.getString("name");
 
 		JSONObject overallRating = jsonPlayer.getJSONObject("ratings").getJSONObject("overall");
 		rating = overallRating.getDouble("rating");
 		gamesPlayed = overallRating.getInt("games_played");
 
-		isFriend = jsonPlayer.getBoolean("is_friend");
-		avatar = jsonPlayer.getString("icon");
-
+		botOwner = -1;
 		botAI = null;
-		botOwner = 0;
+		country = null;
+		language = null;
+		about = null;
+		avatar = null;
+		name = null;
+		registrationDate = null;
+		website = null;
+		isBot = false;
+		isSupporter = false;
+		isFriend = false;
 
-		if ( isBot ) {
-			botAI = jsonPlayer.getString("bot_ai");
-			botOwner = jsonPlayer.getInt("bot_owner");
+		//Some playerdata items can be incomplete.
+		if ( jsonPlayer.has("about") ) {
+			country = jsonPlayer.getString("country");
+			language = jsonPlayer.getString("language");
+			about = jsonPlayer.getString("about");
+			isSupporter = jsonPlayer.getBoolean("supporter");
+			isBot = jsonPlayer.getBoolean("is_bot");
+			website = jsonPlayer.getString("website");
+			registrationDate = Instant.parse(jsonPlayer.getString("registration_date"));
+			name = jsonPlayer.getString("name");
+			isFriend = jsonPlayer.getBoolean("is_friend");
+			avatar = jsonPlayer.getString("icon");
+
+			if ( isBot ) {
+				botAI = jsonPlayer.getString("bot_ai");
+				botOwner = jsonPlayer.getInt("bot_owner");
+			}
 		}
 	}
 
@@ -113,6 +144,38 @@ public class Playerdata {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getRankString() {
+		double rank = 30 - getRank();
+
+		String result = rank > 0 ? "k" : "D";
+
+		if ( rank <= 0 )
+			rank--;
+
+		rank = Math.abs(rank);
+		result = Math.round(rank) + result;
+
+		return result;
+	}
+
+	public double getRank() {
+		double MAX = 6000;
+		double MIN = 100;
+		double rank = getRating();
+
+		rank = Math.min(rank, MAX);
+		rank = Math.max(rank, MIN);
+
+		rank /= 850.0;
+
+		rank = Math.log(rank);
+
+		rank /= 0.032;
+
+
+		return rank;
 	}
 
 	public double getRating() {
@@ -178,5 +241,9 @@ public class Playerdata {
 
 	public boolean isSupporter() {
 		return isSupporter;
+	}
+
+	public Instant getRegistrationDate() {
+		return registrationDate;
 	}
 }
