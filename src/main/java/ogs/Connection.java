@@ -99,7 +99,7 @@ public class Connection {
 
 			connection.gameDisconnect(gameId);
 		});
-		thread.run();
+		thread.start();
 	}
 
 	private void gameDisconnect(int gameId) {
@@ -170,7 +170,7 @@ public class Connection {
 
 			connection.gameConnection(gameId, gamedataConsumer, moveConsumer);
 		});
-		thread.run();
+		thread.start();
 	}
 
 	private void gameConnection(int gameId, Consumer<Gamedata> gamedataConsumer, Consumer<Movedata> moveConsumer) {
@@ -232,7 +232,7 @@ public class Connection {
 
 			connection.gameListQuery(args, callback);
 		});
-		thread.run();
+		thread.start();
 	}
 
 	private void gameListQuery(JSONObject args, Consumer<JSONObject> callback) {
