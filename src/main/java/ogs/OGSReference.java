@@ -27,10 +27,9 @@ public final class OGSReference {
 	static final String GAMEDISCONNECT = "game/disconnect";
 
 	private static final String REST_API = "/api/v1";
-	private static final String REST_PLAYER = "/players";
-	private static final String PLAYER_AVATAR = "/icon";
+	private static final String PLAYER = "/players";
 
-	public static String getAvatarURL(int playerID) {
-		return PREFIX + REST_API + REST_PLAYER + "/" + playerID + PLAYER_AVATAR;
+	public static String getPlayerInfoURL(int playerID) {
+		return PREFIX + REST_API + PLAYER + "/" + playerID;
 	}
 }

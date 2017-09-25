@@ -26,7 +26,7 @@ import ogs.REST;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PlayerInfo extends SelfBuildingController implements Initializable {
+public class PlayerPaneController extends SelfBuildingController implements Initializable {
 
 	public ImageView blackAvatar;
 	public ImageView whiteAvatar;
@@ -35,7 +35,7 @@ public class PlayerInfo extends SelfBuildingController implements Initializable 
 
 	private GameList.Game game;
 
-	PlayerInfo(GameList.Game gameMeta) {
+	PlayerPaneController(GameList.Game gameMeta) {
 		game = gameMeta;
 	}
 
@@ -47,12 +47,12 @@ public class PlayerInfo extends SelfBuildingController implements Initializable 
 		int black = game.getBlackPlayer().getId();
 		int white = game.getWhitePlayer().getId();
 
-		REST.requestPlayerIcon(black, blackAvatar::setImage);
-		REST.requestPlayerIcon(white, whiteAvatar::setImage);
+		REST.requestPlayerIcon(black, 64, blackAvatar::setImage);
+		REST.requestPlayerIcon(white, 64, whiteAvatar::setImage);
 	}
 
 	@Override
 	protected String getResourcePath() {
-		return "/playerInfo.fxml";
+		return "/playerInfoPane.fxml";
 	}
 }
