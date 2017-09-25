@@ -125,6 +125,9 @@ public class GameListController extends SelfBuildingController implements Initia
 		SpectatorGameHandler handler = new SpectatorGameHandler(game.getId());
 		BoardController controller = new BoardController(handler, "/localGame.fxml");
 
+		PlayerInfo playerInfo = new PlayerInfo(game);
+		controller.addToSideBar(playerInfo.getRoot());
+
 		DockNode node = controller.build();
 		node.closedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override

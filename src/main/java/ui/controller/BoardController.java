@@ -22,6 +22,7 @@ import event.GameEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -31,6 +32,8 @@ import logic.gamehandler.GameHandler;
 import ui.drawer.*;
 
 import java.net.URL;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 public class BoardController extends SelfBuildingController implements Initializable {
@@ -45,10 +48,17 @@ public class BoardController extends SelfBuildingController implements Initializ
 	private GameHandler game;
 	private String fxmlLocation;
 
+	private Queue<Node> sideBarItems;
+
 
 	BoardController(GameHandler gameHandler, String resourcePath) {
 		game = gameHandler;
 		fxmlLocation = resourcePath;
+		sideBarItems = new ArrayDeque<>();
+	}
+
+	public final void addToSideBar(Node node) {
+		sideBarItems.add(node);
 	}
 
 	@Override
@@ -58,6 +68,7 @@ public class BoardController extends SelfBuildingController implements Initializ
 
 		setupPanes();
 		constructCanvas();
+		setupSideBar();
 
 		GameEvent.fireGameEvent(game, GameEvent.START);
 	}
@@ -98,6 +109,12 @@ public class BoardController extends SelfBuildingController implements Initializ
 
 	GameHandler getGameHandler() {
 		return game;
+	}
+
+	private void setupSideBar() {
+		while (!sideBarItems.isEmpty()) {
+			sideBar.getChildren().add(sideBarItems.remove());
+		}
 	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
