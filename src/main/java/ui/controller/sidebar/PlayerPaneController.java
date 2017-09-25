@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
 import ogs.REST;
+import ui.controller.DockNodeController;
 import ui.controller.SelfBuildingController;
 
 import java.net.URL;

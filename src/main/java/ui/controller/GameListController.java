@@ -39,7 +39,7 @@ import ui.controller.sidebar.PlayerPaneController;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GameListController extends SelfBuildingController implements Initializable {
+public class GameListController extends DockNodeController implements Initializable {
 
 	private boolean live = true;
 	@FXML
@@ -128,7 +128,7 @@ public class GameListController extends SelfBuildingController implements Initia
 		PlayerPaneController playerInfo = new PlayerPaneController(game);
 		controller.addToSideBar(playerInfo.getRoot());
 
-		DockNode node = controller.build();
+		DockNode node = controller.getDockNode();
 		node.closedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

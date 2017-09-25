@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class NewLocalGameController extends SelfBuildingController implements Initializable {
+public class NewLocalGameController extends DockNodeController implements Initializable {
 
 	public Spinner<Integer> handicapSpinner;
 	public Button startButton;
@@ -76,7 +76,7 @@ public class NewLocalGameController extends SelfBuildingController implements In
 		node.setTitle("Local Game");
 		node.dock(Main.instance.dockPane, DockPos.CENTER);
 
-		getNode().close();
+		getDockNode().close();
 	}
 
 	private DockNode buildLocalGame() {
@@ -85,7 +85,7 @@ public class NewLocalGameController extends SelfBuildingController implements In
 
 		LocalGameController controller = new LocalGameController(handler);
 
-		return controller.build();
+		return controller.getDockNode();
 	}
 
 

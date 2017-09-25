@@ -36,7 +36,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
-public class BoardController extends SelfBuildingController implements Initializable {
+public class BoardController extends DockNodeController implements Initializable {
 
 	@FXML
 	Pane boardPane;

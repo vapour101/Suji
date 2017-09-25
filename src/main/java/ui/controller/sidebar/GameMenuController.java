@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import logic.gamehandler.GameHandler;
 import sgf.SGFWriter;
+import ui.controller.DockNodeController;
 import ui.controller.SelfBuildingController;
 
 import java.io.*;

@@ -19,35 +19,27 @@ package ui.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import org.dockfx.DockNode;
 
 import java.io.IOException;
 
-public abstract class SelfBuildingController {
+public abstract class DockNodeController extends SelfBuildingController {
 
-	private Parent root;
 
-	public SelfBuildingController() {
-		root = null;
+	private DockNode node;
+
+	public DockNodeController() {
+		super();
 	}
 
-	public final Parent getRoot() {
-		if ( root == null )
-			constructRoot();
+	public final DockNode getDockNode() {
+		if ( node == null )
+			constructNode();
 
-		return root;
+		return node;
 	}
 
-	private void constructRoot() {
-		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(getResourcePath()));
-		loader.setControllerFactory(type -> this);
-
-		try {
-			root = loader.load();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void constructNode() {
+		node = new DockNode(getRoot());
 	}
-
-	abstract protected String getResourcePath();
 }

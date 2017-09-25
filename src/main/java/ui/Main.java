@@ -30,7 +30,7 @@ import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 import ui.controller.GameListController;
 import ui.controller.NewLocalGameController;
-import ui.controller.SelfBuildingController;
+import ui.controller.DockNodeController;
 import util.LogHelper;
 
 public class Main extends Application {
@@ -93,8 +93,8 @@ public class Main extends Application {
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
-			SelfBuildingController controller = new NewLocalGameController();
-			DockNode node = controller.build();
+			DockNodeController controller = new NewLocalGameController();
+			DockNode node = controller.getDockNode();
 			node.setTitle("New Local Game");
 			node.dock(dockPane, DockPos.CENTER);
 			node.setFloating(true);
@@ -112,7 +112,7 @@ public class Main extends Application {
 		ogsGameList.setOnAction(event -> {
 			GameListController controller = new GameListController();
 
-			DockNode node = controller.build();
+			DockNode node = controller.getDockNode();
 			node.setTitle("OGS GameList");
 			node.dock(dockPane, DockPos.RIGHT);
 		});

@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
+import ui.controller.DockNodeController;
 import ui.controller.SelfBuildingController;
 
 import java.net.URL;
