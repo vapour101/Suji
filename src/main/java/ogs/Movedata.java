@@ -45,8 +45,6 @@ public class Movedata {
 		gameId = moveObject.getInt("game_id");
 		moveNumber = moveObject.getInt("move_number");
 
-		LogHelper.finest("Received move for game: " + gameId);
-
 		fromJSONArray(moveObject.getJSONArray("move"));
 	}
 

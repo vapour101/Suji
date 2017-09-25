@@ -45,8 +45,6 @@ public class Gamedata {
 	}
 
 	private void fromJSON(JSONObject jsonGame) throws JSONException {
-		LogHelper.finest("Processing JSONObject to Gamedata");
-
 		if ( jsonGame == null ) {
 			LogHelper.severe("JSONObject is null");
 			return;

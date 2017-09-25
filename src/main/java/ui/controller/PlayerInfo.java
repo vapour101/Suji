@@ -22,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import ogs.GameList;
 import ogs.REST;
-import util.LogHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,9 +46,6 @@ public class PlayerInfo extends SelfBuildingController implements Initializable 
 
 		int black = game.getBlackPlayer().getId();
 		int white = game.getWhitePlayer().getId();
-
-		LogHelper.finest("BlackID =  " + black);
-		LogHelper.finest("WhiteID =  " + white);
 
 		REST.requestPlayerIcon(black, blackAvatar::setImage);
 		REST.requestPlayerIcon(white, whiteAvatar::setImage);

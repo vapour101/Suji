@@ -47,8 +47,6 @@ public class SpectatorGameHandler implements GameHandler {
 	}
 
 	private void onGameData(Gamedata gamedata) {
-		LogHelper.info("Gamedata received");
-
 		if ( gamedata == null ) {
 			LogHelper.severe("Gamedata is null");
 			return;
@@ -69,7 +67,6 @@ public class SpectatorGameHandler implements GameHandler {
 			gameTree.stepForward(move.getMove(getTurnPlayer()));
 		}
 
-		LogHelper.finest("Firing game event");
 		GameEvent.fireGameEvent(this);
 	}
 
