@@ -175,6 +175,7 @@ public class GameList {
 			}
 			catch (JSONException e) {
 				LogHelper.jsonError(e);
+				LogHelper.finest(game.toString());
 			}
 		}
 
@@ -186,7 +187,10 @@ public class GameList {
 			white = new Playerdata(game.getJSONObject("white"));
 
 			size = game.getInt("height");
-			isPrivate = game.getBoolean("private");
+
+			isPrivate = false;
+			if ( game.has("private") )
+				isPrivate = game.getBoolean("private");
 
 			turnPlayer = game.getInt("player_to_move");
 			phase = game.getString("phase");

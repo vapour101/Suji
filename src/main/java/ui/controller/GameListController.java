@@ -100,7 +100,7 @@ public class GameListController extends DockNodeController implements Initializa
 
 		TableColumn<GameList.Game, String> whiteRank = new TableColumn<>();
 		whiteRank.setPrefWidth(35);
-		whiteRank.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBlackPlayer().getRankString()));
+		whiteRank.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getWhitePlayer().getRankString()));
 
 		TableColumn<GameList.Game, Integer> moveColumn = new TableColumn<>("Move");
 		moveColumn.setPrefWidth(55);

@@ -55,39 +55,14 @@ public class Playerdata {
 		}
 		catch (JSONException e) {
 			LogHelper.jsonError(e);
+			LogHelper.finest(jsonPlayer.toString());
 		}
 		catch (NullPointerException e) {
 			LogHelper.severe("Something was null.");
 		}
 	}
 
-	/*
-	"white": {
-        "ratings": {
-          "overall": {
-            "rating": 2710.3813831923917,
-            "deviation": 75.84836146479601,
-            "games_played": 1295,
-            "volatility": 0.060730921154513624
-          }
-        },
-        "rank": 32,
-        "accepted": false,
-        "id": 348580,
-        "username": "KDJ123",
-        "professional": false
-      },
-	 */
-
 	private void fromJSON(JSONObject jsonPlayer) throws JSONException {
-		id = jsonPlayer.getInt("id");
-		username = jsonPlayer.getString("username");
-		isPro = jsonPlayer.getBoolean("professional");
-
-		JSONObject overallRating = jsonPlayer.getJSONObject("ratings").getJSONObject("overall");
-		rating = overallRating.getDouble("rating");
-		gamesPlayed = overallRating.getInt("games_played");
-
 		botOwner = -1;
 		botAI = null;
 		country = null;
@@ -100,6 +75,31 @@ public class Playerdata {
 		isBot = false;
 		isSupporter = false;
 		isFriend = false;
+		gamesPlayed = 0;
+		isPro = false;
+
+		id = jsonPlayer.getInt("id");
+		username = jsonPlayer.getString("username");
+
+		if ( jsonPlayer.has("professional") )
+			isPro = jsonPlayer.getBoolean("professional");
+
+		//Pro accounts are handled slightly differently in terms of ratings
+		if ( isPro ) {
+			if ( jsonPlayer.has("rank") )
+				rating = jsonPlayer.getInt("rank");
+			else if ( jsonPlayer.has("ranking") )
+				rating = jsonPlayer.getInt("ranking");
+			else
+				rating = 0;
+		}
+		else {
+			JSONObject overallRating = jsonPlayer.getJSONObject("ratings").getJSONObject("overall");
+			rating = overallRating.getDouble("rating");
+
+			if ( overallRating.has("games_played") )
+				gamesPlayed = overallRating.getInt("games_played");
+		}
 
 		//Some playerdata items can be incomplete.
 		if ( jsonPlayer.has("about") ) {
@@ -147,6 +147,10 @@ public class Playerdata {
 	}
 
 	public String getRankString() {
+		if ( isPro() ) {
+			return getProRank();
+		}
+
 		double rank = 30 - getRank();
 
 		String result = rank > 0 ? "k" : "D";
@@ -155,9 +159,18 @@ public class Playerdata {
 			rank--;
 
 		rank = Math.abs(rank);
+		rank = Math.floor(rank);
 		result = Math.round(rank) + result;
 
 		return result;
+	}
+
+	private String getProRank() {
+		return Math.round(getRating() - 36) + "p";
+	}
+
+	public double getRating() {
+		return rating;
 	}
 
 	public double getRank() {
@@ -178,8 +191,8 @@ public class Playerdata {
 		return rank;
 	}
 
-	public double getRating() {
-		return rating;
+	public boolean isPro() {
+		return isPro;
 	}
 
 	public int getGamesPlayed() {
@@ -233,10 +246,6 @@ public class Playerdata {
 
 	public boolean isFriend() {
 		return isFriend;
-	}
-
-	public boolean isPro() {
-		return isPro;
 	}
 
 	public boolean isSupporter() {
