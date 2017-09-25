@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.controller;
+package ui.controller.strategy;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseButton;

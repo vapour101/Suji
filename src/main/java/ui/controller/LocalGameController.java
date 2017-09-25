@@ -27,6 +27,9 @@ import logic.score.Scorer;
 import ui.controller.sidebar.GameMenuController;
 import ui.controller.sidebar.ReviewPaneController;
 import ui.controller.sidebar.ScorePaneController;
+import ui.controller.strategy.BoardStrategy;
+import ui.controller.strategy.GamePlay;
+import ui.controller.strategy.Scoring;
 import ui.drawer.GameScoreDrawer;
 
 import java.net.URL;
