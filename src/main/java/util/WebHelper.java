@@ -18,6 +18,14 @@
 package util;
 
 import javafx.scene.image.Image;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,10 +64,21 @@ public class WebHelper {
 		if ( client == null )
 			synchronized (WebHelper.class) {
 				if ( client == null )
-					client = ClientBuilder.newClient();
+					buildClient();
 			}
 
 		return client;
+	}
+
+	private static void buildClient() {
+		ClientConfig config = new ClientConfig();
+		config.connectorProvider(new ApacheConnectorProvider());
+		CredentialsProvider credentials = new BasicCredentialsProvider();
+		credentials.setCredentials(AuthScope.ANY, new NTCredentials("username", "password", null, "domain"));
+		config.property(ApacheClientProperties.CREDENTIALS_PROVIDER, credentials);
+		config.property(ClientProperties.PROXY_URI, "proxy_server");
+
+		client = ClientBuilder.newClient(config);
 	}
 
 	public static void requestJSON(String url, Consumer<JSONObject> callback) {

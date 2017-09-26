@@ -21,10 +21,14 @@ import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import util.LogHelper;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Consumer;
@@ -40,6 +44,21 @@ public class Connection {
 	private Socket connection;
 
 	private Connection() {
+		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+		clientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy_server", 80)));
+		clientBuilder.proxyAuthenticator(new Authenticator() {
+			@Override
+			public Request authenticate(Route route, Response response) throws IOException {
+				String credential = Credentials.basic("Domain\\username", "password");
+				return response.request().newBuilder().header("Proxy-Authorization", credential).build();
+			}
+		});
+
+		OkHttpClient client = clientBuilder.build();
+
+		IO.setDefaultOkHttpCallFactory(client);
+		IO.setDefaultOkHttpWebSocketFactory(client);
+
 		URI prefix = getPrefix();
 
 		if ( prefix == null )
