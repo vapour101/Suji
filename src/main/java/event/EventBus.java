@@ -52,7 +52,7 @@ public final class EventBus implements EventTarget {
 		getInstance().handlers.remove(eventType, eventHandler);
 	}
 
-	public void fireEvent(Event event) {
+	public synchronized void fireEvent(Event event) {
 		Event.fireEvent(this, event);
 	}
 
