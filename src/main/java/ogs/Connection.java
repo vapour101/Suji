@@ -25,6 +25,7 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import util.LogHelper;
+import util.WebHelper;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -44,20 +45,24 @@ public class Connection {
 	private Socket connection;
 
 	private Connection() {
-		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-		clientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy_server", 80)));
-		clientBuilder.proxyAuthenticator(new Authenticator() {
-			@Override
-			public Request authenticate(Route route, Response response) throws IOException {
-				String credential = Credentials.basic("Domain\\username", "password");
-				return response.request().newBuilder().header("Proxy-Authorization", credential).build();
-			}
-		});
 
-		OkHttpClient client = clientBuilder.build();
+		if ( WebHelper.USE_PROXY ) {
+			OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+			clientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(WebHelper.PROXY_SERVER, 80)));
+			clientBuilder.proxyAuthenticator(new Authenticator() {
+				@Override
+				public Request authenticate(Route route, Response response) throws IOException {
+					String credential = Credentials.basic(WebHelper.PROXY_DOMAIN + "\\" + WebHelper.PROXY_USER,
+														  WebHelper.PROXY_PASS);
+					return response.request().newBuilder().header("Proxy-Authorization", credential).build();
+				}
+			});
 
-		IO.setDefaultOkHttpCallFactory(client);
-		IO.setDefaultOkHttpWebSocketFactory(client);
+			OkHttpClient client = clientBuilder.build();
+
+			IO.setDefaultOkHttpCallFactory(client);
+			IO.setDefaultOkHttpWebSocketFactory(client);
+		}
 
 		URI prefix = getPrefix();
 

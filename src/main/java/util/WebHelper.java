@@ -39,6 +39,12 @@ import java.util.function.Consumer;
 
 public class WebHelper {
 
+	public static final String PROXY_SERVER = "";
+	public static final String PROXY_DOMAIN = "";
+	public static final String PROXY_USER = "";
+	public static final String PROXY_PASS = "";
+	public static final boolean USE_PROXY = false;
+
 	private static Client client = null;
 
 	public static void requestImage(String url, Consumer<Image> callback) {
@@ -71,14 +77,18 @@ public class WebHelper {
 	}
 
 	private static void buildClient() {
-		ClientConfig config = new ClientConfig();
-		config.connectorProvider(new ApacheConnectorProvider());
-		CredentialsProvider credentials = new BasicCredentialsProvider();
-		credentials.setCredentials(AuthScope.ANY, new NTCredentials("username", "password", null, "domain"));
-		config.property(ApacheClientProperties.CREDENTIALS_PROVIDER, credentials);
-		config.property(ClientProperties.PROXY_URI, "proxy_server");
+		if ( USE_PROXY ) {
+			ClientConfig config = new ClientConfig();
+			config.connectorProvider(new ApacheConnectorProvider());
+			CredentialsProvider credentials = new BasicCredentialsProvider();
+			credentials.setCredentials(AuthScope.ANY, new NTCredentials(PROXY_USER, PROXY_PASS, null, PROXY_DOMAIN));
+			config.property(ApacheClientProperties.CREDENTIALS_PROVIDER, credentials);
+			config.property(ClientProperties.PROXY_URI, PROXY_SERVER);
 
-		client = ClientBuilder.newClient(config);
+			client = ClientBuilder.newClient(config);
+		}
+		else
+			client = ClientBuilder.newClient();
 	}
 
 	public static void requestJSON(String url, Consumer<JSONObject> callback) {
