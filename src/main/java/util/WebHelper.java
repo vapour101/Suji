@@ -39,6 +39,7 @@ import java.util.function.Consumer;
 
 public class WebHelper {
 
+	public static final String PROXY_PROTOCOL = "http://";
 	public static final String PROXY_SERVER = "";
 	public static final String PROXY_DOMAIN = "";
 	public static final String PROXY_USER = "";
@@ -83,7 +84,7 @@ public class WebHelper {
 			CredentialsProvider credentials = new BasicCredentialsProvider();
 			credentials.setCredentials(AuthScope.ANY, new NTCredentials(PROXY_USER, PROXY_PASS, null, PROXY_DOMAIN));
 			config.property(ApacheClientProperties.CREDENTIALS_PROVIDER, credentials);
-			config.property(ClientProperties.PROXY_URI, PROXY_SERVER);
+			config.property(ClientProperties.PROXY_URI, PROXY_PROTOCOL + PROXY_SERVER);
 
 			client = ClientBuilder.newClient(config);
 		}
