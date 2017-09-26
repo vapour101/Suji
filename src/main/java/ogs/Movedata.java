@@ -29,6 +29,7 @@ public class Movedata {
 
 	private int moveNumber;
 	private int gameId;
+	private boolean isPass;
 	private Coords coords;
 	private int time;
 
@@ -52,7 +53,11 @@ public class Movedata {
 		int x = moveArray.getInt(0) + 1;
 		int y = moveArray.getInt(1) + 1;
 
-		coords = Coords.getCoords(x, y);
+		isPass = (x == 0 && y == 0);
+
+		if ( !isPass )
+			coords = Coords.getCoords(x, y);
+
 		time = moveArray.getInt(2);
 	}
 
@@ -81,6 +86,9 @@ public class Movedata {
 	}
 
 	public Move getMove(StoneColour player) {
+		if ( isPass )
+			return Move.pass(player);
+
 		return Move.play(coords, player);
 	}
 }
