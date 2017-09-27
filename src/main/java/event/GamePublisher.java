@@ -89,8 +89,12 @@ public class GamePublisher extends GameHandlerDecorator implements EventTarget {
 		fireEvent(GameEvent.MOVE);
 	}
 
-	private synchronized void fireEvent(EventType<? extends GameEvent> eventType) {
+	private void fireEvent(EventType<? extends GameEvent> eventType) {
 		GameEvent event = new GameEvent(this, this, eventType);
+		fireEvent(event);
+	}
+
+	public synchronized <T extends SujiEvent> void fireEvent(T event) {
 		Event.fireEvent(this, event);
 	}
 }

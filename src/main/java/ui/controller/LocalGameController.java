@@ -28,7 +28,8 @@ import ui.controller.sidebar.ScorePaneController;
 import ui.controller.strategy.BoardStrategy;
 import ui.controller.strategy.GamePlay;
 import ui.controller.strategy.Scoring;
-import ui.drawer.GameScoreDrawer;
+import ui.drawer.Drawer;
+import ui.drawer.ScoreDrawer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -72,12 +73,6 @@ public class LocalGameController extends BoardController {
 	}
 
 	@Override
-	void canvasHover(MouseEvent mouseEvent) {
-		if ( strategy != null )
-			strategy.canvasHover(mouseEvent);
-	}
-
-	@Override
 	void canvasExit(MouseEvent mouseEvent) {
 		if ( strategy != null )
 			strategy.canvasExit(mouseEvent);
@@ -95,8 +90,8 @@ public class LocalGameController extends BoardController {
 		gameDrawer.draw(getPublisher().getBoard());
 	}
 
-	private GameScoreDrawer buildBoardScoreDrawer() {
-		return new GameScoreDrawer(buildGameDrawer(), getPublisher(), boardScorer);
+	private Drawer buildBoardScoreDrawer() {
+		return new ScoreDrawer(buildGameDrawer(), boardScorer);
 	}
 
 	@Override

@@ -15,13 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ui.controller.strategy;
+package event;
 
-import javafx.scene.input.MouseEvent;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
+import logic.gamehandler.GameHandler;
+import util.DrawCoords;
 
-public interface BoardStrategy {
+public class HoverEvent extends GameEvent {
 
-	void canvasClicked(MouseEvent mouseEvent);
+	public static final EventType<HoverEvent> HOVER = new EventType<>(GAME, "HOVER");
 
-	void canvasExit(MouseEvent mouseEvent);
+	private DrawCoords point;
+
+	public HoverEvent(GameHandler source, DrawCoords location, EventTarget target) {
+		super(source, target, HOVER);
+		point = location;
+	}
+
+	public DrawCoords getPoint() {
+		return point;
+	}
 }

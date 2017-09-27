@@ -20,7 +20,7 @@ package ui.controller.strategy;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
-import ui.drawer.GameDrawer;
+import ui.drawer.Drawer;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
@@ -33,9 +33,9 @@ public class GamePlay implements BoardStrategy {
 
 	private Canvas boardCanvas;
 	private GameHandler game;
-	private GameDrawer gameDrawer;
+	private Drawer gameDrawer;
 
-	public GamePlay(Canvas canvas, GameHandler gameHandler, GameDrawer drawer) {
+	public GamePlay(Canvas canvas, GameHandler gameHandler, Drawer drawer) {
 		boardCanvas = canvas;
 		game = gameHandler;
 		gameDrawer = drawer;
@@ -60,13 +60,7 @@ public class GamePlay implements BoardStrategy {
 	}
 
 	@Override
-	public void canvasHover(MouseEvent mouseEvent) {
-		DrawCoords mousePosition = new DrawCoords(mouseEvent.getX(), mouseEvent.getY());
-		gameDrawer.setHoverStone(mousePosition, getTurnPlayer());
-	}
-
-	@Override
 	public void canvasExit(MouseEvent mouseEvent) {
-		gameDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
+		//gameDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
 	}
 }

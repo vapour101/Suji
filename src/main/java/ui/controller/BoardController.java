@@ -19,6 +19,7 @@ package ui.controller;
 
 import event.GameEvent;
 import event.GamePublisher;
+import event.HoverEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.gamehandler.GameHandler;
 import ui.drawer.*;
+import util.DrawCoords;
 
 import java.net.URL;
 import java.util.ArrayDeque;
@@ -43,7 +45,7 @@ public class BoardController extends DockNodeController implements Initializable
 	@FXML
 	VBox sideBar;
 	Canvas boardCanvas;
-	GameDrawer gameDrawer;
+	Drawer gameDrawer;
 
 	private GamePublisher game;
 	private String fxmlLocation;
@@ -105,14 +107,14 @@ public class BoardController extends DockNodeController implements Initializable
 		return drawer;
 	}
 
-	GamePublisher getPublisher() {
-		return game;
-	}
-
 	private void setupSideBar() {
 		while (!sideBarItems.isEmpty()) {
 			sideBar.getChildren().add(sideBarItems.remove());
 		}
+	}
+
+	GamePublisher getPublisher() {
+		return game;
 	}
 
 	GameHandler getGame() {
@@ -127,7 +129,13 @@ public class BoardController extends DockNodeController implements Initializable
 	void canvasClicked(MouseEvent mouseEvent) {
 	}
 
-	void canvasHover(MouseEvent mouseEvent) {
+	private void canvasHover(MouseEvent mouseEvent) {
+		double x = mouseEvent.getX();
+		double y = mouseEvent.getY();
+		DrawCoords location = new DrawCoords(x, y);
+
+		HoverEvent event = new HoverEvent(game, location, game);
+		game.fireEvent(event);
 	}
 
 	void canvasExit(MouseEvent mouseEvent) {

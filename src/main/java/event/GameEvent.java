@@ -21,17 +21,21 @@ import javafx.event.EventTarget;
 import javafx.event.EventType;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
+import util.StoneColour;
 
 public class GameEvent extends SujiEvent {
 
-	public static final EventType<GameEvent> GAME = new EventType<GameEvent>(ANY, "GAME");
-	public static final EventType<GameEvent> START = new EventType<GameEvent>(GAME, "START");
-	public static final EventType<GameEvent> GAMEOVER = new EventType<GameEvent>(GAME, "GAMEOVER");
+	public static final EventType<GameEvent> GAME = new EventType<>(ANY, "GAME");
+	public static final EventType<GameEvent> START = new EventType<>(GAME, "START");
+	public static final EventType<GameEvent> GAMEOVER = new EventType<>(GAME, "GAMEOVER");
 	public static final EventType<GameEvent> REVIEW = new EventType<>(GAME, "REVIEW");
 	public static final EventType<GameEvent> REVIEWSTART = new EventType<>(REVIEW, "REVIEWSTART");
-	public static final EventType<GameEvent> MOVE = new EventType<>(GAME, "MOVE");
+
 	public static final EventType<GameEvent> PASS = new EventType<>(GAME, "PASS");
-	public static final EventType<GameEvent> UNDO = new EventType<>(GAME, "UNDO");
+
+	public static final EventType<GameEvent> CHANGE = new EventType<>(GAME, "CHANGE");
+	public static final EventType<GameEvent> MOVE = new EventType<>(CHANGE, "MOVE");
+	public static final EventType<GameEvent> UNDO = new EventType<>(CHANGE, "UNDO");
 
 	public GameEvent(GameHandler source, EventTarget target, EventType<? extends GameEvent> eventType) {
 		super(source, target, eventType);
@@ -39,6 +43,10 @@ public class GameEvent extends SujiEvent {
 
 	public Board getBoard() {
 		return getHandler().getBoard();
+	}
+
+	public StoneColour getTurnPlayer() {
+		return getHandler().getTurnPlayer();
 	}
 
 	private GameHandler getHandler() {

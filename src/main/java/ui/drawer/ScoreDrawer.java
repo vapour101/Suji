@@ -18,9 +18,7 @@
 package ui.drawer;
 
 
-import event.GamePublisher;
 import event.ScoreEvent;
-import javafx.scene.canvas.Canvas;
 import logic.board.Board;
 import logic.score.Scorer;
 import util.Coords;
@@ -28,22 +26,17 @@ import util.StoneColour;
 
 import java.util.Collection;
 
-public class GameScoreDrawer extends GameDrawer {
+public class ScoreDrawer extends Drawer {
 
 	private Scorer scorer;
 
-	public GameScoreDrawer(Canvas canvas, GamePublisher game, Scorer scorer) {
-		super(canvas, game);
+	public ScoreDrawer(GameDrawer clone, Scorer scorer) {
+		super(clone);
 		setUpScorer(scorer);
 	}
 
 	private void setUpScorer(Scorer scorer) {
 		this.scorer = scorer;
-	}
-
-	public GameScoreDrawer(GameDrawer clone, GamePublisher publisher, Scorer scorer) {
-		super(clone, publisher);
-		setUpScorer(scorer);
 	}
 
 	private void onScoreChange(ScoreEvent event) {

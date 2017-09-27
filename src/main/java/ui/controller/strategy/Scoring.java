@@ -57,11 +57,6 @@ public class Scoring implements BoardStrategy {
 	}
 
 	@Override
-	public void canvasHover(MouseEvent mouseEvent) {
-
-	}
-
-	@Override
 	public void canvasExit(MouseEvent mouseEvent) {
 
 	}
