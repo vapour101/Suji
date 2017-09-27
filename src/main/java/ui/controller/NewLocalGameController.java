@@ -27,7 +27,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SpinnerValueFactory.ListSpinnerValueFactory;
 import javafx.util.StringConverter;
 import logic.gamehandler.GameHandler;
-import logic.gamehandler.LocalGameHandler;
+import logic.gamehandler.LocalGame;
 import org.dockfx.DockNode;
 import org.dockfx.DockPos;
 import ui.Main;
@@ -80,7 +80,7 @@ public class NewLocalGameController extends DockNodeController implements Initia
 	}
 
 	private DockNode buildLocalGame() {
-		GameHandler handler = new LocalGameHandler(handicapSpinner.getValue());
+		GameHandler handler = new LocalGame(handicapSpinner.getValue());
 		handler.setKomi(komiSpinner.getValue());
 
 		LocalGameController controller = new LocalGameController(handler);

@@ -29,13 +29,13 @@ import static util.Move.play;
 import static util.StoneColour.BLACK;
 import static util.StoneColour.WHITE;
 
-public class LocalGameHandlerTest {
+public class LocalGameTest {
 
 	private static final String[] koBoard = {"C4", "D4", "D3", "E3", "D5", "E5", "K4", "F4", "E4"};
 
 	@Test
 	public void gameTracking() {
-		LocalGameHandler handler = new LocalGameHandler();
+		LocalGame handler = new LocalGame();
 
 		handler.playMove(play(getCoords("D4"), BLACK));
 		handler.playMove(play(getCoords("E5"), WHITE));
@@ -46,14 +46,14 @@ public class LocalGameHandlerTest {
 
 	@Test
 	public void koIsIllegal() {
-		LocalGameHandler handler = buildTestHandler(koBoard);
+		LocalGame handler = buildTestHandler(koBoard);
 
 		assertThat(handler.isLegalMove(play(getCoords("D4"), WHITE)), is(false));
 		assertThat(handler.isLegalMove(play(getCoords("D4"), BLACK)), is(true));
 	}
 
-	private LocalGameHandler buildTestHandler(String[] sequence) {
-		LocalGameHandler handler = new LocalGameHandler();
+	private LocalGame buildTestHandler(String[] sequence) {
+		LocalGame handler = new LocalGame();
 
 		for (int i = 0; i < sequence.length; i++) {
 			if ( i % 2 == 0 )
@@ -67,7 +67,7 @@ public class LocalGameHandlerTest {
 
 	@Test
 	public void playingOnOccupiedSpaceIsIllegal() {
-		LocalGameHandler handler = new LocalGameHandler();
+		LocalGame handler = new LocalGame();
 
 		handler.playMove(play(getCoords("D4"), BLACK));
 
@@ -77,7 +77,7 @@ public class LocalGameHandlerTest {
 		assertThat(handler.isLegalMove(play(getCoords("D3"), BLACK)), is(true));
 		assertThat(handler.isLegalMove(play(getCoords("D3"), WHITE)), is(true));
 
-		handler = new LocalGameHandler();
+		handler = new LocalGame();
 		handler.playMove(play(getCoords("D4"), WHITE));
 
 		assertThat(handler.isLegalMove(play(getCoords("D4"), BLACK)), is(false));
@@ -89,7 +89,7 @@ public class LocalGameHandlerTest {
 
 	@Test
 	public void suicideIsIllegal() {
-		LocalGameHandler handler = new LocalGameHandler();
+		LocalGame handler = new LocalGame();
 
 		handler.playMove(play(getCoords("D5"), BLACK));
 		handler.playMove(play(getCoords("D3"), BLACK));
@@ -98,7 +98,7 @@ public class LocalGameHandlerTest {
 
 		assertThat(handler.isLegalMove(play(getCoords("D4"), WHITE)), is(false));
 
-		handler = new LocalGameHandler();
+		handler = new LocalGame();
 		handler.playMove(play(getCoords("D5"), WHITE));
 		handler.playMove(play(getCoords("D3"), WHITE));
 		handler.playMove(play(getCoords("E4"), WHITE));
@@ -109,7 +109,7 @@ public class LocalGameHandlerTest {
 
 	@Test
 	public void passing() {
-		LocalGameHandler handler = new LocalGameHandler();
+		LocalGame handler = new LocalGame();
 
 		handler.playMove(play(getCoords("D4"), BLACK));
 		handler.playMove(play(getCoords("E5"), WHITE));
@@ -125,7 +125,7 @@ public class LocalGameHandlerTest {
 
 	@Test
 	public void undo() {
-		LocalGameHandler handler = new LocalGameHandler();
+		LocalGame handler = new LocalGame();
 
 		handler.playMove(play(getCoords("D4"), BLACK));
 		handler.playMove(play(getCoords("E5"), WHITE));
@@ -144,11 +144,11 @@ public class LocalGameHandlerTest {
 
 	@Test
 	public void turnPlayer() {
-		LocalGameHandler handler = new LocalGameHandler();
+		LocalGame handler = new LocalGame();
 
 		assertThat(handler.getTurnPlayer(), is(BLACK));
 
-		handler = new LocalGameHandler(2);
+		handler = new LocalGame(2);
 		assertThat(handler.getTurnPlayer(), is(WHITE));
 	}
 }

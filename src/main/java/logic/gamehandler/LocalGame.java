@@ -29,17 +29,17 @@ import util.StoneColour;
 
 import java.util.Collection;
 
-public class LocalGameHandler implements GameHandler {
+public class LocalGame implements GameHandler {
 
 	private GameTree gameTree;
 	private int handicap;
 	private double komi;
 
-	LocalGameHandler() {
+	LocalGame() {
 		this(0);
 	}
 
-	public LocalGameHandler(int handicap) {
+	public LocalGame(int handicap) {
 		gameTree = new ComplexGameTree();
 		this.handicap = handicap;
 		komi = 0;
