@@ -17,7 +17,6 @@
 
 package ui.controller.sidebar;
 
-import event.GameEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -86,7 +85,6 @@ public class GameMenuController extends SelfBuildingController implements Initia
 	}
 
 	private void startReview(ActionEvent event) {
-		GameEvent.fireGameEvent(game, GameEvent.REVIEWSTART);
 	}
 
 	private void save(ActionEvent event) {

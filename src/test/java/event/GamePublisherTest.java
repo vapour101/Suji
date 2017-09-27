@@ -25,9 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import util.Coords;
-import util.Move;
-import util.StoneColour;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

@@ -31,16 +31,6 @@ public class ScoreEvent extends SujiEvent {
 		super(source, eventTarget, eventType);
 	}
 
-	public static void fireScoreEvent(Scorer scorer) {
-		fireScoreEvent(scorer, SCORE);
-	}
-
-	public static void fireScoreEvent(Scorer scorer, EventType<? extends ScoreEvent> eventType) {
-		EventBus bus = EventBus.getInstance();
-		ScoreEvent event = new ScoreEvent(scorer, bus, eventType);
-		bus.fireEvent(event);
-	}
-
 	public double getScore(StoneColour colour) {
 		return getScorer().getScore(colour);
 	}

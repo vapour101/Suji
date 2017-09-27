@@ -17,7 +17,6 @@
 
 package ui.controller;
 
-import event.EventBus;
 import event.GameEvent;
 import event.ScoreEvent;
 import javafx.scene.input.MouseEvent;
@@ -56,7 +55,6 @@ public class LocalGameController extends BoardController {
 	}
 
 	private void setupEventHandlers() {
-		EventBus.addEventHandler(ScoreEvent.DONE, this::doneScoring);
 	}
 
 	@Override
@@ -87,9 +85,6 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	void enterScoring(GameEvent event) {
-		if ( event.getHandler() != getPublisher() )
-			return;
-
 		boardScorer = getPublisher().getScorer();
 		gameMenuController.enterScoring();
 		scorePaneController.setScorer(boardScorer);
@@ -98,7 +93,6 @@ public class LocalGameController extends BoardController {
 		gameDrawer = buildBoardScoreDrawer();
 		strategy = new Scoring(boardCanvas, boardScorer, scorePaneController);
 		gameDrawer.draw(getPublisher().getBoard());
-		ScoreEvent.fireScoreEvent(boardScorer);
 	}
 
 	private GameScoreDrawer buildBoardScoreDrawer() {

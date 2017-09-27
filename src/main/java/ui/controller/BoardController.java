@@ -17,7 +17,6 @@
 
 package ui.controller;
 
-import event.EventBus;
 import event.GameEvent;
 import event.GamePublisher;
 import javafx.beans.value.ObservableValue;
@@ -64,14 +63,12 @@ public class BoardController extends DockNodeController implements Initializable
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
-		EventBus.addEventHandler(GameEvent.REVIEWSTART, this::reviewStart);
+		game.subscribe(GameEvent.GAMEOVER, this::enterScoring);
+		game.subscribe(GameEvent.REVIEWSTART, this::reviewStart);
 
 		setupPanes();
 		constructCanvas();
 		setupSideBar();
-
-		GameEvent.fireGameEvent(game, GameEvent.START);
 	}
 
 	void setupPanes() {

@@ -17,7 +17,6 @@
 
 package logic.score;
 
-import event.decorators.ScorerEventDecorator;
 import logic.board.Board;
 import org.junit.Test;
 import util.Coords;
@@ -255,7 +254,7 @@ public class BoardScorerTest {
 	public void complexScore() {
 		Board board = buildTestBoard(testBoard1);
 		BoardScorer boardScorer = new BoardScorer(board, 0);
-		Scorer scorer = new ScorerEventDecorator(boardScorer);
+		Scorer scorer = boardScorer;
 
 		scorer.markGroupDead(getCoords("M18"));
 		scorer.markGroupDead(getCoords("T19"));

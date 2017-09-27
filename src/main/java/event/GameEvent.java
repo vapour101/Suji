@@ -21,10 +21,6 @@ import javafx.event.EventTarget;
 import javafx.event.EventType;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
-import util.Coords;
-import util.StoneColour;
-
-import java.util.Collection;
 
 public class GameEvent extends SujiEvent {
 
@@ -41,25 +37,11 @@ public class GameEvent extends SujiEvent {
 		super(source, target, eventType);
 	}
 
-	public static void fireGameEvent(GameHandler game) {
-		fireGameEvent(game, GAME);
-	}
-
-	public static void fireGameEvent(GameHandler game, EventType<? extends GameEvent> eventType) {
-		EventBus bus = EventBus.getInstance();
-		GameEvent event = new GameEvent(game, bus, eventType);
-		bus.fireEvent(event);
-	}
-
 	public Board getBoard() {
 		return getHandler().getBoard();
 	}
 
-	public GameHandler getHandler() {
+	private GameHandler getHandler() {
 		return (GameHandler) getSource();
-	}
-
-	public Collection<Coords> getStones(StoneColour colour) {
-		return getHandler().getStones(colour);
 	}
 }

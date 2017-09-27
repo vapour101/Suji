@@ -17,7 +17,6 @@
 
 package ui.controller.sidebar;
 
-import event.EventBus;
 import event.ScoreEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -70,8 +69,6 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 		enableButtons();
 		setButtonActions();
 		setVisible(false);
-
-		EventBus.addEventHandler(ScoreEvent.SCORE, this::updateScore);
 	}
 
 	public void setVisible(boolean visible) {
@@ -98,12 +95,11 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 	}
 
 	private void endScoring() {
-		ScoreEvent.fireScoreEvent(scorer, ScoreEvent.DONE);
 
-		displayFinalScore(scorer.getScore());
 	}
 
-	private void displayFinalScore(double finalScore) {
+	private void displayFinalScore(ScoreEvent event) {
+		double finalScore = event.getScorer().getScore();
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Game Over");
 		if ( finalScore == 0 ) {

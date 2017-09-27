@@ -17,14 +17,13 @@
 
 package ui.controller.sidebar;
 
-import event.EventBus;
 import event.GameEvent;
+import event.GamePublisher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
 import ui.controller.SelfBuildingController;
 
@@ -39,10 +38,10 @@ public class ReviewPaneController extends SelfBuildingController implements Init
 	@FXML
 	private Button forwardButton;
 
-	private GameHandler game;
+	private GamePublisher game;
 
-	public ReviewPaneController(GameHandler gameHandler) {
-		game = gameHandler;
+	public ReviewPaneController(GamePublisher publisher) {
+		game = publisher;
 	}
 
 	@Override
@@ -53,13 +52,10 @@ public class ReviewPaneController extends SelfBuildingController implements Init
 		backButton.setVisible(false);
 		forwardButton.setVisible(false);
 
-		EventBus.addEventHandler(GameEvent.REVIEWSTART, this::startReview);
+		game.subscribe(GameEvent.REVIEWSTART, this::startReview);
 	}
 
 	private void startReview(GameEvent event) {
-		if ( event.getHandler() != game )
-			return;
-
 		backButton.setVisible(true);
 		forwardButton.setVisible(true);
 		update();
@@ -68,7 +64,6 @@ public class ReviewPaneController extends SelfBuildingController implements Init
 	private void update() {
 		checkTreeBounds();
 		updateMoveNumber();
-		GameEvent.fireGameEvent(game, GameEvent.REVIEW);
 	}
 
 	private void updateMoveNumber() {

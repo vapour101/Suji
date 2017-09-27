@@ -18,7 +18,6 @@
 package ui.drawer;
 
 
-import event.EventBus;
 import event.GamePublisher;
 import event.ScoreEvent;
 import javafx.scene.canvas.Canvas;
@@ -40,8 +39,6 @@ public class GameScoreDrawer extends GameDrawer {
 
 	private void setUpScorer(Scorer scorer) {
 		this.scorer = scorer;
-
-		EventBus.addEventHandler(ScoreEvent.SCORE, this::onScoreChange);
 	}
 
 	public GameScoreDrawer(GameDrawer clone, GamePublisher publisher, Scorer scorer) {

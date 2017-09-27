@@ -17,7 +17,6 @@
 
 package ogs;
 
-import event.GameEvent;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
 import logic.gametree.ComplexGameTree;
@@ -66,8 +65,6 @@ public class SpectatorGameHandler implements GameHandler {
 		for (Movedata move : moveList) {
 			gameTree.stepForward(move.getMove(getTurnPlayer()));
 		}
-
-		GameEvent.fireGameEvent(this);
 	}
 
 	private void onMovedata(Movedata move) {
@@ -77,8 +74,6 @@ public class SpectatorGameHandler implements GameHandler {
 		}
 
 		gameTree.stepForward(move.getMove(getTurnPlayer()));
-
-		GameEvent.fireGameEvent(this);
 	}
 
 	@Override
