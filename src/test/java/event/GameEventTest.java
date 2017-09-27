@@ -33,7 +33,7 @@ public class GameEventTest {
 
 	@Test
 	public void getState() {
-		GamePublisher publisher = new GamePublisher(new LocalGame(0));
+		EventPublisher publisher = new EventPublisher(new LocalGame(0));
 		final Board[] result = {null};
 		Board board = new Board();
 

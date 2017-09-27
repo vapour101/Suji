@@ -51,7 +51,7 @@ public class LocalGameController extends BoardController {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		super.initialize(url, resourceBundle);
-		strategy = new GamePlay(boardCanvas, getPublisher(), gameDrawer);
+		strategy = new GamePlay(boardCanvas, getGameHandler(), gameDrawer);
 		setupEventHandlers();
 	}
 
@@ -80,14 +80,14 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	void enterScoring(GameEvent event) {
-		boardScorer = getPublisher().getScorer();
+		boardScorer = getGameHandler().getScorer();
 		gameMenuController.enterScoring();
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
 		gameDrawer = buildBoardScoreDrawer();
 		strategy = new Scoring(boardCanvas, boardScorer, scorePaneController);
-		gameDrawer.draw(getPublisher().getBoard());
+		gameDrawer.draw(getGameHandler().getBoard());
 	}
 
 	private Drawer buildBoardScoreDrawer() {
@@ -107,13 +107,13 @@ public class LocalGameController extends BoardController {
 
 	private void loadGameMenu() {
 		gameMenuController = new GameMenuController();
-		gameMenuController.setGameHandler(getPublisher());
+		gameMenuController.setGameHandler(getGameHandler());
 
 		sideBar.getChildren().add(gameMenuController.getRoot());
 	}
 
 	private void loadReviewPanel() {
-		reviewPaneController = new ReviewPaneController(getPublisher());
+		reviewPaneController = new ReviewPaneController(getGameHandler());
 
 		sideBar.getChildren().add(reviewPaneController.getRoot());
 	}

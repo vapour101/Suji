@@ -18,12 +18,12 @@
 package ui.controller.sidebar;
 
 import event.GameEvent;
-import event.GamePublisher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import logic.gamehandler.GameHandler;
 import logic.gametree.GameTree;
 import ui.controller.SelfBuildingController;
 
@@ -38,10 +38,10 @@ public class ReviewPaneController extends SelfBuildingController implements Init
 	@FXML
 	private Button forwardButton;
 
-	private GamePublisher game;
+	private GameHandler game;
 
-	public ReviewPaneController(GamePublisher publisher) {
-		game = publisher;
+	public ReviewPaneController(GameHandler handler) {
+		game = handler;
 	}
 
 	@Override

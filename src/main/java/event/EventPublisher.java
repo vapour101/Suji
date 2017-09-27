@@ -20,18 +20,16 @@ package event;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import javafx.event.*;
-import logic.gamehandler.GameHandler;
-import logic.gamehandler.GameHandlerDecorator;
-import util.Move;
 
 import java.util.Collection;
 
-public class GamePublisher extends GameHandlerDecorator implements EventTarget {
+public class EventPublisher {
 
 	private Multimap<EventType, EventHandler> handlers;
+	private EventTarget target;
 
-	public GamePublisher(GameHandler gameHandler) {
-		super(gameHandler);
+	public EventPublisher(EventTarget owner) {
+		this.target = owner;
 
 		handlers = HashMultimap.create();
 	}
@@ -44,7 +42,6 @@ public class GamePublisher extends GameHandlerDecorator implements EventTarget {
 		handlers.remove(eventType, eventHandler);
 	}
 
-	@Override
 	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
 		return tail.prepend(this::dispatchEvent);
 	}
@@ -68,33 +65,7 @@ public class GamePublisher extends GameHandlerDecorator implements EventTarget {
 		handlers.forEach(handler -> handler.handle(event));
 	}
 
-	@Override
-	public void pass() {
-		super.pass();
-
-		fireEvent(GameEvent.PASS);
-	}
-
-	@Override
-	public void undo() {
-		super.undo();
-
-		fireEvent(GameEvent.UNDO);
-	}
-
-	@Override
-	public void playMove(Move move) {
-		super.playMove(move);
-
-		fireEvent(GameEvent.MOVE);
-	}
-
-	private void fireEvent(EventType<? extends GameEvent> eventType) {
-		GameEvent event = new GameEvent(this, this, eventType);
-		fireEvent(event);
-	}
-
 	public synchronized <T extends SujiEvent> void fireEvent(T event) {
-		Event.fireEvent(this, event);
+		Event.fireEvent(target, event);
 	}
 }

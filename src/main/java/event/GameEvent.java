@@ -45,11 +45,11 @@ public class GameEvent extends SujiEvent {
 		return getHandler().getBoard();
 	}
 
-	public StoneColour getTurnPlayer() {
-		return getHandler().getTurnPlayer();
-	}
-
 	private GameHandler getHandler() {
 		return (GameHandler) getSource();
+	}
+
+	public StoneColour getTurnPlayer() {
+		return getHandler().getTurnPlayer();
 	}
 }

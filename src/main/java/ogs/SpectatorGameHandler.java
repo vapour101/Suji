@@ -17,6 +17,10 @@
 
 package ogs;
 
+import event.SujiEvent;
+import javafx.event.EventDispatchChain;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
 import logic.gametree.ComplexGameTree;
@@ -97,6 +101,26 @@ public class SpectatorGameHandler implements GameHandler {
 	@Override
 	public void setKomi(double komi) {
 
+	}
+
+	@Override
+	public <T extends SujiEvent> void fireEvent(T event) {
+
+	}
+
+	@Override
+	public <T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+
+	}
+
+	@Override
+	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+
+	}
+
+	@Override
+	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
+		return null;
 	}
 
 	@Override

@@ -33,16 +33,16 @@ import static util.Move.play;
 import static util.StoneColour.BLACK;
 
 @RunWith (MockitoJUnitRunner.StrictStubs.class)
-public class GamePublisherTest {
+public class EventPublisherTest {
 
 	@Mock
 	private EventHandler<SujiEvent> handler;
 
-	private GamePublisher publisher;
+	private EventPublisher publisher;
 
 	@Before
 	public void init() {
-		publisher = new GamePublisher(new LocalGame(0));
+		publisher = new EventPublisher(new LocalGame(0));
 	}
 
 	@Test

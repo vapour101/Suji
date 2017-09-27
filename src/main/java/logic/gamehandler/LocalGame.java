@@ -17,6 +17,12 @@
 
 package logic.gamehandler;
 
+import event.EventPublisher;
+import event.GameEvent;
+import event.SujiEvent;
+import javafx.event.EventDispatchChain;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import logic.board.Board;
 import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
@@ -29,11 +35,14 @@ import util.StoneColour;
 
 import java.util.Collection;
 
+import static event.GameEvent.*;
+
 public class LocalGame implements GameHandler {
 
 	private GameTree gameTree;
 	private int handicap;
 	private double komi;
+	private EventPublisher publisher;
 
 	LocalGame() {
 		this(0);
@@ -43,16 +52,26 @@ public class LocalGame implements GameHandler {
 		gameTree = new ComplexGameTree();
 		this.handicap = handicap;
 		komi = 0;
+		publisher = new EventPublisher(this);
 	}
 
 	@Override
 	public void pass() {
+		boolean gameOver = false;
+		if ( gameTree.getNumMoves() > 0 && gameTree.getLastMove().getType() == Move.Type.PASS )
+			gameOver = true;
+
 		playMove(Move.pass(getTurnPlayer()));
+		fireGameEvent(PASS);
+
+		if ( gameOver )
+			fireGameEvent(GAMEOVER);
 	}
 
 	@Override
 	public void undo() {
 		gameTree.stepBack();
+		fireGameEvent(UNDO);
 	}
 
 	@Override
@@ -66,6 +85,22 @@ public class LocalGame implements GameHandler {
 	@Override
 	public void setKomi(double komi) {
 		this.komi = komi;
+	}
+
+	@Override
+	public <T extends SujiEvent> void fireEvent(T event) {
+		publisher.fireEvent(event);
+	}
+
+	@Override
+	public <T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+		publisher.subscribe(eventType, eventHandler);
+	}
+
+	@Override
+
+	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+		publisher.unsubscribe(eventType, eventHandler);
 	}
 
 	@Override
@@ -115,10 +150,22 @@ public class LocalGame implements GameHandler {
 			return;
 
 		gameTree.stepForward(move);
+
+		fireGameEvent(MOVE);
 	}
 
 	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return getBoard().getStones(colour);
+	}
+
+	private void fireGameEvent(EventType<? extends GameEvent> type) {
+		GameEvent event = new GameEvent(this, this, type);
+		fireEvent(event);
+	}
+
+	@Override
+	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
+		return publisher.buildEventDispatchChain(tail);
 	}
 }
