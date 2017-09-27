@@ -65,9 +65,6 @@ public class GamePublisher extends GameHandlerDecorator implements EventTarget {
 	}
 
 	private void handleEvent(Event event, Collection<EventHandler> handlers) {
-		if ( handlers == null )
-			return;
-
 		handlers.forEach(handler -> handler.handle(event));
 	}
 
@@ -86,13 +83,10 @@ public class GamePublisher extends GameHandlerDecorator implements EventTarget {
 	}
 
 	@Override
-	public void setKomi(double komi) {
-		super.setKomi(komi);
-	}
-
-	@Override
 	public void playMove(Move move) {
 		super.playMove(move);
+
+		fireEvent(GameEvent.MOVE);
 	}
 
 	private synchronized void fireEvent(EventType<? extends GameEvent> eventType) {
