@@ -26,11 +26,11 @@ import util.Move;
 
 import java.util.Collection;
 
-public class GameHandlerPublisher extends GameHandlerDecorator implements EventTarget {
+public class GamePublisher extends GameHandlerDecorator implements EventTarget {
 
 	private Multimap<EventType, EventHandler> handlers;
 
-	public GameHandlerPublisher(GameHandler gameHandler) {
+	public GamePublisher(GameHandler gameHandler) {
 		super(gameHandler);
 
 		handlers = HashMultimap.create();

@@ -19,9 +19,10 @@ package ui.drawer;
 
 
 import event.EventBus;
+import event.GamePublisher;
 import event.ScoreEvent;
 import javafx.scene.canvas.Canvas;
-import logic.gamehandler.GameHandler;
+import logic.board.Board;
 import logic.score.Scorer;
 import util.Coords;
 import util.StoneColour;
@@ -32,7 +33,7 @@ public class GameScoreDrawer extends GameDrawer {
 
 	private Scorer scorer;
 
-	public GameScoreDrawer(Canvas canvas, GameHandler game, Scorer scorer) {
+	public GameScoreDrawer(Canvas canvas, GamePublisher game, Scorer scorer) {
 		super(canvas, game);
 		setUpScorer(scorer);
 	}
@@ -43,28 +44,28 @@ public class GameScoreDrawer extends GameDrawer {
 		EventBus.addEventHandler(ScoreEvent.SCORE, this::onScoreChange);
 	}
 
-	public GameScoreDrawer(GameDrawer clone, Scorer scorer) {
-		super(clone);
+	public GameScoreDrawer(GameDrawer clone, GamePublisher publisher, Scorer scorer) {
+		super(clone, publisher);
 		setUpScorer(scorer);
 	}
 
 	private void onScoreChange(ScoreEvent event) {
 		if ( event.getScorer() != scorer )
 			return;
-		draw();
+		redraw();
 	}
 
 	@Override
-	public void draw() {
-		super.draw();
+	public void draw(Board board) {
+		super.draw(board);
 		drawTerritory();
 	}
 
 	@Override
-	void drawStones(StoneColour colour) {
+	void drawStones(Board board, StoneColour colour) {
 		StoneDrawer drawer = getStoneDrawer();
 
-		Collection<Coords> stones = getStones(colour);
+		Collection<Coords> stones = board.getStones(colour);
 		stones.removeAll(scorer.getDeadStones(colour));
 
 		drawer.drawGhostStones(scorer.getDeadStones(colour), colour);

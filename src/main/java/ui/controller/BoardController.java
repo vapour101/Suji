@@ -19,6 +19,7 @@ package ui.controller;
 
 import event.EventBus;
 import event.GameEvent;
+import event.GamePublisher;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,14 +46,14 @@ public class BoardController extends DockNodeController implements Initializable
 	Canvas boardCanvas;
 	GameDrawer gameDrawer;
 
-	private GameHandler game;
+	private GamePublisher game;
 	private String fxmlLocation;
 
 	private Queue<Node> sideBarItems;
 
 
 	BoardController(GameHandler gameHandler, String resourcePath) {
-		game = gameHandler;
+		game = new GamePublisher(gameHandler);
 		fxmlLocation = resourcePath;
 		sideBarItems = new ArrayDeque<>();
 	}
@@ -90,7 +91,7 @@ public class BoardController extends DockNodeController implements Initializable
 	}
 
 	GameDrawer buildGameDrawer() {
-		GameDrawer drawer = new GameDrawer(boardCanvas, getGameHandler());
+		GameDrawer drawer = new GameDrawer(boardCanvas, getPublisher());
 
 		Image blackStone = new Image("/images/black.png", false);
 		Image whiteStone = new Image("/images/white.png", false);
@@ -107,7 +108,7 @@ public class BoardController extends DockNodeController implements Initializable
 		return drawer;
 	}
 
-	GameHandler getGameHandler() {
+	GamePublisher getPublisher() {
 		return game;
 	}
 
@@ -115,6 +116,10 @@ public class BoardController extends DockNodeController implements Initializable
 		while (!sideBarItems.isEmpty()) {
 			sideBar.getChildren().add(sideBarItems.remove());
 		}
+	}
+
+	GameHandler getGame() {
+		return game;
 	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {

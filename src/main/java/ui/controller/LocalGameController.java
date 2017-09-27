@@ -20,7 +20,6 @@ package ui.controller;
 import event.EventBus;
 import event.GameEvent;
 import event.ScoreEvent;
-import event.decorators.GameHandlerEventDecorator;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
@@ -46,17 +45,13 @@ public class LocalGameController extends BoardController {
 	private BoardStrategy strategy;
 
 	public LocalGameController(GameHandler handler) {
-		super(processGameHandler(handler), "/fxml/localGame.fxml");
-	}
-
-	private static GameHandler processGameHandler(GameHandler handler) {
-		return new GameHandlerEventDecorator(handler);
+		super(handler, "/fxml/localGame.fxml");
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		super.initialize(url, resourceBundle);
-		strategy = new GamePlay(boardCanvas, getGameHandler(), gameDrawer);
+		strategy = new GamePlay(boardCanvas, getPublisher(), gameDrawer);
 		setupEventHandlers();
 	}
 
@@ -92,22 +87,22 @@ public class LocalGameController extends BoardController {
 
 	@Override
 	void enterScoring(GameEvent event) {
-		if ( event.getHandler() != getGameHandler() )
+		if ( event.getHandler() != getPublisher() )
 			return;
 
-		boardScorer = getGameHandler().getScorer();
+		boardScorer = getPublisher().getScorer();
 		gameMenuController.enterScoring();
 		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
 		gameDrawer = buildBoardScoreDrawer();
 		strategy = new Scoring(boardCanvas, boardScorer, scorePaneController);
-		gameDrawer.draw();
+		gameDrawer.draw(getPublisher().getBoard());
 		ScoreEvent.fireScoreEvent(boardScorer);
 	}
 
 	private GameScoreDrawer buildBoardScoreDrawer() {
-		return new GameScoreDrawer(buildGameDrawer(), boardScorer);
+		return new GameScoreDrawer(buildGameDrawer(), getPublisher(), boardScorer);
 	}
 
 	@Override
@@ -123,13 +118,13 @@ public class LocalGameController extends BoardController {
 
 	private void loadGameMenu() {
 		gameMenuController = new GameMenuController();
-		gameMenuController.setGameHandler(getGameHandler());
+		gameMenuController.setGameHandler(getPublisher());
 
 		sideBar.getChildren().add(gameMenuController.getRoot());
 	}
 
 	private void loadReviewPanel() {
-		reviewPaneController = new ReviewPaneController(getGameHandler());
+		reviewPaneController = new ReviewPaneController(getPublisher());
 
 		sideBar.getChildren().add(reviewPaneController.getRoot());
 	}
