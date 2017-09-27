@@ -90,4 +90,19 @@ public class GameHandlerDecorator implements GameHandler {
 	public Scorer getScorer() {
 		return instance.getScorer();
 	}
+
+	@Override
+	public int hashCode() {
+		return instance.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof GameHandler) && (instance == obj);
+	}
+
+	@Override
+	public String toString() {
+		return instance.toString();
+	}
 }

@@ -110,7 +110,7 @@ public class Playerdata {
 			isBot = jsonPlayer.getBoolean("is_bot");
 			website = jsonPlayer.getString("website");
 			registrationDate = Instant.parse(jsonPlayer.getString("registration_date"));
-			
+
 			if ( !jsonPlayer.isNull("name") )
 				name = jsonPlayer.getString("name");
 
