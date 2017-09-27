@@ -19,6 +19,7 @@ package event;
 
 import javafx.event.EventHandler;
 import logic.board.Board;
+import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGame;
 import org.junit.Test;
 import util.Move;
@@ -33,7 +34,7 @@ public class GameEventTest {
 
 	@Test
 	public void getState() {
-		EventPublisher publisher = new EventPublisher(new LocalGame(0));
+		GameHandler game = new LocalGame(0);
 		final Board[] result = {null};
 		Board board = new Board();
 
@@ -41,9 +42,9 @@ public class GameEventTest {
 		board.playStone(move);
 
 		EventHandler<GameEvent> dummy = event -> result[0] = event.getBoard();
-		publisher.subscribe(GameEvent.MOVE, dummy);
+		game.subscribe(GameEvent.MOVE, dummy);
 
-		publisher.playMove(move);
+		game.playMove(move);
 
 		assertThat(result[0], is(board));
 	}

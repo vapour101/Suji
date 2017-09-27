@@ -19,6 +19,7 @@ package event;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGame;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,20 +39,20 @@ public class EventPublisherTest {
 	@Mock
 	private EventHandler<SujiEvent> handler;
 
-	private EventPublisher publisher;
+	private GameHandler game;
 
 	@Before
 	public void init() {
-		publisher = new EventPublisher(new LocalGame(0));
+		game = new LocalGame(0);
 	}
 
 	@Test
 	public void generateEvents() {
-		publisher.subscribe(SujiEvent.ANY, handler);
+		game.subscribe(GameEvent.GAME, handler);
 
 		verifyZeroInteractions(handler);
 
-		publisher.pass();
+		game.pass();
 
 		verify(handler).handle(any());
 		verifyNoMoreInteractions(handler);
@@ -59,33 +60,33 @@ public class EventPublisherTest {
 
 	@Test
 	public void specificEventsOnly() {
-		publisher.subscribe(GameEvent.PASS, handler);
+		game.subscribe(GameEvent.PASS, handler);
 
-		publisher.pass();
+		game.pass();
 
 		verify(handler).handle(any());
 
 		verifyNoMoreInteractions(handler);
 
-		publisher.playMove(play(getCoords("K10"), BLACK));
+		game.playMove(play(getCoords("K10"), BLACK));
 	}
 
 	@Test
 	public void invalidEvent() {
-		Event event = new Event(publisher, publisher, Event.ANY);
-		Event.fireEvent(publisher, event);
+		Event event = new Event(game, game, Event.ANY);
+		Event.fireEvent(game, event);
 	}
 
 	@Test
 	public void unsubscribe() {
-		publisher.subscribe(GameEvent.UNDO, handler);
+		game.subscribe(GameEvent.UNDO, handler);
 
-		publisher.undo();
+		game.undo();
 
 		verify(handler).handle(any());
 		verifyNoMoreInteractions(handler);
 
-		publisher.unsubscribe(GameEvent.UNDO, handler);
-		publisher.undo();
+		game.unsubscribe(GameEvent.UNDO, handler);
+		game.undo();
 	}
 }

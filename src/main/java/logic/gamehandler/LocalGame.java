@@ -103,6 +103,11 @@ public class LocalGame implements GameHandler {
 		publisher.unsubscribe(eventType, eventHandler);
 	}
 
+	private void fireGameEvent(EventType<? extends GameEvent> type) {
+		GameEvent event = new GameEvent(this, this, type);
+		fireEvent(event);
+	}
+
 	@Override
 	public GameTree getGameTree() {
 		return gameTree;
@@ -151,17 +156,13 @@ public class LocalGame implements GameHandler {
 
 		gameTree.stepForward(move);
 
-		fireGameEvent(MOVE);
+		if ( move.getType() == Move.Type.PLAY )
+			fireGameEvent(MOVE);
 	}
 
 	@Override
 	public Collection<Coords> getStones(StoneColour colour) {
 		return getBoard().getStones(colour);
-	}
-
-	private void fireGameEvent(EventType<? extends GameEvent> type) {
-		GameEvent event = new GameEvent(this, this, type);
-		fireEvent(event);
 	}
 
 	@Override
