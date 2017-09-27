@@ -55,7 +55,7 @@ public class GameDrawer {
 		setStoneDrawer(new SimpleStoneDrawer(canvas));
 		setBoardDrawer(new SimpleBoardDrawer(canvas));
 
-		EventBus.addEventHandler(GameEvent.ANY, this::onGameUpdate);
+		EventBus.addEventHandler(GameEvent.GAME, this::onGameUpdate);
 		canvas.widthProperty().addListener(this::onCanvasResize);
 		canvas.heightProperty().addListener(this::onCanvasResize);
 	}

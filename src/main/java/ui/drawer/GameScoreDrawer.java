@@ -40,7 +40,7 @@ public class GameScoreDrawer extends GameDrawer {
 	private void setUpScorer(Scorer scorer) {
 		this.scorer = scorer;
 
-		EventBus.addEventHandler(ScoreEvent.ANY, this::onScoreChange);
+		EventBus.addEventHandler(ScoreEvent.SCORE, this::onScoreChange);
 	}
 
 	public GameScoreDrawer(GameDrawer clone, Scorer scorer) {

@@ -71,7 +71,7 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 		setButtonActions();
 		setVisible(false);
 
-		EventBus.addEventHandler(ScoreEvent.ANY, this::updateScore);
+		EventBus.addEventHandler(ScoreEvent.SCORE, this::updateScore);
 	}
 
 	public void setVisible(boolean visible) {

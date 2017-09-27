@@ -22,25 +22,29 @@ import javafx.event.EventTarget;
 import javafx.event.EventType;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
+import ogs.GameList;
 import util.Coords;
 import util.StoneColour;
 
 import java.util.Collection;
 
-public class GameEvent extends Event {
+public class GameEvent extends SujiEvent {
 
-	public static final EventType<GameEvent> ANY = new EventType<GameEvent>("GAME");
-	public static final EventType<GameEvent> START = new EventType<GameEvent>(ANY, "START");
-	public static final EventType<GameEvent> GAMEOVER = new EventType<GameEvent>(ANY, "GAMEOVER");
-	public static final EventType<GameEvent> REVIEW = new EventType<>(ANY, "REVIEW");
+	public static final EventType<GameEvent> GAME = new EventType<GameEvent>(ANY, "GAME");
+	public static final EventType<GameEvent> START = new EventType<GameEvent>(GAME, "START");
+	public static final EventType<GameEvent> GAMEOVER = new EventType<GameEvent>(GAME, "GAMEOVER");
+	public static final EventType<GameEvent> REVIEW = new EventType<>(GAME, "REVIEW");
 	public static final EventType<GameEvent> REVIEWSTART = new EventType<>(REVIEW, "REVIEWSTART");
+	public static final EventType<GameEvent> MOVE = new EventType<>(GAME, "MOVE");
+	public static final EventType<GameEvent> PASS = new EventType<>(GAME, "PASS");
+	public static final EventType<GameEvent> UNDO = new EventType<>(GAME, "UNDO");
 
-	private GameEvent(GameHandler source, EventTarget target, EventType<? extends GameEvent> eventType) {
+	public GameEvent(GameHandler source, EventTarget target, EventType<? extends GameEvent> eventType) {
 		super(source, target, eventType);
 	}
 
 	public static void fireGameEvent(GameHandler game) {
-		fireGameEvent(game, ANY);
+		fireGameEvent(game, GAME);
 	}
 
 	public static void fireGameEvent(GameHandler game, EventType<? extends GameEvent> eventType) {

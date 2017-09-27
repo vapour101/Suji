@@ -75,6 +75,6 @@ public class GameHandlerEventDecorator extends GameHandlerDecorator {
 	}
 
 	private void fireGameEvent() {
-		GameEvent.fireGameEvent(this, GameEvent.ANY);
+		GameEvent.fireGameEvent(this, GameEvent.GAME);
 	}
 }

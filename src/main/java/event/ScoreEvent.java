@@ -17,23 +17,22 @@
 
 package event;
 
-import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import logic.score.Scorer;
 import util.StoneColour;
 
-public class ScoreEvent extends Event {
+public class ScoreEvent extends SujiEvent {
 
-	public static final EventType<ScoreEvent> ANY = new EventType<ScoreEvent>("SCORE");
-	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(ANY, "DONE");
+	public static final EventType<ScoreEvent> SCORE = new EventType<ScoreEvent>(ANY, "SCORE");
+	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(SCORE, "DONE");
 
 	private ScoreEvent(Scorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
 		super(source, eventTarget, eventType);
 	}
 
 	public static void fireScoreEvent(Scorer scorer) {
-		fireScoreEvent(scorer, ANY);
+		fireScoreEvent(scorer, SCORE);
 	}
 
 	public static void fireScoreEvent(Scorer scorer, EventType<? extends ScoreEvent> eventType) {
