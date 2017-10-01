@@ -45,7 +45,7 @@ public class GameEvent extends SujiEvent {
 		return getHandler().getBoard();
 	}
 
-	private GameHandler getHandler() {
+	public GameHandler getHandler() {
 		return (GameHandler) getSource();
 	}
 

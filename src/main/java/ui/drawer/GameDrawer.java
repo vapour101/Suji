@@ -19,6 +19,7 @@ package ui.drawer;
 
 import event.GameEvent;
 import event.HoverEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import logic.gamehandler.GameHandler;
 import util.*;
@@ -28,6 +29,9 @@ import static util.Move.play;
 public class GameDrawer extends Drawer {
 
 	private Move hoverStone;
+	private EventHandler<GameEvent> changeHandler = this::onChange;
+	private EventHandler<HoverEvent> hoverHandler = this::onHover;
+	private EventHandler<GameEvent> gameOverHandler = this::onGameOver;
 
 	public GameDrawer(Canvas canvas, GameHandler handler) {
 		super(canvas);
@@ -40,8 +44,10 @@ public class GameDrawer extends Drawer {
 		canvas.widthProperty().addListener(this::onCanvasResize);
 		canvas.heightProperty().addListener(this::onCanvasResize);
 
-		handler.subscribe(GameEvent.CHANGE, this::onChange);
-		handler.subscribe(HoverEvent.HOVER, this::onHover);
+
+		handler.subscribe(GameEvent.CHANGE, changeHandler);
+		handler.subscribe(HoverEvent.HOVER, hoverHandler);
+		handler.subscribe(GameEvent.GAMEOVER, gameOverHandler);
 	}
 
 	private void onChange(GameEvent event) {
@@ -73,5 +79,11 @@ public class GameDrawer extends Drawer {
 			getStoneDrawer().drawGhostStone(pos, colour);
 			hoverStone = move;
 		}
+	}
+
+	private void onGameOver(GameEvent event) {
+		event.getHandler().unsubscribe(GameEvent.CHANGE, changeHandler);
+		event.getHandler().unsubscribe(HoverEvent.HOVER, hoverHandler);
+		event.getHandler().unsubscribe(GameEvent.GAMEOVER, gameOverHandler);
 	}
 }

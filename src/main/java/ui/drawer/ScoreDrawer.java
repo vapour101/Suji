@@ -30,7 +30,7 @@ public class ScoreDrawer extends Drawer {
 
 	private Scorer scorer;
 
-	public ScoreDrawer(GameDrawer clone, Scorer scorer) {
+	public ScoreDrawer(Drawer clone, Scorer scorer) {
 		super(clone);
 		setUpScorer(scorer);
 	}

@@ -91,7 +91,7 @@ public class LocalGameController extends BoardController {
 	}
 
 	private Drawer buildBoardScoreDrawer() {
-		return new ScoreDrawer(buildGameDrawer(), boardScorer);
+		return new ScoreDrawer(gameDrawer, boardScorer);
 	}
 
 	@Override

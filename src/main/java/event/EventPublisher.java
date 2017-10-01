@@ -22,9 +22,13 @@ import com.google.common.collect.Multimap;
 import javafx.event.*;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class EventPublisher {
 
+	private final Lock mutex = new ReentrantLock(true);
 	private Multimap<EventType, EventHandler> handlers;
 	private EventTarget target;
 
@@ -35,11 +39,15 @@ public class EventPublisher {
 	}
 
 	public <T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+		mutex.lock();
 		handlers.put(eventType, eventHandler);
+		mutex.unlock();
 	}
 
 	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+		mutex.lock();
 		handlers.remove(eventType, eventHandler);
+		mutex.unlock();
 	}
 
 	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
@@ -52,16 +60,22 @@ public class EventPublisher {
 
 		EventType type = event.getEventType();
 
-		while (type != Event.ANY) {
+		while (type != SujiEvent.ANY) {
 			handleEvent(event, handlers.get(type));
 			type = type.getSuperType();
 		}
 
-		handleEvent(event, handlers.get(Event.ANY));
-		return event;
+		handleEvent(event, handlers.get(SujiEvent.ANY));
+		return null;
 	}
 
-	private void handleEvent(Event event, Collection<EventHandler> handlers) {
+	private void handleEvent(Event event, Collection<EventHandler> eventHandlers) {
+		Collection<EventHandler> handlers = new LinkedList<>();
+
+		mutex.lock();
+		handlers.addAll(eventHandlers);
+		mutex.unlock();
+
 		handlers.forEach(handler -> handler.handle(event));
 	}
 
