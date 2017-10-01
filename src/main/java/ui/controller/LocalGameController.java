@@ -18,6 +18,7 @@
 package ui.controller;
 
 import event.GameEvent;
+import event.ScoreDrawerEventWrapper;
 import event.ScoreEvent;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
@@ -28,7 +29,7 @@ import ui.controller.sidebar.ScorePaneController;
 import ui.controller.strategy.BoardStrategy;
 import ui.controller.strategy.GamePlay;
 import ui.controller.strategy.Scoring;
-import ui.drawer.GameDrawer;
+import ui.drawer.Drawer;
 import ui.drawer.ScoreDrawer;
 
 import java.net.URL;
@@ -79,18 +80,19 @@ public class LocalGameController extends BoardController {
 		gameMenuController.enterScoring();
 		scorePaneController.setVisible(true);
 
-		gameGameDrawer = buildBoardScoreDrawer();
+		gameDrawer = buildBoardScoreDrawer();
 		strategy = new Scoring(boardCanvas, getGameHandler(), scorePaneController);
-		gameGameDrawer.draw(getGameHandler().getBoard());
+		gameDrawer.draw(getGameHandler().getBoard());
 	}
 
-	private GameDrawer buildBoardScoreDrawer() {
-		return new ScoreDrawer(getGameHandler(), gameGameDrawer, boardScorer);
+	private Drawer buildBoardScoreDrawer() {
+		Drawer drawer = new ScoreDrawer(gameDrawer, boardScorer);
+		return new ScoreDrawerEventWrapper(drawer, getGameHandler());
 	}
 
 	@Override
 	void reviewStart(GameEvent event) {
-		gameGameDrawer = buildGameDrawer();
+		gameDrawer = buildGameDrawer();
 	}
 
 	private void loadScorePane() {

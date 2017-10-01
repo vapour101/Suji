@@ -28,11 +28,14 @@ public class ScoreEvent extends SujiEvent {
 	public static final EventType<ScoreEvent> SCORE = new EventType<ScoreEvent>(ANY, "SCORE");
 	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(SCORE, "DONE");
 
+	private Scorer scorer;
+
 	public ScoreEvent(GameHandler game, EventType<? extends ScoreEvent> eventType) {
-		this(game.getScorer(), game, eventType);
+		this(game, game, eventType);
+		scorer = game.getScorer();
 	}
 
-	private ScoreEvent(Scorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
+	private ScoreEvent(GameHandler source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
 		super(source, eventTarget, eventType);
 	}
 
@@ -41,6 +44,6 @@ public class ScoreEvent extends SujiEvent {
 	}
 
 	public Scorer getScorer() {
-		return (Scorer) getSource();
+		return scorer;
 	}
 }

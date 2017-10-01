@@ -17,6 +17,7 @@
 
 package ui.controller;
 
+import event.GameDrawerEventWrapper;
 import event.GameEvent;
 import event.HoverEvent;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +45,7 @@ public class BoardController extends DockNodeController implements Initializable
 	@FXML
 	VBox sideBar;
 	Canvas boardCanvas;
-	GameDrawer gameGameDrawer;
+	Drawer gameDrawer;
 
 	private GameHandler game;
 	private String fxmlLocation;
@@ -85,11 +86,11 @@ public class BoardController extends DockNodeController implements Initializable
 
 		boardPane.getChildren().add(boardCanvas);
 
-		gameGameDrawer = buildGameDrawer();
+		gameDrawer = buildGameDrawer();
 	}
 
-	GameDrawer buildGameDrawer() {
-		GameDrawer gameDrawer = new GameDrawer(boardCanvas, getGameHandler());
+	Drawer buildGameDrawer() {
+		Drawer gameDrawer = new GameDrawer(boardCanvas);
 
 		Image blackStone = new Image("/images/black.png", false);
 		Image whiteStone = new Image("/images/white.png", false);
@@ -102,6 +103,8 @@ public class BoardController extends DockNodeController implements Initializable
 
 		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
 		gameDrawer.setBoardDrawer(boardDrawer);
+
+		gameDrawer = new GameDrawerEventWrapper(gameDrawer, getGameHandler());
 
 		return gameDrawer;
 	}
@@ -137,7 +140,7 @@ public class BoardController extends DockNodeController implements Initializable
 		game.fireEvent(event);
 	}
 
-	void canvasExit(MouseEvent mouseEvent) {
+	private void canvasExit(MouseEvent mouseEvent) {
 		DrawCoords location = new DrawCoords(-10, -10);
 		HoverEvent event = new HoverEvent(game, location, game);
 		game.fireEvent(event);

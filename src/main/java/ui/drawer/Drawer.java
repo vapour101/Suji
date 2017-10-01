@@ -15,24 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package event;
+package ui.drawer;
 
-import javafx.event.Event;
-import javafx.event.EventTarget;
-import javafx.event.EventType;
+import javafx.scene.canvas.Canvas;
+import logic.board.Board;
+import util.DrawCoords;
+import util.StoneColour;
 
-public class SujiEvent extends Event {
+public interface Drawer {
 
-	public static final EventType<SujiEvent> ANY = new EventType<SujiEvent>("SUJI");
+	BoardDrawer getBoardDrawer();
 
-	private EventPublisher publisher;
+	void setBoardDrawer(BoardDrawer boardDrawer);
 
-	public SujiEvent(EventPublisher source, EventTarget target, EventType<? extends SujiEvent> eventType) {
-		super(source, target, eventType);
-		publisher = source;
-	}
+	StoneDrawer getStoneDrawer();
 
-	public EventPublisher getPublisher() {
-		return publisher;
-	}
+	void setStoneDrawer(StoneDrawer stoneDrawer);
+
+	void draw(Board board);
+
+	void redraw();
+
+	void setHoverStone(DrawCoords position, StoneColour colour);
+
+	Canvas getCanvas();
 }

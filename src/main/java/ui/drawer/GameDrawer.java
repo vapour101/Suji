@@ -17,63 +17,34 @@
 
 package ui.drawer;
 
-import event.GameEvent;
-import event.HoverEvent;
 import javafx.beans.Observable;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import logic.board.Board;
-import logic.gamehandler.GameHandler;
 import util.*;
 
 import java.util.Collection;
 
 import static util.Move.play;
 
-public class GameDrawer {
+public class GameDrawer implements Drawer {
 
-	protected Move hoverStone;
-	protected EventHandler<GameEvent> changeHandler = this::onChange;
-	protected EventHandler<HoverEvent> hoverHandler = this::onHover;
-	protected EventHandler<GameEvent> gameOverHandler = this::onGameOver;
-	Board lastState;
+	private Move hoverStone;
+	private Board lastState;
 	private Canvas canvas;
 	private StoneDrawer stoneDrawer;
 	private BoardDrawer boardDrawer;
 
-	GameDrawer(GameDrawer clone) {
+
+	GameDrawer(Drawer clone) {
 		this(clone.getCanvas());
 
 		setStoneDrawer(clone.getStoneDrawer());
 		setBoardDrawer(clone.getBoardDrawer());
 	}
 
-	public GameDrawer(Canvas canvas, GameHandler handler) {
-		this(canvas);
-
-		setStoneDrawer(new SimpleStoneDrawer(canvas));
-		setBoardDrawer(new SimpleBoardDrawer(canvas));
-
-		canvas.widthProperty().addListener(this::onCanvasResize);
-		canvas.heightProperty().addListener(this::onCanvasResize);
-
-
-		handler.subscribe(GameEvent.CHANGE, changeHandler);
-		handler.subscribe(HoverEvent.HOVER, hoverHandler);
-		handler.subscribe(GameEvent.GAMEOVER, gameOverHandler);
-	}
-
-	private BoardDrawer getBoardDrawer() {
-		return boardDrawer;
-	}
-
-	public void setBoardDrawer(BoardDrawer boardDrawer) {
-		this.boardDrawer = boardDrawer;
-	}
-
-	GameDrawer(Canvas canvas) {
+	public GameDrawer(Canvas canvas) {
 		this.canvas = canvas;
 		lastState = new Board();
 
@@ -85,26 +56,27 @@ public class GameDrawer {
 		hoverStone = null;
 	}
 
-	StoneDrawer getStoneDrawer() {
+	@Override
+	public BoardDrawer getBoardDrawer() {
+		return boardDrawer;
+	}
+
+	@Override
+	public void setBoardDrawer(BoardDrawer boardDrawer) {
+		this.boardDrawer = boardDrawer;
+	}
+
+	@Override
+	public StoneDrawer getStoneDrawer() {
 		return stoneDrawer;
 	}
 
+	@Override
 	public void setStoneDrawer(StoneDrawer stoneDrawer) {
 		this.stoneDrawer = stoneDrawer;
 	}
 
-	Canvas getCanvas() {
-		return canvas;
-	}
-
-	void onCanvasResize(Observable observable) {
-		redraw();
-	}
-
-	void redraw() {
-		draw(lastState);
-	}
-
+	@Override
 	public void draw(Board board) {
 		drawBackground();
 		boardDrawer.draw();
@@ -131,19 +103,13 @@ public class GameDrawer {
 		context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
-	CoordProjector getProjector() {
-		return DimensionHelper.getProjector(canvas);
+	@Override
+	public void redraw() {
+		draw(lastState);
 	}
 
-	private void onChange(GameEvent event) {
-		draw(event.getBoard());
-	}
-
-	private void onHover(HoverEvent event) {
-		setHoverStone(event.getPoint(), event.getTurnPlayer());
-	}
-
-	private void setHoverStone(DrawCoords position, StoneColour colour) {
+	@Override
+	public void setHoverStone(DrawCoords position, StoneColour colour) {
 		CoordProjector projector = getProjector();
 
 		if ( !projector.isWithinBounds(position) ) {
@@ -166,9 +132,16 @@ public class GameDrawer {
 		}
 	}
 
-	private void onGameOver(GameEvent event) {
-		event.getHandler().unsubscribe(GameEvent.CHANGE, changeHandler);
-		event.getHandler().unsubscribe(HoverEvent.HOVER, hoverHandler);
-		event.getHandler().unsubscribe(GameEvent.GAMEOVER, gameOverHandler);
+	private CoordProjector getProjector() {
+		return DimensionHelper.getProjector(canvas);
+	}
+
+	@Override
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
+	private void onCanvasResize(Observable observable) {
+		redraw();
 	}
 }
