@@ -51,10 +51,12 @@ public class Scoring implements BoardStrategy {
 			return;
 
 		scorePane.enableButtons();
-		if ( mouseEvent.getButton() == MouseButton.PRIMARY )
-			boardScorer.markGroupDead(boardPos);
-		else if ( mouseEvent.getButton() == MouseButton.SECONDARY )
-			boardScorer.unmarkGroupDead(boardPos);
+		if ( mouseEvent.getButton() == MouseButton.PRIMARY ) {
+			if ( !mouseEvent.isShiftDown() )
+				boardScorer.markGroupDead(boardPos);
+			else
+				boardScorer.unmarkGroupDead(boardPos);
+		}
 	}
 
 	@Override
