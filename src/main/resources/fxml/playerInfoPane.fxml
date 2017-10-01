@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.sidebar.PlayerPaneController"
+          xmlns="http://javafx.com/javafx/8.0.111">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <ImageView fx:id="blackAvatar" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true"
+               GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <ImageView fx:id="whiteAvatar" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true"
+               GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label fx:id="blackName" text="Black" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+           GridPane.valignment="CENTER">
+        <padding>
+            <Insets bottom="5.0" top="5.0"/>
+        </padding>
+    </Label>
+    <Label fx:id="whiteName" text="White" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+           GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <padding>
+            <Insets bottom="5.0" top="5.0"/>
+        </padding>
+    </Label>
+</GridPane>

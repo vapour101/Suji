@@ -19,21 +19,25 @@ package ui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ogs.Connection;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
-import ui.dialog.LocalGameDialog;
+import ui.controller.DockNodeController;
+import ui.controller.GameListController;
+import ui.controller.NewLocalGameController;
+import util.LogHelper;
 
 public class Main extends Application {
 
+	public static Main instance;
+	public DockPane dockPane;
 	private Stage window;
-	private DockPane dockPane;
 	private MenuBar menuBar;
 
 	public static void main(String[] args) {
@@ -42,7 +46,14 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		instance = this;
+		LogHelper.finest("Starting");
 		window = primaryStage;
+
+		primaryStage.setOnCloseRequest(event -> {
+			Connection.disconnect();
+			System.exit(0);
+		});
 		buildWindow();
 	}
 
@@ -70,11 +81,11 @@ public class Main extends Application {
 	private void buildMenuBar() {
 		//file menu, creating the main tabs
 		Menu fileMenu = getFileMenu();
-		Menu exitMenu = getExitMenu();
+		Menu ogsMenu = getOGSMenu();
 
 		//main menu bar
 		menuBar = new MenuBar();
-		menuBar.getMenus().addAll(fileMenu, exitMenu);
+		menuBar.getMenus().addAll(fileMenu, ogsMenu);
 	}
 
 	private Menu getFileMenu() {
@@ -82,24 +93,33 @@ public class Main extends Application {
 
 		MenuItem newLocalGame = new MenuItem("Local Game");
 		newLocalGame.setOnAction(event -> {
-			DockNode node = LocalGameDialog.build();
+			DockNodeController controller = new NewLocalGameController();
+			DockNode node = controller.getDockNode();
+			node.setTitle("New Local Game");
 			node.dock(dockPane, DockPos.CENTER);
+			node.setFloating(true);
 		});
 
-		//Home items
 		fileMenu.getItems().add(newLocalGame);
 
 		return fileMenu;
 	}
 
-	private Menu getExitMenu() {
-		Menu exitMenu = new Menu();
+	private Menu getOGSMenu() {
+		Menu ogsMenu = new Menu("OGS");
 
-		Label exitLabel = new Label("Exit");
-		exitLabel.setOnMouseClicked(event -> window.close());
-		exitMenu.setGraphic(exitLabel);
+		MenuItem ogsGameList = new MenuItem("Game List");
+		ogsGameList.setOnAction(event -> {
+			GameListController controller = new GameListController();
 
-		return exitMenu;
+			DockNode node = controller.getDockNode();
+			node.setTitle("OGS GameList");
+			node.dock(dockPane, DockPos.RIGHT);
+		});
+
+		ogsMenu.getItems().add(ogsGameList);
+
+		return ogsMenu;
 	}
 
 	private void buildDockPane() {

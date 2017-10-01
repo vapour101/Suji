@@ -15,26 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package ui.controller;
 
-import event.EventPublisher;
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import logic.score.ScoreProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+import org.dockfx.DockNode;
 
-/**
- * Common interface for any class that tracks a game of Go from
- * start to finish.
- */
-public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
+public abstract class DockNodeController extends SelfBuildingController {
 
-	void pass();
 
-	void undo();
+	private DockNode node;
 
-	StoneColour getTurnPlayer();
+	public DockNodeController() {
+		super();
+	}
 
-	void setKomi(double komi);
+	public final synchronized DockNode getDockNode() {
+		if ( node == null )
+			constructNode();
+
+		return node;
+	}
+
+	private void constructNode() {
+		node = new DockNode(getRoot());
+	}
+
+	public void dock() {
+
+	}
 }

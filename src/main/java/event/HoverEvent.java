@@ -15,26 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package event;
 
-import event.EventPublisher;
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import logic.score.ScoreProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
+import logic.gamehandler.GameHandler;
+import util.DrawCoords;
 
-/**
- * Common interface for any class that tracks a game of Go from
- * start to finish.
- */
-public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
+public class HoverEvent extends GameEvent {
 
-	void pass();
+	public static final EventType<HoverEvent> HOVER = new EventType<>(GAME, "HOVER");
 
-	void undo();
+	private DrawCoords point;
 
-	StoneColour getTurnPlayer();
+	public HoverEvent(GameHandler source, DrawCoords location, EventTarget target) {
+		super(source, target, HOVER);
+		point = location;
+	}
 
-	void setKomi(double komi);
+	public DrawCoords getPoint() {
+		return point;
+	}
 }

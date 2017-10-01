@@ -19,19 +19,18 @@ package ui.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.util.Builder;
 
 import java.io.IOException;
 
-public abstract class SelfBuildingController implements Builder<Parent> {
+public abstract class SelfBuildingController {
 
 	private Parent root;
 
-	SelfBuildingController() {
+	public SelfBuildingController() {
 		root = null;
 	}
 
-	public final Parent build() {
+	public final Parent getRoot() {
 		if ( root == null )
 			constructRoot();
 

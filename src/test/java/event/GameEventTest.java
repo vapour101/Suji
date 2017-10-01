@@ -17,72 +17,35 @@
 
 package event;
 
+import javafx.event.EventHandler;
+import logic.board.Board;
 import logic.gamehandler.GameHandler;
-import logic.gamehandler.LocalGameHandler;
+import logic.gamehandler.LocalGame;
 import org.junit.Test;
+import util.Move;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 import static util.Move.play;
 import static util.StoneColour.BLACK;
-import static util.StoneColour.WHITE;
 
 public class GameEventTest {
 
 	@Test
-	public void gameEvent() {
-		GameHandler game = new LocalGameHandler(0);
+	public void getState() {
+		GameHandler game = new LocalGame(0);
+		final Board[] result = {null};
+		Board board = new Board();
 
-		GameEventConsumer dummy = new GameEventConsumer();
-		EventBus.addEventHandler(GameEvent.ANY, dummy::consume);
+		Move move = play(getCoords("K10"), BLACK);
+		board.playStone(move);
 
-		GameEvent.fireGameEvent(game);
-		assertThat(dummy.hits, is(1));
+		EventHandler<GameEvent> dummy = event -> result[0] = event.getBoard();
+		game.subscribe(GameEvent.MOVE, dummy);
 
-		GameEvent.fireGameEvent(game, GameEvent.START);
-		GameEvent.fireGameEvent(game, GameEvent.GAMEOVER);
-		assertThat(dummy.hits, is(3));
+		game.playMove(move);
 
-		dummy = new GameEventConsumer();
-
-		GameEvent.fireGameEvent(game);
-		assertThat(dummy.hits, is(0));
-
-		EventBus.addEventHandler(GameEvent.START, dummy::consume);
-
-		GameEvent.fireGameEvent(game, GameEvent.GAMEOVER);
-		GameEvent.fireGameEvent(game);
-		GameEvent.fireGameEvent(game, GameEvent.START);
-		assertThat(dummy.hits, is(1));
-	}
-
-	@Test
-	public void boardData() {
-		GameHandler game = new LocalGameHandler(0);
-		game.playMove(play(getCoords("D4"), BLACK));
-		game.playMove(play(getCoords("E5"), WHITE));
-		game.playMove(play(getCoords("C4"), BLACK));
-		game.playMove(play(getCoords("F8"), WHITE));
-		game.playMove(play(getCoords("G9"), BLACK));
-		game.playMove(play(getCoords("M10"), WHITE));
-
-		GameEventConsumer dummy = new GameEventConsumer();
-		EventBus.addEventHandler(GameEvent.ANY, dummy::consume);
-
-		GameEvent.fireGameEvent(game, GameEvent.ANY);
-		assertThat(dummy.gameEvent.getBoard(), is(game.getBoard()));
-		assertThat(dummy.gameEvent.getStones(BLACK), is(game.getStones(BLACK)));
-	}
-
-	private class GameEventConsumer {
-
-		public int hits = 0;
-		public GameEvent gameEvent;
-
-		public void consume(GameEvent event) {
-			hits++;
-			gameEvent = event;
-		}
+		assertThat(result[0], is(board));
 	}
 }

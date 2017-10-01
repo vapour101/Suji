@@ -17,48 +17,65 @@
 
 package ui.controller;
 
-import event.EventBus;
+import event.GameDrawerEventWrapper;
 import event.GameEvent;
+import event.HoverEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import logic.gamehandler.GameHandler;
-import ui.drawer.GameDrawer;
+import ui.drawer.*;
+import util.DrawCoords;
 
 import java.net.URL;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
-public abstract class BoardController extends SelfBuildingController implements Initializable {
+public class BoardController extends DockNodeController implements Initializable {
 
 	@FXML
 	Pane boardPane;
 	@FXML
 	VBox sideBar;
-
-	GameHandler game;
 	Canvas boardCanvas;
-	GameDrawer gameDrawer;
+	Drawer gameDrawer;
 
-	BoardController() {
-		game = buildGameHandler();
-		EventBus.addEventHandler(GameEvent.GAMEOVER, this::enterScoring);
-		EventBus.addEventHandler(GameEvent.REVIEWSTART, this::reviewStart);
+	private GameHandler game;
+	private String fxmlLocation;
+	private boolean interactive;
+	private Queue<Node> sideBarItems;
+
+	BoardController(GameHandler gameHandler, String resourcePath) {
+		this(gameHandler, resourcePath, true);
 	}
 
-	abstract GameHandler buildGameHandler();
+	BoardController(GameHandler gameHandler, String resourcePath, boolean interactive) {
+		game = gameHandler;
+		fxmlLocation = resourcePath;
+		sideBarItems = new ArrayDeque<>();
+		this.interactive = interactive;
+	}
+
+	public final void addToSideBar(Node node) {
+		sideBarItems.add(node);
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		game.subscribe(GameEvent.GAMEOVER, this::enterScoring);
+		game.subscribe(GameEvent.REVIEWSTART, this::reviewStart);
+
 		setupPanes();
 		constructCanvas();
-
-		GameEvent.fireGameEvent(game, GameEvent.START);
+		setupSideBar();
 	}
-
 
 	void setupPanes() {
 		boardPane.widthProperty().addListener(this::resizeCanvas);
@@ -67,29 +84,84 @@ public abstract class BoardController extends SelfBuildingController implements 
 
 	private void constructCanvas() {
 		boardCanvas = new Canvas();
-		boardCanvas.setOnMouseMoved(this::canvasHover);
-		boardCanvas.setOnMouseClicked(this::canvasClicked);
-		boardCanvas.setOnMouseExited(this::canvasExit);
+
+		if ( interactive ) {
+			boardCanvas.setOnMouseMoved(this::canvasHover);
+			boardCanvas.setOnMouseClicked(this::canvasClicked);
+			boardCanvas.setOnMouseExited(this::canvasExit);
+		}
 
 		boardPane.getChildren().add(boardCanvas);
 
 		gameDrawer = buildGameDrawer();
+		gameDrawer.draw(getGameHandler().getBoard());
 	}
 
-	abstract GameDrawer buildGameDrawer();
+	Drawer buildGameDrawer() {
+		Drawer gameDrawer = new GameDrawer(boardCanvas);
+
+		Image blackStone = new Image("/images/black.png", false);
+		Image whiteStone = new Image("/images/white.png", false);
+
+		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
+		gameDrawer.setStoneDrawer(stoneDrawer);
+
+		Image wood = new Image("/images/wood.jpg", false);
+		Image lines = new Image("/images/grid.png", false);
+
+		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
+		gameDrawer.setBoardDrawer(boardDrawer);
+
+		gameDrawer = new GameDrawerEventWrapper(gameDrawer, getGameHandler());
+
+		return gameDrawer;
+	}
+
+	GameHandler getGameHandler() {
+		return game;
+	}
+
+	private void setupSideBar() {
+		while (!sideBarItems.isEmpty()) {
+			sideBar.getChildren().add(sideBarItems.remove());
+		}
+	}
+
+	GameHandler getGame() {
+		return game;
+	}
 
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		boardCanvas.setHeight(boardPane.getHeight());
 		boardCanvas.setWidth(boardPane.getWidth());
 	}
 
-	abstract void canvasClicked(MouseEvent mouseEvent);
+	void canvasClicked(MouseEvent mouseEvent) {
+	}
 
-	abstract void canvasHover(MouseEvent mouseEvent);
+	private void canvasHover(MouseEvent mouseEvent) {
+		double x = mouseEvent.getX();
+		double y = mouseEvent.getY();
+		DrawCoords location = new DrawCoords(x, y);
 
-	abstract void canvasExit(MouseEvent mouseEvent);
+		HoverEvent event = new HoverEvent(game, location, game);
+		game.fireEvent(event);
+	}
 
-	abstract void enterScoring(GameEvent event);
+	private void canvasExit(MouseEvent mouseEvent) {
+		DrawCoords location = new DrawCoords(-10, -10);
+		HoverEvent event = new HoverEvent(game, location, game);
+		game.fireEvent(event);
+	}
 
-	abstract void reviewStart(GameEvent event);
+	void enterScoring(GameEvent event) {
+	}
+
+	void reviewStart(GameEvent event) {
+	}
+
+	@Override
+	protected String getResourcePath() {
+		return fxmlLocation;
+	}
 }

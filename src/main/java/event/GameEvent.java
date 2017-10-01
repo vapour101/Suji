@@ -17,36 +17,28 @@
 
 package event;
 
-import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
-import util.Coords;
 import util.StoneColour;
 
-import java.util.Collection;
+public class GameEvent extends SujiEvent {
 
-public class GameEvent extends Event {
-
-	public static final EventType<GameEvent> ANY = new EventType<GameEvent>("GAME");
-	public static final EventType<GameEvent> START = new EventType<GameEvent>(ANY, "START");
-	public static final EventType<GameEvent> GAMEOVER = new EventType<GameEvent>(ANY, "GAMEOVER");
-	public static final EventType<GameEvent> REVIEW = new EventType<>(ANY, "REVIEW");
+	public static final EventType<GameEvent> GAME = new EventType<>(ANY, "GAME");
+	public static final EventType<GameEvent> START = new EventType<>(GAME, "START");
+	public static final EventType<GameEvent> GAMEOVER = new EventType<>(GAME, "GAMEOVER");
+	public static final EventType<GameEvent> REVIEW = new EventType<>(GAME, "REVIEW");
 	public static final EventType<GameEvent> REVIEWSTART = new EventType<>(REVIEW, "REVIEWSTART");
 
-	private GameEvent(GameHandler source, EventTarget target, EventType<? extends GameEvent> eventType) {
+	public static final EventType<GameEvent> PASS = new EventType<>(GAME, "PASS");
+
+	public static final EventType<GameEvent> CHANGE = new EventType<>(GAME, "CHANGE");
+	public static final EventType<GameEvent> MOVE = new EventType<>(CHANGE, "MOVE");
+	public static final EventType<GameEvent> UNDO = new EventType<>(CHANGE, "UNDO");
+
+	public GameEvent(GameHandler source, EventTarget target, EventType<? extends GameEvent> eventType) {
 		super(source, target, eventType);
-	}
-
-	public static void fireGameEvent(GameHandler game) {
-		fireGameEvent(game, ANY);
-	}
-
-	public static void fireGameEvent(GameHandler game, EventType<? extends GameEvent> eventType) {
-		EventBus bus = EventBus.getInstance();
-		GameEvent event = new GameEvent(game, bus, eventType);
-		bus.fireEvent(event);
 	}
 
 	public Board getBoard() {
@@ -57,7 +49,7 @@ public class GameEvent extends Event {
 		return (GameHandler) getSource();
 	}
 
-	public Collection<Coords> getStones(StoneColour colour) {
-		return getHandler().getStones(colour);
+	public StoneColour getTurnPlayer() {
+		return getHandler().getTurnPlayer();
 	}
 }

@@ -15,26 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package ogs;
 
-import event.EventPublisher;
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import logic.score.ScoreProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+public final class OGSReference {
 
-/**
- * Common interface for any class that tracks a game of Go from
- * start to finish.
- */
-public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
+	static final String PREFIX = "https://online-go.com";
+	static final String WEBSOCKET = "websocket";
 
-	void pass();
+	static final String GAMELIST = "gamelist/query";
+	static final String GAMECONNECT = "game/connect";
+	static final String GAMEDISCONNECT = "game/disconnect";
 
-	void undo();
+	private static final String REST_API = "/api/v1";
+	private static final String PLAYER = "/players";
 
-	StoneColour getTurnPlayer();
-
-	void setKomi(double komi);
+	public static String getPlayerInfoURL(int playerID) {
+		return PREFIX + REST_API + PLAYER + "/" + playerID;
+	}
 }
