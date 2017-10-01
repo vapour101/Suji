@@ -20,7 +20,6 @@ package ui.controller.strategy;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
-import ui.drawer.Drawer;
 import util.CoordProjector;
 import util.Coords;
 import util.DrawCoords;
@@ -33,12 +32,10 @@ public class GamePlay implements BoardStrategy {
 
 	private Canvas boardCanvas;
 	private GameHandler game;
-	private Drawer gameDrawer;
 
-	public GamePlay(Canvas canvas, GameHandler gameHandler, Drawer drawer) {
+	public GamePlay(Canvas canvas, GameHandler gameHandler) {
 		boardCanvas = canvas;
 		game = gameHandler;
-		gameDrawer = drawer;
 	}
 
 	@Override

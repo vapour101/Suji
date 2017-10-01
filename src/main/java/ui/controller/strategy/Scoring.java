@@ -20,6 +20,7 @@ package ui.controller.strategy;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
 import ui.controller.sidebar.ScorePaneController;
 import util.CoordProjector;
@@ -34,9 +35,9 @@ public class Scoring implements BoardStrategy {
 	private Scorer boardScorer;
 	private ScorePaneController scorePane;
 
-	public Scoring(Canvas canvas, Scorer scorer, ScorePaneController scorePaneController) {
+	public Scoring(Canvas canvas, GameHandler game, ScorePaneController scorePaneController) {
 		boardCanvas = canvas;
-		boardScorer = scorer;
+		boardScorer = game.getScorer();
 		scorePane = scorePaneController;
 	}
 

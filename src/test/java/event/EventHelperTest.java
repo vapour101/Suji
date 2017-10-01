@@ -34,7 +34,7 @@ import static util.Move.play;
 import static util.StoneColour.BLACK;
 
 @RunWith (MockitoJUnitRunner.StrictStubs.class)
-public class EventPublisherTest {
+public class EventHelperTest {
 
 	@Mock
 	private EventHandler<SujiEvent> handler;

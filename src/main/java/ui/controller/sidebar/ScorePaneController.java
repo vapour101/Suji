@@ -19,6 +19,7 @@ package ui.controller.sidebar;
 
 import event.ScoreEvent;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -28,7 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import logic.score.Scorer;
+import logic.gamehandler.GameHandler;
 import ui.controller.SelfBuildingController;
 import util.StoneColour;
 
@@ -48,19 +49,20 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 	@FXML
 	private Label whiteScore;
 
-	private Scorer scorer;
+	private GameHandler game;
+	private EventHandler<ScoreEvent> scoreChangeHandler = this::updateScore;
+	private EventHandler<ScoreEvent> doneScoringHandler = this::displayFinalScore;
 
-	public ScorePaneController() {
-		scorer = null;
+	public ScorePaneController(GameHandler gameHandler) {
+		game = gameHandler;
+
+		game.subscribe(ScoreEvent.DONE, doneScoringHandler);
+		game.subscribe(ScoreEvent.SCORE, scoreChangeHandler);
 	}
 
 	@Override
 	protected String getResourcePath() {
 		return "/fxml/scorePane.fxml";
-	}
-
-	public void setScorer(Scorer scorer) {
-		this.scorer = scorer;
 	}
 
 	@Override
@@ -95,10 +97,12 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 	}
 
 	private void endScoring() {
-
+		ScoreEvent event = new ScoreEvent(game, ScoreEvent.DONE);
+		game.fireEvent(event);
 	}
 
 	private void displayFinalScore(ScoreEvent event) {
+		unsunscribeEvents();
 		double finalScore = event.getScorer().getScore();
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Game Over");
@@ -123,9 +127,12 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 		alert.showAndWait();
 	}
 
+	private void unsunscribeEvents() {
+		game.unsubscribe(ScoreEvent.DONE, doneScoringHandler);
+		game.unsubscribe(ScoreEvent.SCORE, scoreChangeHandler);
+	}
+
 	private void updateScore(ScoreEvent event) {
-		if ( event.getSource() != scorer )
-			return;
 		blackScore.setText(Double.toString(event.getScore(StoneColour.BLACK)));
 		whiteScore.setText(Double.toString(event.getScore(StoneColour.WHITE)));
 	}

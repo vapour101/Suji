@@ -19,7 +19,9 @@ package ui.drawer;
 
 
 import event.ScoreEvent;
+import javafx.event.EventHandler;
 import logic.board.Board;
+import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
 import util.Coords;
 import util.StoneColour;
@@ -29,10 +31,12 @@ import java.util.Collection;
 public class ScoreDrawer extends Drawer {
 
 	private Scorer scorer;
+	private EventHandler<ScoreEvent> scoreChangeHandler = this::onScoreChange;
 
-	public ScoreDrawer(Drawer clone, Scorer scorer) {
+	public ScoreDrawer(GameHandler game, Drawer clone, Scorer scorer) {
 		super(clone);
 		setUpScorer(scorer);
+		game.subscribe(ScoreEvent.SCORE, scoreChangeHandler);
 	}
 
 	private void setUpScorer(Scorer scorer) {

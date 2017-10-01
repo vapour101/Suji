@@ -19,6 +19,7 @@ package event;
 
 import javafx.event.EventTarget;
 import javafx.event.EventType;
+import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
 import util.StoneColour;
 
@@ -26,6 +27,10 @@ public class ScoreEvent extends SujiEvent {
 
 	public static final EventType<ScoreEvent> SCORE = new EventType<ScoreEvent>(ANY, "SCORE");
 	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(SCORE, "DONE");
+
+	public ScoreEvent(GameHandler game, EventType<? extends ScoreEvent> eventType) {
+		this(game.getScorer(), game, eventType);
+	}
 
 	private ScoreEvent(Scorer source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
 		super(source, eventTarget, eventType);

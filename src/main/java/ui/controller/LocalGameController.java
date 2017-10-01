@@ -51,11 +51,12 @@ public class LocalGameController extends BoardController {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		super.initialize(url, resourceBundle);
-		strategy = new GamePlay(boardCanvas, getGameHandler(), gameDrawer);
+		strategy = new GamePlay(boardCanvas, getGameHandler());
 		setupEventHandlers();
 	}
 
 	private void setupEventHandlers() {
+		getGameHandler().subscribe(ScoreEvent.DONE, this::doneScoring);
 	}
 
 	@Override
@@ -82,16 +83,15 @@ public class LocalGameController extends BoardController {
 	void enterScoring(GameEvent event) {
 		boardScorer = getGameHandler().getScorer();
 		gameMenuController.enterScoring();
-		scorePaneController.setScorer(boardScorer);
 		scorePaneController.setVisible(true);
 
 		gameDrawer = buildBoardScoreDrawer();
-		strategy = new Scoring(boardCanvas, boardScorer, scorePaneController);
+		strategy = new Scoring(boardCanvas, getGameHandler(), scorePaneController);
 		gameDrawer.draw(getGameHandler().getBoard());
 	}
 
 	private Drawer buildBoardScoreDrawer() {
-		return new ScoreDrawer(gameDrawer, boardScorer);
+		return new ScoreDrawer(getGameHandler(), gameDrawer, boardScorer);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class LocalGameController extends BoardController {
 	}
 
 	private void loadScorePane() {
-		scorePaneController = new ScorePaneController();
+		scorePaneController = new ScorePaneController(getGameHandler());
 
 		sideBar.getChildren().add(scorePaneController.getRoot());
 	}
@@ -119,9 +119,6 @@ public class LocalGameController extends BoardController {
 	}
 
 	private void doneScoring(ScoreEvent event) {
-		if ( event.getSource() != boardScorer )
-			return;
-
 		strategy = null;
 
 		gameMenuController.enableEndGameButtons();

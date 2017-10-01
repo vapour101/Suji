@@ -17,10 +17,7 @@
 
 package logic.gamehandler;
 
-import event.SujiEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventTarget;
-import javafx.event.EventType;
+import event.EventPublisher;
 import logic.board.BoardProvider;
 import logic.gametree.GameTreeProvider;
 import logic.score.ScoreProvider;
@@ -31,7 +28,7 @@ import util.StoneColour;
  * Common interface for any class that tracks a game of Go from
  * start to finish.
  */
-public interface GameHandler extends BoardProvider, EventTarget, GameTreeProvider, SGFProvider, ScoreProvider {
+public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
 
 	void pass();
 
@@ -40,10 +37,4 @@ public interface GameHandler extends BoardProvider, EventTarget, GameTreeProvide
 	StoneColour getTurnPlayer();
 
 	void setKomi(double komi);
-
-	<T extends SujiEvent> void fireEvent(T event);
-
-	<T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler);
-
-	<T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler);
 }

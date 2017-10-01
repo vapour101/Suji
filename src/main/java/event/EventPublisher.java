@@ -17,69 +17,15 @@
 
 package event;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import javafx.event.*;
+import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+public interface EventPublisher extends EventTarget {
 
-public class EventPublisher {
+	<T extends SujiEvent> void fireEvent(T event);
 
-	private final Lock mutex = new ReentrantLock(true);
-	private Multimap<EventType, EventHandler> handlers;
-	private EventTarget target;
+	<T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler);
 
-	public EventPublisher(EventTarget owner) {
-		this.target = owner;
-
-		handlers = HashMultimap.create();
-	}
-
-	public <T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
-		mutex.lock();
-		handlers.put(eventType, eventHandler);
-		mutex.unlock();
-	}
-
-	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
-		mutex.lock();
-		handlers.remove(eventType, eventHandler);
-		mutex.unlock();
-	}
-
-	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
-		return tail.prepend(this::dispatchEvent);
-	}
-
-	private Event dispatchEvent(Event event, EventDispatchChain tail) {
-		if ( !(event instanceof SujiEvent) )
-			return null;
-
-		EventType type = event.getEventType();
-
-		while (type != SujiEvent.ANY) {
-			handleEvent(event, handlers.get(type));
-			type = type.getSuperType();
-		}
-
-		handleEvent(event, handlers.get(SujiEvent.ANY));
-		return null;
-	}
-
-	private void handleEvent(Event event, Collection<EventHandler> eventHandlers) {
-		Collection<EventHandler> handlers = new LinkedList<>();
-
-		mutex.lock();
-		handlers.addAll(eventHandlers);
-		mutex.unlock();
-
-		handlers.forEach(handler -> handler.handle(event));
-	}
-
-	public synchronized <T extends SujiEvent> void fireEvent(T event) {
-		Event.fireEvent(target, event);
-	}
+	<T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler);
 }

@@ -17,7 +17,7 @@
 
 package logic.gamehandler;
 
-import event.EventPublisher;
+import event.EventHelper;
 import event.GameEvent;
 import event.SujiEvent;
 import javafx.event.EventDispatchChain;
@@ -27,6 +27,8 @@ import logic.board.Board;
 import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
 import logic.score.BoardScorer;
+import logic.score.EventScorer;
+import logic.score.Scorer;
 import sgf.SGFWriter;
 import sgf.SimpleSGFWriter;
 import util.Coords;
@@ -42,7 +44,8 @@ public class LocalGame implements GameHandler {
 	private GameTree gameTree;
 	private int handicap;
 	private double komi;
-	private EventPublisher publisher;
+	private EventHelper publisher;
+	private Scorer scorer;
 
 	LocalGame() {
 		this(0);
@@ -52,7 +55,8 @@ public class LocalGame implements GameHandler {
 		gameTree = new ComplexGameTree();
 		this.handicap = handicap;
 		komi = 0;
-		publisher = new EventPublisher(this);
+		publisher = new EventHelper(this);
+		scorer = null;
 	}
 
 	@Override
@@ -87,6 +91,11 @@ public class LocalGame implements GameHandler {
 		this.komi = komi;
 	}
 
+	private void fireGameEvent(EventType<? extends GameEvent> type) {
+		GameEvent event = new GameEvent(this, this, type);
+		fireEvent(event);
+	}
+
 	@Override
 	public <T extends SujiEvent> void fireEvent(T event) {
 		publisher.fireEvent(event);
@@ -103,11 +112,6 @@ public class LocalGame implements GameHandler {
 		publisher.unsubscribe(eventType, eventHandler);
 	}
 
-	private void fireGameEvent(EventType<? extends GameEvent> type) {
-		GameEvent event = new GameEvent(this, this, type);
-		fireEvent(event);
-	}
-
 	@Override
 	public GameTree getGameTree() {
 		return gameTree;
@@ -119,8 +123,13 @@ public class LocalGame implements GameHandler {
 	}
 
 	@Override
-	public BoardScorer getScorer() {
-		return new BoardScorer(getBoard(), komi);
+	public Scorer getScorer() {
+		if ( scorer == null ) {
+			scorer = new BoardScorer(getBoard(), komi);
+			scorer = new EventScorer(scorer, this);
+		}
+
+		return scorer;
 	}
 
 	@Override
