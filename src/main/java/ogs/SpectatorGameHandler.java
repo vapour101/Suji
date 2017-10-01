@@ -17,6 +17,8 @@
 
 package ogs;
 
+import event.EventHelper;
+import event.GameEvent;
 import event.SujiEvent;
 import javafx.event.EventDispatchChain;
 import javafx.event.EventHandler;
@@ -37,12 +39,14 @@ public class SpectatorGameHandler implements GameHandler {
 	private StoneColour initialPlayer;
 	private GameTree gameTree;
 	private int gameId;
+	private EventHelper publisher;
 
 	public SpectatorGameHandler(int gameId) {
 		this.gameId = gameId;
 		initialPlayer = StoneColour.BLACK;
 		gameTree = new ComplexGameTree();
 		Connection.connectToGame(gameId, this::onGameData, this::onMovedata);
+		publisher = new EventHelper(this);
 	}
 
 	public void disconnect() {
@@ -69,6 +73,8 @@ public class SpectatorGameHandler implements GameHandler {
 		for (Movedata move : moveList) {
 			gameTree.stepForward(move.getMove(getTurnPlayer()));
 		}
+
+		fireGameEvent(GameEvent.MOVE);
 	}
 
 	private void onMovedata(Movedata move) {
@@ -78,6 +84,27 @@ public class SpectatorGameHandler implements GameHandler {
 		}
 
 		gameTree.stepForward(move.getMove(getTurnPlayer()));
+		fireGameEvent(GameEvent.MOVE);
+	}
+
+	private void fireGameEvent(EventType<? extends GameEvent> type) {
+		GameEvent event = new GameEvent(this, this, type);
+		fireEvent(event);
+	}
+
+	@Override
+	public <T extends SujiEvent> void fireEvent(T event) {
+		publisher.fireEvent(event);
+	}
+
+	@Override
+	public <T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+		publisher.subscribe(eventType, eventHandler);
+	}
+
+	@Override
+	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
+		publisher.unsubscribe(eventType, eventHandler);
 	}
 
 	@Override
@@ -104,23 +131,8 @@ public class SpectatorGameHandler implements GameHandler {
 	}
 
 	@Override
-	public <T extends SujiEvent> void fireEvent(T event) {
-
-	}
-
-	@Override
-	public <T extends SujiEvent> void subscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
-
-	}
-
-	@Override
-	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
-
-	}
-
-	@Override
 	public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
-		return null;
+		return publisher.buildEventDispatchChain(tail);
 	}
 
 	@Override

@@ -87,6 +87,7 @@ public class BoardController extends DockNodeController implements Initializable
 		boardPane.getChildren().add(boardCanvas);
 
 		gameDrawer = buildGameDrawer();
+		gameDrawer.draw(getGameHandler().getBoard());
 	}
 
 	Drawer buildGameDrawer() {
