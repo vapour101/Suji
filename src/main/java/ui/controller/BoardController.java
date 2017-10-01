@@ -44,7 +44,7 @@ public class BoardController extends DockNodeController implements Initializable
 	@FXML
 	VBox sideBar;
 	Canvas boardCanvas;
-	Drawer gameDrawer;
+	GameDrawer gameGameDrawer;
 
 	private GameHandler game;
 	private String fxmlLocation;
@@ -85,25 +85,25 @@ public class BoardController extends DockNodeController implements Initializable
 
 		boardPane.getChildren().add(boardCanvas);
 
-		gameDrawer = buildGameDrawer();
+		gameGameDrawer = buildGameDrawer();
 	}
 
 	GameDrawer buildGameDrawer() {
-		GameDrawer drawer = new GameDrawer(boardCanvas, getGameHandler());
+		GameDrawer gameDrawer = new GameDrawer(boardCanvas, getGameHandler());
 
 		Image blackStone = new Image("/images/black.png", false);
 		Image whiteStone = new Image("/images/white.png", false);
 
 		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
-		drawer.setStoneDrawer(stoneDrawer);
+		gameDrawer.setStoneDrawer(stoneDrawer);
 
 		Image wood = new Image("/images/wood.jpg", false);
 		Image lines = new Image("/images/grid.png", false);
 
 		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
-		drawer.setBoardDrawer(boardDrawer);
+		gameDrawer.setBoardDrawer(boardDrawer);
 
-		return drawer;
+		return gameDrawer;
 	}
 
 	GameHandler getGameHandler() {

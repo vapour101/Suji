@@ -28,7 +28,7 @@ import ui.controller.sidebar.ScorePaneController;
 import ui.controller.strategy.BoardStrategy;
 import ui.controller.strategy.GamePlay;
 import ui.controller.strategy.Scoring;
-import ui.drawer.Drawer;
+import ui.drawer.GameDrawer;
 import ui.drawer.ScoreDrawer;
 
 import java.net.URL;
@@ -79,18 +79,18 @@ public class LocalGameController extends BoardController {
 		gameMenuController.enterScoring();
 		scorePaneController.setVisible(true);
 
-		gameDrawer = buildBoardScoreDrawer();
+		gameGameDrawer = buildBoardScoreDrawer();
 		strategy = new Scoring(boardCanvas, getGameHandler(), scorePaneController);
-		gameDrawer.draw(getGameHandler().getBoard());
+		gameGameDrawer.draw(getGameHandler().getBoard());
 	}
 
-	private Drawer buildBoardScoreDrawer() {
-		return new ScoreDrawer(getGameHandler(), gameDrawer, boardScorer);
+	private GameDrawer buildBoardScoreDrawer() {
+		return new ScoreDrawer(getGameHandler(), gameGameDrawer, boardScorer);
 	}
 
 	@Override
 	void reviewStart(GameEvent event) {
-		gameDrawer = buildGameDrawer();
+		gameGameDrawer = buildGameDrawer();
 	}
 
 	private void loadScorePane() {

@@ -28,12 +28,12 @@ import util.StoneColour;
 
 import java.util.Collection;
 
-public class ScoreDrawer extends Drawer {
+public class ScoreDrawer extends GameDrawer {
 
 	private Scorer scorer;
 	private EventHandler<ScoreEvent> scoreChangeHandler = this::onScoreChange;
 
-	public ScoreDrawer(GameHandler game, Drawer clone, Scorer scorer) {
+	public ScoreDrawer(GameHandler game, GameDrawer clone, Scorer scorer) {
 		super(clone);
 		setUpScorer(scorer);
 		game.subscribe(ScoreEvent.SCORE, scoreChangeHandler);
