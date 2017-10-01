@@ -55,9 +55,4 @@ public class GamePlay implements BoardStrategy {
 	private StoneColour getTurnPlayer() {
 		return game.getTurnPlayer();
 	}
-
-	@Override
-	public void canvasExit(MouseEvent mouseEvent) {
-		//gameDrawer.setHoverStone(new DrawCoords(-1, -1), getTurnPlayer());
-	}
 }

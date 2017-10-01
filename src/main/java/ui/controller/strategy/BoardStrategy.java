@@ -22,6 +22,4 @@ import javafx.scene.input.MouseEvent;
 public interface BoardStrategy {
 
 	void canvasClicked(MouseEvent mouseEvent);
-
-	void canvasExit(MouseEvent mouseEvent);
 }

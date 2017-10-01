@@ -138,6 +138,9 @@ public class BoardController extends DockNodeController implements Initializable
 	}
 
 	void canvasExit(MouseEvent mouseEvent) {
+		DrawCoords location = new DrawCoords(-10, -10);
+		HoverEvent event = new HoverEvent(game, location, game);
+		game.fireEvent(event);
 	}
 
 	void enterScoring(GameEvent event) {

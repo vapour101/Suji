@@ -74,12 +74,6 @@ public class LocalGameController extends BoardController {
 	}
 
 	@Override
-	void canvasExit(MouseEvent mouseEvent) {
-		if ( strategy != null )
-			strategy.canvasExit(mouseEvent);
-	}
-
-	@Override
 	void enterScoring(GameEvent event) {
 		boardScorer = getGameHandler().getScorer();
 		gameMenuController.enterScoring();

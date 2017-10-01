@@ -58,9 +58,4 @@ public class Scoring implements BoardStrategy {
 				boardScorer.unmarkGroupDead(boardPos);
 		}
 	}
-
-	@Override
-	public void canvasExit(MouseEvent mouseEvent) {
-
-	}
 }
