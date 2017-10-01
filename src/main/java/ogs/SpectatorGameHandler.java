@@ -77,16 +77,6 @@ public class SpectatorGameHandler implements GameHandler {
 		fireGameEvent(GameEvent.MOVE);
 	}
 
-	private void onMovedata(Movedata move) {
-		if ( gameTree == null ) {
-			LogHelper.severe("gameTree is null");
-			return;
-		}
-
-		gameTree.stepForward(move.getMove(getTurnPlayer()));
-		fireGameEvent(GameEvent.MOVE);
-	}
-
 	private void fireGameEvent(EventType<? extends GameEvent> type) {
 		GameEvent event = new GameEvent(this, this, type);
 		fireEvent(event);
@@ -105,6 +95,16 @@ public class SpectatorGameHandler implements GameHandler {
 	@Override
 	public <T extends SujiEvent> void unsubscribe(EventType<T> eventType, EventHandler<? super T> eventHandler) {
 		publisher.unsubscribe(eventType, eventHandler);
+	}
+
+	private void onMovedata(Movedata move) {
+		if ( gameTree == null ) {
+			LogHelper.severe("gameTree is null");
+			return;
+		}
+
+		gameTree.stepForward(move.getMove(getTurnPlayer()));
+		fireGameEvent(GameEvent.MOVE);
 	}
 
 	@Override

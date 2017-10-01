@@ -133,7 +133,7 @@ public class GameListController extends DockNodeController implements Initializa
 
 	private void spectateGame(GameList.Game game) {
 		SpectatorGameHandler handler = new SpectatorGameHandler(game.getId());
-		BoardController controller = new BoardController(handler, "/fxml/localGame.fxml");
+		BoardController controller = new BoardController(handler, "/fxml/localGame.fxml", false);
 
 		PlayerPaneController playerInfo = new PlayerPaneController(game);
 		controller.addToSideBar(playerInfo.getRoot());

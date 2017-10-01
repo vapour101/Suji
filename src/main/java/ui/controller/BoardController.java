@@ -49,14 +49,18 @@ public class BoardController extends DockNodeController implements Initializable
 
 	private GameHandler game;
 	private String fxmlLocation;
-
+	private boolean interactive;
 	private Queue<Node> sideBarItems;
 
-
 	BoardController(GameHandler gameHandler, String resourcePath) {
+		this(gameHandler, resourcePath, true);
+	}
+
+	BoardController(GameHandler gameHandler, String resourcePath, boolean interactive) {
 		game = gameHandler;
 		fxmlLocation = resourcePath;
 		sideBarItems = new ArrayDeque<>();
+		this.interactive = interactive;
 	}
 
 	public final void addToSideBar(Node node) {
@@ -80,9 +84,12 @@ public class BoardController extends DockNodeController implements Initializable
 
 	private void constructCanvas() {
 		boardCanvas = new Canvas();
-		boardCanvas.setOnMouseMoved(this::canvasHover);
-		boardCanvas.setOnMouseClicked(this::canvasClicked);
-		boardCanvas.setOnMouseExited(this::canvasExit);
+
+		if ( interactive ) {
+			boardCanvas.setOnMouseMoved(this::canvasHover);
+			boardCanvas.setOnMouseClicked(this::canvasClicked);
+			boardCanvas.setOnMouseExited(this::canvasExit);
+		}
 
 		boardPane.getChildren().add(boardCanvas);
 
