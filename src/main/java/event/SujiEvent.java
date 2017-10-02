@@ -23,7 +23,7 @@ import javafx.event.EventType;
 
 public class SujiEvent extends Event {
 
-	public static final EventType<SujiEvent> ANY = new EventType<SujiEvent>("SUJI");
+	public static final EventType<SujiEvent> ANY = new EventType<SujiEvent>("SUJI EVENT");
 
 	private EventPublisher publisher;
 

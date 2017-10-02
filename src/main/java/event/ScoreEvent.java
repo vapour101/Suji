@@ -25,14 +25,18 @@ import util.StoneColour;
 
 public class ScoreEvent extends SujiEvent {
 
-	public static final EventType<ScoreEvent> SCORE = new EventType<ScoreEvent>(ANY, "SCORE");
-	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(SCORE, "DONE");
+	public static final EventType<ScoreEvent> SCORE = new EventType<ScoreEvent>(ANY, "SCORING");
+	public static final EventType<ScoreEvent> PRESTART = new EventType<>(SCORE, "SCORING PRESTART");
+	public static final EventType<ScoreEvent> START = new EventType<>(SCORE, "START SCORING");
+	public static final EventType<ScoreEvent> DONE = new EventType<ScoreEvent>(SCORE, "DONE SCORING");
 
 	private Scorer scorer;
+	private GameHandler handler;
 
 	public ScoreEvent(GameHandler game, EventType<? extends ScoreEvent> eventType) {
 		this(game, game, eventType);
 		scorer = game.getScorer();
+		handler = game;
 	}
 
 	private ScoreEvent(GameHandler source, EventTarget eventTarget, EventType<? extends ScoreEvent> eventType) {
@@ -45,5 +49,9 @@ public class ScoreEvent extends SujiEvent {
 
 	public Scorer getScorer() {
 		return scorer;
+	}
+
+	public GameHandler getGameHandler() {
+		return handler;
 	}
 }

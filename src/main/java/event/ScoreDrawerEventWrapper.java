@@ -25,11 +25,13 @@ import util.LogHelper;
 public class ScoreDrawerEventWrapper extends DrawerDecorator {
 
 	private EventHandler<ScoreEvent> scoreChangeHandler = this::onScoreChange;
+	private EventHandler<ScoreEvent> scoreStartHandler = this::onScoreStart;
 	private EventHandler<ScoreEvent> scoreDoneHandler = this::onDoneScoring;
 
 	public ScoreDrawerEventWrapper(Drawer drawer, EventPublisher publisher) {
 		super(drawer);
 
+		publisher.subscribe(ScoreEvent.START, scoreStartHandler);
 		publisher.subscribe(ScoreEvent.SCORE, scoreChangeHandler);
 		publisher.subscribe(ScoreEvent.DONE, scoreDoneHandler);
 	}
@@ -38,12 +40,18 @@ public class ScoreDrawerEventWrapper extends DrawerDecorator {
 		redraw();
 	}
 
+	private void onScoreStart(ScoreEvent event) {
+		draw(event.getGameHandler().getBoard());
+	}
+
 	private void onDoneScoring(ScoreEvent event) {
 		event.getPublisher().unsubscribe(ScoreEvent.SCORE, scoreChangeHandler);
 		event.getPublisher().unsubscribe(ScoreEvent.DONE, scoreDoneHandler);
+		event.getPublisher().unsubscribe(ScoreEvent.START, scoreStartHandler);
 
 		scoreChangeHandler = null;
 		scoreDoneHandler = null;
+		scoreStartHandler = null;
 	}
 
 	@Override

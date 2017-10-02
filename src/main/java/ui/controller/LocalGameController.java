@@ -20,6 +20,7 @@ package ui.controller;
 import event.GameEvent;
 import event.ScoreDrawerEventWrapper;
 import event.ScoreEvent;
+import event.SujiEvent;
 import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
@@ -57,6 +58,10 @@ public class LocalGameController extends BoardController {
 	}
 
 	private void setupEventHandlers() {
+		getGameHandler().subscribe(GameEvent.REVIEWSTART, this::onReviewStart);
+		getGameHandler().subscribe(GameEvent.GAMEOVER, this::onGameEnd);
+		getGameHandler().subscribe(ScoreEvent.PRESTART, this::onScoringPrestart);
+		getGameHandler().subscribe(ScoreEvent.START, this::onScoringStart);
 		getGameHandler().subscribe(ScoreEvent.DONE, this::doneScoring);
 	}
 
@@ -72,27 +77,6 @@ public class LocalGameController extends BoardController {
 	void canvasClicked(MouseEvent mouseEvent) {
 		if ( strategy != null )
 			strategy.canvasClicked(mouseEvent);
-	}
-
-	@Override
-	void enterScoring(GameEvent event) {
-		boardScorer = getGameHandler().getScorer();
-		gameMenuController.enterScoring();
-		scorePaneController.setVisible(true);
-
-		gameDrawer = buildBoardScoreDrawer();
-		strategy = new Scoring(boardCanvas, getGameHandler(), scorePaneController);
-		gameDrawer.draw(getGameHandler().getBoard());
-	}
-
-	private Drawer buildBoardScoreDrawer() {
-		Drawer drawer = new ScoreDrawer(gameDrawer, boardScorer);
-		return new ScoreDrawerEventWrapper(drawer, getGameHandler());
-	}
-
-	@Override
-	void reviewStart(GameEvent event) {
-		gameDrawer = buildGameDrawer();
 	}
 
 	private void loadScorePane() {
@@ -112,6 +96,34 @@ public class LocalGameController extends BoardController {
 		reviewPaneController = new ReviewPaneController(getGameHandler());
 
 		sideBar.getChildren().add(reviewPaneController.getRoot());
+	}
+
+	private void onReviewStart(GameEvent event) {
+		gameDrawer = buildGameDrawer();
+	}
+
+	private void onGameEnd(GameEvent event) {
+		SujiEvent scorePrestart = new ScoreEvent(getGameHandler(), ScoreEvent.PRESTART);
+		SujiEvent scoreStart = new ScoreEvent(getGameHandler(), ScoreEvent.START);
+
+		getGameHandler().fireEvent(scorePrestart);
+		getGameHandler().fireEvent(scoreStart);
+	}
+
+	private void onScoringPrestart(ScoreEvent event) {
+		boardScorer = event.getScorer();
+		gameDrawer = buildBoardScoreDrawer();
+		strategy = new Scoring(boardCanvas, getGameHandler(), scorePaneController);
+	}
+
+	private Drawer buildBoardScoreDrawer() {
+		Drawer drawer = new ScoreDrawer(gameDrawer, boardScorer);
+		return new ScoreDrawerEventWrapper(drawer, getGameHandler());
+	}
+
+	private void onScoringStart(ScoreEvent event) {
+		gameMenuController.enterScoring();
+		scorePaneController.setVisible(true);
 	}
 
 	private void doneScoring(ScoreEvent event) {
