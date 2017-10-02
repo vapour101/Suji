@@ -17,6 +17,7 @@
 
 package ui.controller;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -35,9 +36,12 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPos;
 import ui.Main;
 import ui.controller.sidebar.PlayerPaneController;
+import util.LogHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameListController extends DockNodeController implements Initializable {
 
@@ -48,6 +52,19 @@ public class GameListController extends DockNodeController implements Initializa
 	private Button corrButton;
 	@FXML
 	private Button liveButton;
+
+	private Timer timer;
+	private TimerTask requestTask = new TimerTask() {
+		@Override
+		public void run() {
+			if ( canBeSeen() )
+				requestGameList();
+		}
+	};
+
+	private boolean canBeSeen() {
+		return !(getDockNode().isClosed() || getDockNode().isMinimized());
+	}
 
 	private void onSwitch(ActionEvent event) {
 		live = !live;
@@ -76,7 +93,6 @@ public class GameListController extends DockNodeController implements Initializa
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		buildTable();
-		requestGameList();
 		liveButton.setOnAction(this::onSwitch);
 		corrButton.setOnAction(this::onSwitch);
 	}
@@ -150,6 +166,21 @@ public class GameListController extends DockNodeController implements Initializa
 		});
 		node.setTitle(game.getGameName());
 		node.dock(Main.instance.dockPane, DockPos.CENTER);
+	}
+
+	@Override
+	protected void dockNodeInitialised() {
+		timer = new Timer();
+		LogHelper.finest("Timer initialised");
+		timer.scheduleAtFixedRate(requestTask, 0, 5 * 1000);
+		getDockNode().closedProperty().addListener(this::onClose);
+	}
+
+	private void onClose(Observable value) {
+		if ( getDockNode().isClosed() ) {
+			LogHelper.finest("Killing timer");
+			timer.cancel();
+		}
 	}
 
 	private void populate(GameList gameList) {
