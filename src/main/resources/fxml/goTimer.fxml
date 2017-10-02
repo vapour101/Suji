@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.SplitPane?>
+<fx:root xmlns:fx="http://javafx.com/fxml" type="javafx.scene.control.SplitPane" prefWidth="200" dividerPositions="0.8">
+    <Label prefWidth="10000" fx:id="label"/>
+    <ProgressIndicator prefWidth="10000" fx:id="indicator"/>
+</fx:root>
