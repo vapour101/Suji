@@ -17,108 +17,104 @@
 
 package ui.drawer;
 
-import event.EventBus;
-import event.GameEvent;
 import javafx.beans.Observable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import logic.gamehandler.GameHandler;
+import logic.board.Board;
 import util.*;
 
 import java.util.Collection;
 
 import static util.Move.play;
 
-public class GameDrawer {
+public class GameDrawer implements Drawer {
 
+	private Move hoverStone;
+	private Board lastState;
 	private Canvas canvas;
-	private GameHandler game;
 	private StoneDrawer stoneDrawer;
 	private BoardDrawer boardDrawer;
-	private Move hoverStone;
 
 
-	GameDrawer(GameDrawer clone) {
-		this(clone.canvas, clone.game);
+	GameDrawer(Drawer clone) {
+		this(clone.getCanvas());
 
-		setStoneDrawer(clone.stoneDrawer);
-		setBoardDrawer(clone.boardDrawer);
+		setStoneDrawer(clone.getStoneDrawer());
+		setBoardDrawer(clone.getBoardDrawer());
 	}
 
-	public GameDrawer(Canvas canvas, GameHandler game) {
+	public GameDrawer(Canvas canvas) {
 		this.canvas = canvas;
-		this.game = game;
-
-		hoverStone = null;
+		lastState = new Board();
 
 		setStoneDrawer(new SimpleStoneDrawer(canvas));
 		setBoardDrawer(new SimpleBoardDrawer(canvas));
 
-		EventBus.addEventHandler(GameEvent.ANY, this::onGameUpdate);
 		canvas.widthProperty().addListener(this::onCanvasResize);
 		canvas.heightProperty().addListener(this::onCanvasResize);
+		hoverStone = null;
 	}
 
+	@Override
+	public BoardDrawer getBoardDrawer() {
+		return boardDrawer;
+	}
+
+	@Override
 	public void setBoardDrawer(BoardDrawer boardDrawer) {
 		this.boardDrawer = boardDrawer;
 	}
 
-	StoneDrawer getStoneDrawer() {
+	@Override
+	public StoneDrawer getStoneDrawer() {
 		return stoneDrawer;
 	}
 
+	@Override
 	public void setStoneDrawer(StoneDrawer stoneDrawer) {
 		this.stoneDrawer = stoneDrawer;
 	}
 
-	private void onCanvasResize(Observable observable) {
-		draw();
-	}
-
-	public void draw() {
+	@Override
+	public void draw(Board board) {
 		drawBackground();
 		boardDrawer.draw();
-		drawStones();
+		drawStones(board);
+		lastState = board;
 	}
 
-	private void drawStones() {
+	private void drawStones(Board board) {
 		for (StoneColour colour : StoneColour.values())
-			drawStones(colour);
+			drawStones(board, colour);
 	}
 
-	void drawStones(StoneColour colour) {
-		Collection<Coords> stones = getStones(colour);
-		stoneDrawer.drawStones(stones, colour);
-	}
+	void drawStones(Board board, StoneColour colour) {
+		StoneDrawer drawer = getStoneDrawer();
+		Collection<Coords> stones = board.getStones(colour);
 
-	Collection<Coords> getStones(StoneColour colour) {
-		return game.getStones(colour);
+		drawer.drawStones(stones, colour);
 	}
 
 	private void drawBackground() {
-		GraphicsContext context = getGraphicsContext();
+		GraphicsContext context = getCanvas().getGraphicsContext2D();
 
 		context.setFill(Color.GREEN);
 		context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
-	private GraphicsContext getGraphicsContext() {
-		return canvas.getGraphicsContext2D();
+	@Override
+	public void redraw() {
+		draw(lastState);
 	}
 
-	private void onGameUpdate(GameEvent event) {
-		if ( event.getHandler() != game )
-			return;
-		draw();
-	}
-
+	@Override
 	public void setHoverStone(DrawCoords position, StoneColour colour) {
 		CoordProjector projector = getProjector();
 
 		if ( !projector.isWithinBounds(position) ) {
 			hoverStone = null;
-			draw();
+			draw(lastState);
 			return;
 		}
 
@@ -129,14 +125,23 @@ public class GameDrawer {
 		if ( hoverStone == move )
 			return;
 
-		if ( game.isLegalMove(move) ) {
-			draw();
-			stoneDrawer.drawGhostStone(pos, colour);
+		if ( !lastState.isOccupied(move.getPosition()) ) {
+			draw(lastState);
+			getStoneDrawer().drawGhostStone(pos, colour);
 			hoverStone = move;
 		}
 	}
 
 	private CoordProjector getProjector() {
 		return DimensionHelper.getProjector(canvas);
+	}
+
+	@Override
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
+	private void onCanvasResize(Observable observable) {
+		redraw();
 	}
 }

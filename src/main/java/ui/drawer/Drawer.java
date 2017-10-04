@@ -15,26 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package ui.drawer;
 
-import event.EventPublisher;
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import logic.score.ScoreProvider;
-import sgf.SGFProvider;
+import javafx.scene.canvas.Canvas;
+import logic.board.Board;
+import util.DrawCoords;
 import util.StoneColour;
 
-/**
- * Common interface for any class that tracks a game of Go from
- * start to finish.
- */
-public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
+public interface Drawer {
 
-	void pass();
+	BoardDrawer getBoardDrawer();
 
-	void undo();
+	void setBoardDrawer(BoardDrawer boardDrawer);
 
-	StoneColour getTurnPlayer();
+	StoneDrawer getStoneDrawer();
 
-	void setKomi(double komi);
+	void setStoneDrawer(StoneDrawer stoneDrawer);
+
+	void draw(Board board);
+
+	void redraw();
+
+	void setHoverStone(DrawCoords position, StoneColour colour);
+
+	Canvas getCanvas();
 }

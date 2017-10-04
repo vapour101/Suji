@@ -15,26 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package ui.controller.strategy;
 
-import event.EventPublisher;
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import logic.score.ScoreProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+import javafx.scene.input.MouseEvent;
 
-/**
- * Common interface for any class that tracks a game of Go from
- * start to finish.
- */
-public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
+public interface BoardStrategy {
 
-	void pass();
-
-	void undo();
-
-	StoneColour getTurnPlayer();
-
-	void setKomi(double komi);
+	void canvasClicked(MouseEvent mouseEvent);
 }

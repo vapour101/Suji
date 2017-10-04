@@ -15,26 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package logic.gamehandler;
+package event;
 
-import event.EventPublisher;
-import logic.board.BoardProvider;
-import logic.gametree.GameTreeProvider;
-import logic.score.ScoreProvider;
-import sgf.SGFProvider;
-import util.StoneColour;
+import javafx.event.Event;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
 
-/**
- * Common interface for any class that tracks a game of Go from
- * start to finish.
- */
-public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProvider, SGFProvider, ScoreProvider {
+public class SujiEvent extends Event {
 
-	void pass();
+	public static final EventType<SujiEvent> ANY = new EventType<SujiEvent>("SUJI");
 
-	void undo();
+	private EventPublisher publisher;
 
-	StoneColour getTurnPlayer();
+	public SujiEvent(EventPublisher source, EventTarget target, EventType<? extends SujiEvent> eventType) {
+		super(source, target, eventType);
+		publisher = source;
+	}
 
-	void setKomi(double komi);
+	public EventPublisher getPublisher() {
+		return publisher;
+	}
 }
