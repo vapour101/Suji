@@ -40,6 +40,19 @@ jfx {
     mainClass = 'ui.Main'
 }
 
+generateGrammarSource {
+    arguments += ["-package", "sgf"]
+
+    doLast {
+        copy {
+            from 'build/generated-src/antlr/main/'
+            include '*.*'
+            into 'build/generated-src/antlr/main/sgf'
+        }
+        project.delete fileTree('build/generated-src/antlr/main').include('*.*')
+    }
+}
+
 cobertura {
     coverageFormats = ['html', 'xml']
     coverageExcludes = ['.*instrumented_classes.ui.*']
