@@ -1,7 +1,8 @@
 package sgf;
 
 public class SGFReader {
-	public SGFReader (String sgfSting) {
+
+	public SGFReader(String sgfSting) {
 
 	}
 }

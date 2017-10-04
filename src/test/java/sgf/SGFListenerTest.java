@@ -1,6 +1,8 @@
 package sgf;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,9 +10,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class SGFListenerTest {
 
@@ -38,16 +39,6 @@ public class SGFListenerTest {
 		listener = new SGFListener();
 	}
 
-	private void loadFile(String filename) throws IOException {
-		ANTLRInputStream inputStream = new ANTLRFileStream(filename);
-		sgfLexer.setInputStream(inputStream);
-	}
-
-	private void loadString(String string) {
-		ANTLRInputStream inputStream = new ANTLRInputStream(string);
-		sgfLexer.setInputStream(inputStream);
-	}
-
 	@Test
 	public void sgfRecognition() throws IOException {
 		loadFile(testSGF);
@@ -58,12 +49,16 @@ public class SGFListenerTest {
 		assertThat(errorListener.getSymbol(), is(nullValue()));
 	}
 
+	private void loadFile(String filename) throws IOException {
+		ANTLRInputStream inputStream = new ANTLRFileStream(filename);
+		sgfLexer.setInputStream(inputStream);
+	}
+
 	@Test
 	public void emptyIsError() {
 		SGFParser.CollectionContext context = parser.collection();
 		listener.enterCollection(context);
-
-		assertThat(errorListener.getSymbol(), is(not(nullValue())));
+		
 		assertThat(errorListener.getSymbol(), is("<EOF>"));
 	}
 
@@ -77,4 +72,28 @@ public class SGFListenerTest {
 		assertThat(errorListener.getSymbol(), is(nullValue()));
 	}
 
+	private void loadString(String string) {
+		ANTLRInputStream inputStream = new ANTLRInputStream(string);
+		sgfLexer.setInputStream(inputStream);
+	}
+
+	@Test
+	public void gametreeNeedsNodes() {
+		loadString("()");
+
+		SGFParser.CollectionContext context = parser.collection();
+		listener.enterCollection(context);
+
+		assertThat(errorListener.getSymbol(), is(")"));
+	}
+
+	@Test
+	public void ignoreInitialJunk() {
+		loadString("adgt56srse;))))(;)");
+
+		SGFParser.CollectionContext context = parser.collection();
+		listener.enterCollection(context);
+
+		assertThat(errorListener.getSymbol(), is(nullValue()));
+	}
 }
