@@ -34,6 +34,8 @@ public interface GameHandler extends BoardProvider, EventPublisher, GameTreeProv
 
 	void undo();
 
+	void texture();
+
 	StoneColour getTurnPlayer();
 
 	void setKomi(double komi);

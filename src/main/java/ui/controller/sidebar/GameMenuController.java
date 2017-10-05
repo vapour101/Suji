@@ -39,6 +39,9 @@ public class GameMenuController extends SelfBuildingController implements Initia
 	private Button undoButton;
 	@FXML
 	private Button passButton;
+	@FXML
+	private Button textureButton;
+
 
 	private GameHandler game;
 
@@ -66,6 +69,7 @@ public class GameMenuController extends SelfBuildingController implements Initia
 		undoButton.setOnAction(this::undo);
 		saveButton.setOnAction(this::save);
 		reviewButton.setOnAction(this::startReview);
+		textureButton.setOnAction(this::texture);
 		saveButton.setVisible(false);
 		reviewButton.setVisible(false);
 	}
@@ -111,4 +115,6 @@ public class GameMenuController extends SelfBuildingController implements Initia
 	private void undo(ActionEvent event) {
 		game.undo();
 	}
+
+	private  void texture(ActionEvent event) { game.texture();}
 }

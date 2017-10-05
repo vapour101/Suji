@@ -91,6 +91,9 @@ public class LocalGame implements GameHandler {
 		this.komi = komi;
 	}
 
+	@Override
+	public void texture(){}
+
 	private void fireGameEvent(EventType<? extends GameEvent> type) {
 		GameEvent event = new GameEvent(this, this, type);
 		fireEvent(event);

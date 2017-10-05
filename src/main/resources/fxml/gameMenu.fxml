@@ -22,4 +22,9 @@
         <Button fx:id="reviewButton" mnemonicParsing="false" text="Review" AnchorPane.leftAnchor="0"
                 AnchorPane.rightAnchor="0"/>
     </AnchorPane>
+    <AnchorPane>
+        <Button fx:id="textureButton" mnemonicParsing="false" text="Texture" AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0"/>
+    </AnchorPane>
+
 </VBox>

@@ -113,6 +113,9 @@ public class SpectatorGameHandler implements GameHandler {
 	}
 
 	@Override
+	public void texture(){}
+
+	@Override
 	public void undo() {
 
 	}
