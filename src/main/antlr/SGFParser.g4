@@ -8,20 +8,9 @@ sequence		: node+;
 node			: ';' property*;
 
 property		: identifier value+;
-identifier		: UPPERCASE+;
-value			: '[' vtypecompose ']';
+identifier		: IDENTIFIER;
+value			: '[' valueornull ']';
 
-vtypecompose	:
-				| numbertype
-				| colortype
-				| texttype
-				| pointtype
-				| compose;
-numbertype		: NUMBER
-				| REAL
-				| DOUBLE
-				;
-colortype		: COLOR;
-pointtype		: POINT;
-texttype		: TEXT;
-compose			: pointtype ':' pointtype;
+valueornull 	:                      #novalue
+				| VALUE                #hasvalue
+                ;

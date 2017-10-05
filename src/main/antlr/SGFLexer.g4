@@ -1,27 +1,19 @@
 lexer grammar SGFLexer;
 
-fragment DIGIT	: [0-9];
-fragment LETTER : [a-zA-Z];
+fragment DIGIT      : [0-9];
+fragment LETTER     : [a-zA-Z];
+fragment UPPERCASE  : [A-Z];
 
-JUNK        	: ~('(')* -> skip, pushMode(CONTENT);
+JUNK                : ~('(')* -> skip, pushMode(CONTENTMODE);
 
-mode CONTENT;
-LPAREN    		: '(';
-RPAREN			: ')';
-LBRACKET		: '[' -> pushMode(VALUE);
+mode CONTENTMODE;
+LPAREN    		    : '(';
+RPAREN			    : ')';
+LBRACKET            : '[' -> pushMode(VALUEMODE);
+NODESTART           : ';';
+IDENTIFIER          : UPPERCASE+;
+WS                  : [ \n\r\t] -> skip;
 
-NODESTART		: ';';
-UPPERCASE		: [A-Z];
-WS				: [ \n\r\t] -> skip;
-
-mode VALUE;
-RBRACKET		: ']' -> popMode;
-SEPARATOR		: ':';
-
-DOUBLE			: '1' | '2';
-NUMBER			: ('+'|'-')? DIGIT+;
-REAL			: NUMBER ('.' DIGIT+)?;
-COLOR			: 'B' | 'W';
-POINT			: LETTER LETTER;
-
-TEXT			: (~(']') | '\\]' | '\\:')*;
+mode VALUEMODE;
+RBRACKET            : ']' -> popMode;
+VALUE               : (~(']') | '\\]')+;
