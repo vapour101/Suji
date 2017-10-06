@@ -1,6 +1,5 @@
 package sgf;
 
-import logic.gametree.ComplexGameTree;
 import logic.gametree.GameTree;
 import logic.gametree.GameTreeBuilder;
 import logic.gametree.GameTreeProvider;
@@ -17,9 +16,8 @@ public class SGFReader implements GameTreeProvider {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		SGFParser parser = new SGFParser(tokens);
 
-		builder = ComplexGameTree.getBuilder();
 		SGFVisitor visitor = new SGFVisitor();
-		visitor.visitCollection(parser.collection());
+		builder = visitor.visitCollection(parser.collection());
 	}
 
 	@Override

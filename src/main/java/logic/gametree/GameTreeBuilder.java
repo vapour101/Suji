@@ -1,6 +1,6 @@
 package logic.gametree;
 
-import java.util.Collection;
+import java.util.Vector;
 
 public interface GameTreeBuilder {
 
@@ -18,8 +18,22 @@ public interface GameTreeBuilder {
 
 	class GameTreeProperty {
 
-		public static GameTreeProperty getSGFProperty(String identifier, Collection<String> values) {
-			return new GameTreeProperty();
+		private String identifier;
+		private Vector<String> values;
+
+		public static GameTreeProperty getSGFProperty(String identifier, Vector<String> values) {
+			GameTreeProperty result = new GameTreeProperty();
+			result.identifier = identifier;
+			result.values = values;
+			return result;
+		}
+
+		public String getIdentifier() {
+			return identifier;
+		}
+
+		public Vector<String> getValues() {
+			return values;
 		}
 	}
 }

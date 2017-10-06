@@ -5,8 +5,7 @@ import logic.gametree.GameTreeBuilder;
 import logic.gametree.GameTreeBuilder.GameTreeProperty;
 import sgf.SGFParser.*;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Vector;
 
 public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 
@@ -70,7 +69,7 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 			throw new IllegalStateException("Builder has not been set.");
 
 		String identifier = ctx.identifier().IDENTIFIER().getSymbol().getText();
-		Collection<String> values = new LinkedList<>();
+		Vector<String> values = new Vector<>();
 		StringVisitor valueVisitor = new StringVisitor();
 
 		for (ValueContext value : ctx.value()) {
@@ -85,6 +84,11 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 	}
 
 	private class StringVisitor extends SGFParserBaseVisitor<String> {
+
+		@Override
+		public String visitValue(ValueContext ctx) {
+			return visit(ctx.valueornull());
+		}
 
 		@Override
 		public String visitNovalue(NovalueContext ctx) {
