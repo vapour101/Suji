@@ -22,7 +22,13 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 
 	@Override
 	public GameTreeBuilder visitGametree(GametreeContext ctx) {
-		GameTreeBuilder result = visit(ctx.sequence());
+		GameTreeBuilder result = null;
+
+		if ( ctx.sequence() != null )
+			result = visit(ctx.sequence());
+		else
+			result = ComplexGameTree.getBuilder();
+
 		result.gotoRoot();
 
 		for (GametreeContext tree : ctx.gametree()) {

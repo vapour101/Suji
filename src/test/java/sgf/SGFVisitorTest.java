@@ -13,14 +13,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-public class SGFListenerTest {
+public class SGFVisitorTest {
 
-	private static final String testSGF = SGFListenerTest.class.getResource("/ff4_ex.sgf").getPath();
+	private static final String testSGF = SGFVisitorTest.class.getResource("/ff4_ex.sgf").getPath();
 
 	private SGFLexer sgfLexer;
 
 	private SGFParser parser;
-	private SGFListener listener;
+	private SGFVisitor visitor;
 	private SGFErrorListener errorListener;
 
 	@Before
@@ -36,7 +36,7 @@ public class SGFListenerTest {
 		parser.removeErrorListeners();
 		parser.addErrorListener(errorListener);
 
-		listener = new SGFListener();
+		visitor = new SGFVisitor();
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class SGFListenerTest {
 		loadFile(testSGF);
 
 		SGFParser.CollectionContext context = parser.collection();
-		listener.enterCollection(context);
+		visitor.visitCollection(context);
 
 		assertThat(errorListener.getSymbol(), is(nullValue()));
 	}
@@ -57,8 +57,8 @@ public class SGFListenerTest {
 	@Test
 	public void emptyIsError() {
 		SGFParser.CollectionContext context = parser.collection();
-		listener.enterCollection(context);
-		
+		visitor.visitCollection(context);
+
 		assertThat(errorListener.getSymbol(), is("<EOF>"));
 	}
 
@@ -67,7 +67,7 @@ public class SGFListenerTest {
 		loadString("(;)");
 
 		SGFParser.CollectionContext context = parser.collection();
-		listener.enterCollection(context);
+		visitor.visitCollection(context);
 
 		assertThat(errorListener.getSymbol(), is(nullValue()));
 	}
@@ -82,7 +82,7 @@ public class SGFListenerTest {
 		loadString("()");
 
 		SGFParser.CollectionContext context = parser.collection();
-		listener.enterCollection(context);
+		visitor.visitCollection(context);
 
 		assertThat(errorListener.getSymbol(), is(")"));
 	}
@@ -92,7 +92,7 @@ public class SGFListenerTest {
 		loadString("adgt56srse;))))(;)");
 
 		SGFParser.CollectionContext context = parser.collection();
-		listener.enterCollection(context);
+		visitor.visitCollection(context);
 
 		assertThat(errorListener.getSymbol(), is(nullValue()));
 	}
