@@ -60,7 +60,12 @@ public class ComplexGameTree implements GameTree {
 
 		@Override
 		public GameTree build() {
-			return new ComplexGameTree(root);
+			GameTree result = new ComplexGameTree(root);
+
+			while (result.getNumChildren() > 0)
+				result.stepForward(0);
+
+			return result;
 		}
 
 		@Override

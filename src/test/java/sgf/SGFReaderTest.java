@@ -1,6 +1,7 @@
 package sgf;
 
 import logic.board.Board;
+import logic.score.BoardScorerTest;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -17,12 +18,21 @@ import static util.StoneColour.BLACK;
 public class SGFReaderTest {
 
 	private static String simpleSGF = "(;FF[4]GM[1]SZ[19];B[aa])";
+	private static String complexSGF = SGFReaderTest.class.getResource("/tb4.sgf").getPath();
 
 	@Test
-	public void readSGF() {
+	public void readSimpleSGF() {
 		SGFReader reader = new SGFReader(simpleSGF);
 		Board board = new Board();
 		board.playStone(play(getCoords("A1"), BLACK));
+
+		assertThat(reader.getGameTree().getPosition(), is(board));
+	}
+
+	@Test
+	public void readComplexSGF() {
+		SGFReader reader = new SGFReader(loadFile(complexSGF));
+		Board board = BoardScorerTest.buildTestBoard(BoardScorerTest.testBoard4, 3);
 
 		assertThat(reader.getGameTree().getPosition(), is(board));
 	}
