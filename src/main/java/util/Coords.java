@@ -66,7 +66,7 @@ public class Coords {
 			throw new IllegalArgumentException("String: '" + coords + "' is not recognizable as SGF coordinates.");
 
 		int x = coords.charAt(0) - 'a' + 1;
-		int y = coords.charAt(0) - 'a' + 1;
+		int y = coords.charAt(1) - 'a' + 1;
 
 		return getCoords(x, y);
 	}

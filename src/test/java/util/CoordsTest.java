@@ -167,5 +167,6 @@ public class CoordsTest {
 
 		assertThat(fromSGFString("aa"), is(getCoords("A1")));
 		assertThat(fromSGFString("ss"), is(getCoords("T19")));
+		assertThat(fromSGFString("as"), is(getCoords("A19")));
 	}
 }
