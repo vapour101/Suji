@@ -35,9 +35,6 @@ public class ComplexGameTree implements GameTree {
 
 	public static GameTreeBuilder getBuilder() {
 		return new Builder();
-	}	@Override
-	public boolean isRoot() {
-		return current == root;
 	}
 
 	private static class Builder implements GameTreeBuilder {
@@ -93,7 +90,15 @@ public class ComplexGameTree implements GameTree {
 		public void appendProperty(GameTreeProperty property) {
 
 		}
-	}	@Override
+	}
+
+	@Override
+	public boolean isRoot() {
+		return current == root;
+	}
+
+
+	@Override
 	public int getNumChildren() {
 		return current.getChildren().size();
 	}
@@ -193,8 +198,4 @@ public class ComplexGameTree implements GameTree {
 
 		return getPositionAt(current.getParent());
 	}
-
-
-
-
 }
