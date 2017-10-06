@@ -69,6 +69,7 @@ public class EventHelper {
 		return null;
 	}
 
+	@SuppressWarnings ("unchecked")
 	private void handleEvent(Event event, Collection<EventHandler> eventHandlers) {
 		Collection<EventHandler> handlers = new LinkedList<>();
 
