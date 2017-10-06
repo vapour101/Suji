@@ -41,7 +41,7 @@ jfx {
 }
 
 generateGrammarSource {
-    arguments += ["-package", "sgf"]
+    arguments += ["-package", "sgf", "-visitor"]
 
     doLast {
         copy {

@@ -139,4 +139,63 @@ public class ComplexGameTree implements GameTree {
 
 		return getPositionAt(current.getParent());
 	}
+
+	public static GameTreeBuilder getBuilder() {
+		return new Builder();
+	}
+
+	private static class Builder implements GameTreeBuilder {
+
+		private TreeNode root;
+		private TreeNode current;
+
+		private Builder() {
+			root = null;
+			current = null;
+		}
+
+		@Override
+		public GameTree build() {
+			return null;
+		}
+
+		@Override
+		public void gotoRoot() {
+			current = root;
+		}
+
+		@Override
+		public TreeNode getRoot() {
+			return root;
+		}
+
+		@Override
+		public void addVariation(GameTreeBuilder subtree) {
+			if ( root == null ) {
+				root = subtree.getRoot();
+				current = root;
+				return;
+			}
+
+			current.addChild(subtree.getRoot());
+		}
+
+		@Override
+		public void appendNode() {
+			if ( root == null ) {
+				root = new TreeNode();
+				current = root;
+				return;
+			}
+
+			TreeNode node = new TreeNode();
+			current.addChild(node);
+			current = node;
+		}
+
+		@Override
+		public void appendProperty(GameTreeProperty property) {
+
+		}
+	}
 }
