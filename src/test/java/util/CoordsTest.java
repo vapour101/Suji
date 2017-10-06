@@ -23,6 +23,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static util.Coords.fromSGFString;
 import static util.Coords.getCoords;
 
 public class CoordsTest {
@@ -161,7 +162,10 @@ public class CoordsTest {
 
 	@Test
 	public void sgfString() {
-		assertThat(getCoords("A1").sgfString(), is("aa"));
-		assertThat(getCoords("T19").sgfString(), is("ss"));
+		assertThat(getCoords("A1").toSGFString(), is("aa"));
+		assertThat(getCoords("T19").toSGFString(), is("ss"));
+
+		assertThat(fromSGFString("aa"), is(getCoords("A1")));
+		assertThat(fromSGFString("ss"), is(getCoords("T19")));
 	}
 }

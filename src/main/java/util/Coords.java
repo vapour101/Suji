@@ -61,6 +61,16 @@ public class Coords {
 		return coordsPool.get(key);
 	}
 
+	public static Coords fromSGFString(String coords) {
+		if ( !coords.matches("[a-s][a-s]") )
+			throw new IllegalArgumentException("String: '" + coords + "' is not recognizable as SGF coordinates.");
+
+		int x = coords.charAt(0) - 'a' + 1;
+		int y = coords.charAt(0) - 'a' + 1;
+
+		return getCoords(x, y);
+	}
+
 	public Set<Coords> getNeighbours() {
 		HashSet<Coords> neighbours = new HashSet<>();
 
@@ -132,7 +142,7 @@ public class Coords {
 		return result;
 	}
 
-	public String sgfString() {
+	public String toSGFString() {
 		char x = 'a';
 		x += getX() - 1;
 		char y = 'a';
