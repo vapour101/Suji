@@ -18,7 +18,6 @@
 package ui.controller;
 
 import event.GameDrawerEventWrapper;
-import event.GameEvent;
 import event.HoverEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -69,9 +68,6 @@ public class BoardController extends DockNodeController implements Initializable
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		game.subscribe(GameEvent.GAMEOVER, this::enterScoring);
-		game.subscribe(GameEvent.REVIEWSTART, this::reviewStart);
-
 		setupPanes();
 		constructCanvas();
 		setupSideBar();
@@ -127,10 +123,6 @@ public class BoardController extends DockNodeController implements Initializable
 		}
 	}
 
-	GameHandler getGame() {
-		return game;
-	}
-
 	private void resizeCanvas(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
 		boardCanvas.setHeight(boardPane.getHeight());
 		boardCanvas.setWidth(boardPane.getWidth());
@@ -152,12 +144,6 @@ public class BoardController extends DockNodeController implements Initializable
 		DrawCoords location = new DrawCoords(-10, -10);
 		HoverEvent event = new HoverEvent(game, location, game);
 		game.fireEvent(event);
-	}
-
-	void enterScoring(GameEvent event) {
-	}
-
-	void reviewStart(GameEvent event) {
 	}
 
 	@Override

@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.121"
+<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" xmlns="http://javafx.com/javafx"
       fx:controller="ui.controller.NewLocalGameController" minWidth="300" minHeight="130" maxWidth="300"
       maxHeight="130">
     <GridPane>

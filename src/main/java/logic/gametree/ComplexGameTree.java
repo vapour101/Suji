@@ -18,10 +18,17 @@
 package logic.gametree;
 
 import logic.board.Board;
+import util.Coords;
 import util.Move;
+import util.StoneColour;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static util.Coords.fromSGFString;
+import static util.Move.pass;
+import static util.Move.play;
+import static util.StoneColour.fromString;
 
 public class ComplexGameTree implements GameTree {
 
@@ -29,15 +36,94 @@ public class ComplexGameTree implements GameTree {
 	private TreeNode current;
 
 	public ComplexGameTree() {
-		root = new TreeNode();
+		this(new TreeNode());
+	}
+
+	private ComplexGameTree(TreeNode rootNode) {
+		root = rootNode;
 		current = root;
 	}
 
+	public static GameTreeBuilder getBuilder() {
+		return new Builder();
+	}
+
+	private static class Builder implements GameTreeBuilder {
+
+		private TreeNode root;
+		private TreeNode current;
+
+		private Builder() {
+			root = null;
+			current = null;
+		}
+
+		@Override
+		public GameTree build() {
+			GameTree result = new ComplexGameTree(root);
+
+			while (result.getNumChildren() > 0)
+				result.stepForward(0);
+
+			return result;
+		}
+
+		@Override
+		public void gotoRoot() {
+			current = root;
+		}
+
+		@Override
+		public TreeNode getRoot() {
+			return root;
+		}
+
+		@Override
+		public void addVariation(GameTreeBuilder subtree) {
+			if ( root == null ) {
+				root = subtree.getRoot();
+				current = root;
+				return;
+			}
+
+			current.addChild(subtree.getRoot());
+		}
+
+		@Override
+		public void appendNode() {
+			if ( root == null ) {
+				root = new TreeNode();
+				current = root;
+				return;
+			}
+
+			TreeNode node = new TreeNode();
+			current.addChild(node);
+			current = node;
+		}
+
+		@Override
+		public void appendProperty(GameTreeProperty property) {
+			String identifier = property.getIdentifier();
+			if ( identifier.equals("B") || identifier.equals("W") ) {
+				StoneColour colour = fromString(identifier);
+
+				if ( property.getValues().isEmpty() )
+					current.setMove(pass(colour));
+				else {
+					Coords coords = fromSGFString(property.getValues().firstElement());
+
+					current.setMove(play(coords, colour));
+				}
+			}
+		}
+	}
 
 	@Override
 	public boolean isRoot() {
 		return current == root;
 	}
+
 
 	@Override
 	public int getNumChildren() {

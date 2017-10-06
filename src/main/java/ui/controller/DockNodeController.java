@@ -37,6 +37,11 @@ public abstract class DockNodeController extends SelfBuildingController {
 
 	private void constructNode() {
 		node = new DockNode(getRoot());
+		dockNodeInitialised();
+	}
+
+	protected void dockNodeInitialised() {
+
 	}
 
 	public void dock() {

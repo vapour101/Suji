@@ -4,14 +4,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.sidebar.PlayerPaneController"
-          xmlns="http://javafx.com/javafx/8.0.111">
+<?import ui.javafx.GoTimer?>
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="ui.controller.sidebar.PlayerPaneController"
+          xmlns="http://javafx.com/javafx">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
         <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
     </rowConstraints>
     <ImageView fx:id="blackAvatar" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true"
@@ -30,4 +32,7 @@
             <Insets bottom="5.0" top="5.0"/>
         </padding>
     </Label>
+    <GoTimer GridPane.rowIndex="2" GridPane.columnIndex="0" initial="100" current="50"/>
+    <GoTimer GridPane.rowIndex="2" GridPane.columnIndex="1" initial="100" current="75"/>
+
 </GridPane>

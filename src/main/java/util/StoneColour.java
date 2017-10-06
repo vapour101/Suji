@@ -20,6 +20,15 @@ package util;
 public enum StoneColour {
 	BLACK, WHITE;
 
+	public static StoneColour fromString(String colour) {
+		if ( colour.equals("B") )
+			return BLACK;
+		else if ( colour.equals("W") )
+			return WHITE;
+
+		return null;
+	}
+
 	public StoneColour other() {
 		if ( this == BLACK )
 			return WHITE;

@@ -66,7 +66,7 @@ public class SimpleSGFWriter implements SGFWriter {
 		stringBuilder.append("[");
 
 		if ( move.getType() == PLAY )
-			stringBuilder.append(move.getPosition().sgfString());
+			stringBuilder.append(move.getPosition().toSGFString());
 
 		stringBuilder.append("]");
 		stringBuilder.append("\n");
