@@ -6,8 +6,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Font?>
-<FlowPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.OGSPlayer"
-          xmlns="http://javafx.com/javafx/8.0.111">
+<FlowPane xmlns:fx="http://javafx.com/fxml" fx:controller="ui.controller.OGSPlayer"
+          xmlns="http://javafx.com/javafx">
     <ImageView fx:id="avatar" fitHeight="128.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true"/>
     <Label fx:id="username" text="Username">
         <font>
