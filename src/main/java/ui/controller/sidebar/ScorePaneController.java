@@ -102,7 +102,7 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 	}
 
 	private void displayFinalScore(ScoreEvent event) {
-		unsunscribeEvents();
+		unsubscribeEvents();
 		double finalScore = event.getScorer().getScore();
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Game Over");
@@ -127,7 +127,7 @@ public class ScorePaneController extends SelfBuildingController implements Initi
 		alert.showAndWait();
 	}
 
-	private void unsunscribeEvents() {
+	private void unsubscribeEvents() {
 		game.unsubscribe(ScoreEvent.DONE, doneScoringHandler);
 		game.unsubscribe(ScoreEvent.SCORE, scoreChangeHandler);
 	}
