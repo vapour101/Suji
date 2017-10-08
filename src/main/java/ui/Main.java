@@ -31,6 +31,7 @@ import org.dockfx.DockPos;
 import ui.controller.DockNodeController;
 import ui.controller.GameListController;
 import ui.controller.NewLocalGameController;
+import ui.controller.dialog.ProxySettings;
 import util.LogHelper;
 
 public class Main extends Application {
@@ -82,10 +83,11 @@ public class Main extends Application {
 		//file menu, creating the main tabs
 		Menu fileMenu = getFileMenu();
 		Menu ogsMenu = getOGSMenu();
+		Menu settingsMenu = getSettingsMenu();
 
 		//main menu bar
 		menuBar = new MenuBar();
-		menuBar.getMenus().addAll(fileMenu, ogsMenu);
+		menuBar.getMenus().addAll(fileMenu, ogsMenu, settingsMenu);
 	}
 
 	private Menu getFileMenu() {
@@ -120,6 +122,22 @@ public class Main extends Application {
 		ogsMenu.getItems().add(ogsGameList);
 
 		return ogsMenu;
+	}
+
+	private Menu getSettingsMenu() {
+		Menu settings = new Menu("Settings");
+
+		MenuItem proxy = new MenuItem("Configure Proxy");
+		proxy.setOnAction(event -> {
+			DockNode node = (new ProxySettings()).getDockNode();
+			node.setTitle("Proxy Settings");
+			node.dock(dockPane, DockPos.CENTER);
+			node.setFloating(true);
+		});
+
+		settings.getItems().add(proxy);
+
+		return settings;
 	}
 
 	private void buildDockPane() {

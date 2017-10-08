@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+      fx:controller="ui.controller.dialog.ProxySettings">
+    <fx:script source="../script/proxyDialog.js"/>
+    <CheckBox fx:id="enableProxy" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="onClickEnable()"
+              text="Use Proxy"/>
+    <TextField fx:id="server" promptText="Server" disable="true"/>
+    <TextField fx:id="domain" promptText="Domain" disable="true"/>
+    <TextField fx:id="username" promptText="Username" disable="true"/>
+    <TextField fx:id="password" promptText="Password" disable="true"/>
+    <HBox>
+        <TextField fx:id="protocol" promptText="Protocol" disable="true"/>
+        <Spinner fx:id="port" editable="true" prefHeight="26.0" prefWidth="90.0" disable="true">
+            <valueFactory>
+                <SpinnerValueFactory.IntegerSpinnerValueFactory initialValue="80" max="65535" min="0"/>
+            </valueFactory>
+        </Spinner>
+    </HBox>
+    <ButtonBar>
+        <buttons>
+            <Button mnemonicParsing="false" text="Apply" ButtonBar.buttonData="APPLY" onAction="#onApply"/>
+            <Button cancelButton="true" mnemonicParsing="false" text="Cancel"
+                    ButtonBar.buttonData="CANCEL_CLOSE" onAction="#onCancel"/>
+        </buttons>
+    </ButtonBar>
+</VBox>
