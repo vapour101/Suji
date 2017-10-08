@@ -23,13 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-class TreeNode {
+public class TreeNode {
 
 	private Vector<TreeNode> children;
 	private TreeNode parent;
 	private Map<PropertyType, Object> properties;
 
-	protected TreeNode() {
+	TreeNode() {
 		parent = null;
 		children = new Vector<>();
 		properties = new HashMap<>();
@@ -42,6 +42,13 @@ class TreeNode {
 	public void addChild(TreeNode child) {
 		child.setParent(this);
 		children.add(child);
+	}
+
+	public int getDepth() {
+		if ( getParent() == null )
+			return 1;
+
+		return getParent().getDepth() + 1;
 	}
 
 	public TreeNode getParent() {

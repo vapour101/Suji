@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import logic.gamehandler.GameHandler;
 import logic.score.Scorer;
 import ui.controller.sidebar.GameMenuController;
+import ui.controller.sidebar.GameTreePane;
 import ui.controller.sidebar.ReviewPaneController;
 import ui.controller.sidebar.ScorePaneController;
 import ui.controller.strategy.BoardStrategy;
@@ -43,6 +44,7 @@ public class LocalGameController extends BoardController {
 	private ScorePaneController scorePaneController;
 	private GameMenuController gameMenuController;
 	private ReviewPaneController reviewPaneController;
+	private GameTreePane gameTreePane;
 
 	private BoardStrategy strategy;
 
@@ -71,6 +73,13 @@ public class LocalGameController extends BoardController {
 		loadGameMenu();
 		loadScorePane();
 		loadReviewPanel();
+		loadGameTreePane();
+	}
+
+	private void loadGameTreePane() {
+		gameTreePane = new GameTreePane(getGameHandler(), buildStoneDrawer());
+
+		sideBar.getChildren().add(gameTreePane.getRoot());
 	}
 
 	@Override

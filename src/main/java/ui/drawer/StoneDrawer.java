@@ -27,9 +27,15 @@ import java.util.Collection;
 public abstract class StoneDrawer {
 
 	private Canvas canvas;
+	private Double radius;
+
+	StoneDrawer(StoneDrawer other) {
+		this(other.canvas);
+	}
 
 	StoneDrawer(Canvas canvas) {
 		this.canvas = canvas;
+		radius = null;
 	}
 
 	public void drawGhostStone(DrawCoords position, StoneColour colour) {
@@ -45,6 +51,12 @@ public abstract class StoneDrawer {
 	}
 
 	public abstract void draw(DrawCoords position, StoneColour colour);
+
+	public abstract StoneDrawer clone();
+
+	public void setCanvas(Canvas canvas) {
+		this.canvas = canvas;
+	}
 
 	public void drawGhostStones(Collection<Coords> stones, StoneColour colour) {
 		GraphicsContext context = getGraphicsContext();
@@ -71,6 +83,13 @@ public abstract class StoneDrawer {
 	public abstract void draw(DrawCoords position, StoneColour colour, double scale);
 
 	double getRadius() {
+		if ( radius != null )
+			return radius;
+
 		return DimensionHelper.getStoneRadius(canvas);
+	}
+
+	public void setRadius(Double r) {
+		radius = r;
 	}
 }

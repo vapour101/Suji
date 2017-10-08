@@ -32,6 +32,8 @@ public interface GameTree {
 	 */
 	boolean isRoot();
 
+	TreeNode getRoot();
+
 	/**
 	 * @return The number of children to the current node pointed to by the GameTree's
 	 * internal iterator.

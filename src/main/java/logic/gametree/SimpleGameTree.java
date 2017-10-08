@@ -41,6 +41,11 @@ public class SimpleGameTree implements GameTree {
 	}
 
 	@Override
+	public TreeNode getRoot() {
+		return null;
+	}
+
+	@Override
 	public int getNumChildren() {
 		return 0;
 	}

@@ -124,6 +124,11 @@ public class ComplexGameTree implements GameTree {
 		return current == root;
 	}
 
+	@Override
+	public TreeNode getRoot() {
+		return root;
+	}
+
 
 	@Override
 	public int getNumChildren() {
