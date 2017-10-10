@@ -54,8 +54,8 @@ public class ComplexGameTree implements GameTree {
 		private TreeNode current;
 
 		private Builder() {
-			root = null;
-			current = null;
+			root = new TreeNode();
+			current = root;
 		}
 
 		@Override
@@ -80,23 +80,11 @@ public class ComplexGameTree implements GameTree {
 
 		@Override
 		public void addVariation(GameTreeBuilder subtree) {
-			if ( root == null ) {
-				root = subtree.getRoot();
-				current = root;
-				return;
-			}
-
 			current.addChild(subtree.getRoot());
 		}
 
 		@Override
 		public void appendNode() {
-			if ( root == null ) {
-				root = new TreeNode();
-				current = root;
-				return;
-			}
-
 			TreeNode node = new TreeNode();
 			current.addChild(node);
 			current = node;
