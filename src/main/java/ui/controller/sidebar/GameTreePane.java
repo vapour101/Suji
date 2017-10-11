@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import logic.gamehandler.GameHandler;
+import logic.gametree.TreeNode;
 import logic.gametree.TreeNodeOld;
 import ui.controller.SelfBuildingController;
 import ui.drawer.StoneDrawer;
@@ -34,11 +35,11 @@ public class GameTreePane extends SelfBuildingController implements Initializabl
 		graph.drawGraph(canvasWrapper);
 	}
 
-	private mxGraph constructGraph(TreeNodeOld tree) {
+	private mxGraph constructGraph(TreeNode tree) {
 		if ( tree == null )
 			return new mxGraph();
 
-		TreeNodeOld node = tree;
+		TreeNode node = tree;
 
 		mxGraph graph = new mxGraph();
 		Object parent = graph.getDefaultParent();
@@ -62,7 +63,7 @@ public class GameTreePane extends SelfBuildingController implements Initializabl
 		return graph;
 	}
 
-	private String getStyle(TreeNodeOld node) {
+	private String getStyle(TreeNode node) {
 		if ( !node.hasMove() )
 			return "defaultVertex;shape=emptyNode;depth=" + node.getDepth();
 

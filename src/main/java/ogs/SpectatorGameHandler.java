@@ -25,7 +25,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import logic.board.Board;
 import logic.gamehandler.GameHandler;
-import logic.gametree.ComplexGameTree;
+import logic.gametree.ComplexTree;
 import logic.gametree.GameTree;
 import logic.score.Scorer;
 import sgf.SGFWriter;
@@ -44,7 +44,7 @@ public class SpectatorGameHandler implements GameHandler {
 	public SpectatorGameHandler(int gameId) {
 		this.gameId = gameId;
 		initialPlayer = StoneColour.BLACK;
-		gameTree = new ComplexGameTree();
+		gameTree = new ComplexTree();
 		Connection.connectToGame(gameId, this::onGameData, this::onMovedata);
 		publisher = new EventHelper(this);
 	}
@@ -59,7 +59,7 @@ public class SpectatorGameHandler implements GameHandler {
 			return;
 		}
 
-		gameTree = new ComplexGameTree();
+		gameTree = new ComplexTree();
 
 		initialPlayer = gamedata.getInitialPlayer();
 		int handicap = gamedata.getHandicap();

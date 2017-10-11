@@ -1,6 +1,6 @@
 package sgf;
 
-import logic.gametree.ComplexGameTree;
+import logic.gametree.ComplexTree;
 import logic.gametree.GameTreeBuilder;
 import logic.gametree.GameTreeBuilder.GameTreeProperty;
 import sgf.SGFParser.*;
@@ -26,7 +26,7 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 		if ( ctx.sequence() != null )
 			result = visit(ctx.sequence());
 		else
-			result = ComplexGameTree.getBuilder();
+			result = ComplexTree.getBuilder();
 
 		result.gotoRoot();
 
@@ -42,7 +42,7 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 		if ( builder != null )
 			throw new IllegalStateException("Builder is in use.");
 
-		builder = ComplexGameTree.getBuilder();
+		builder = ComplexTree.getBuilder();
 
 		visitChildren(ctx);
 
