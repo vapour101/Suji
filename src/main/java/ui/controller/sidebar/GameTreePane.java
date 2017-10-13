@@ -7,10 +7,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import logic.gamehandler.GameHandler;
 import logic.gametree.TreeNode;
-import logic.gametree.TreeNodeOld;
 import ui.controller.SelfBuildingController;
 import ui.drawer.StoneDrawer;
-import ui.javafx.GameTreemxCanvas;
+import ui.drawer.TreeDrawer;
 import util.StoneColour;
 
 import java.net.URL;
@@ -20,7 +19,7 @@ import java.util.ResourceBundle;
 public class GameTreePane extends SelfBuildingController implements Initializable {
 
 	private StoneDrawer drawer;
-	private GameTreemxCanvas canvasWrapper;
+	private TreeDrawer treeDrawer;
 	@FXML
 	private Canvas canvas;
 
@@ -31,8 +30,10 @@ public class GameTreePane extends SelfBuildingController implements Initializabl
 
 	private void onGameEvent(GameEvent event) {
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		mxGraph graph = constructGraph(event.getHandler().getGameTree().getRoot());
-		graph.drawGraph(canvasWrapper);
+		//mxGraph graph = constructGraph(event.getHandler().getGameTree().getRoot());
+		//graph.drawGraph(canvasWrapper);
+		treeDrawer.updateModel(event.getHandler().getGameTree());
+		treeDrawer.draw(drawer);
 	}
 
 	private mxGraph constructGraph(TreeNode tree) {
@@ -81,6 +82,9 @@ public class GameTreePane extends SelfBuildingController implements Initializabl
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		canvasWrapper = new GameTreemxCanvas(canvas.getGraphicsContext2D(), drawer);
+		drawer = drawer.clone();
+		drawer.setRadius(5.0);
+		drawer.setCanvas(canvas);
+		treeDrawer = new TreeDrawer(canvas);
 	}
 }
