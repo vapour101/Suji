@@ -41,7 +41,7 @@ public class SimpleGameTree implements GameTree {
 	}
 
 	@Override
-	public TreeNode getRoot() {
+	public GameTreeIterator getRoot() {
 		return null;
 	}
 

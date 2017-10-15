@@ -1,72 +1,66 @@
 package sgf;
 
 import logic.gametree.ComplexTree;
+import logic.gametree.GameTree;
 import logic.gametree.GameTreeBuilder;
 import logic.gametree.GameTreeBuilder.GameTreeProperty;
+import logic.gametree.GameTreeIterator;
 import sgf.SGFParser.*;
 
 import java.util.Vector;
 
-public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
+public class SGFVisitor extends SGFParserBaseVisitor<GameTree> {
 
-	private GameTreeBuilder builder;
+	private GameTreeIterator iterator;
 
 	@Override
-	public GameTreeBuilder visitCollection(CollectionContext ctx) {
-		GameTreeBuilder result = visit(ctx.getChild(ctx.getChildCount() - 1));
+	public GameTree visitCollection(CollectionContext ctx) {
+		GameTree result = new ComplexTree();
+		iterator = result.getRoot();
+
+		visit(ctx.getChild(ctx.getChildCount() - 1));
 		ctx.removeLastChild();
 
 		return result;
 	}
 
 	@Override
-	public GameTreeBuilder visitGametree(GametreeContext ctx) {
-		GameTreeBuilder result = null;
-
+	public GameTree visitGametree(GametreeContext ctx) {
 		if ( ctx.sequence() != null )
-			result = visit(ctx.sequence());
-		else
-			result = ComplexTree.getBuilder();
+			visit(ctx.sequence());
 
-		result.gotoRoot();
+		for (GametreeContext tree : ctx.gametree())
+			visit(tree);
 
-		for (GametreeContext tree : ctx.gametree()) {
-			result.addVariation(visit(tree));
-		}
-
-		return result;
+		return null;
 	}
 
 	@Override
-	public GameTreeBuilder visitSequence(SequenceContext ctx) {
-		if ( builder != null )
-			throw new IllegalStateException("Builder is in use.");
+	public GameTree visitSequence(SequenceContext ctx) {
+		if ( iterator == null )
+			throw new IllegalStateException("Iterator has not been set.");
 
-		builder = ComplexTree.getBuilder();
-
-		visitChildren(ctx);
-
-		GameTreeBuilder result = builder;
-		builder = null;
-
-		return result;
-	}
-
-	@Override
-	public GameTreeBuilder visitNode(NodeContext ctx) {
-		if ( builder == null )
-			throw new IllegalStateException("Builder has not been set.");
-
-		builder.appendNode();
 		visitChildren(ctx);
 
 		return null;
 	}
 
 	@Override
-	public GameTreeBuilder visitProperty(PropertyContext ctx) {
-		if ( builder == null )
-			throw new IllegalStateException("Builder has not been set.");
+	public GameTree visitNode(NodeContext ctx) {
+		if ( iterator == null )
+			throw new IllegalStateException("Iterator has not been set.");
+
+		iterator.stepForward();
+		visitChildren(ctx);
+		iterator.stepBack();
+
+		return null;
+	}
+
+	@Override
+	public GameTree visitProperty(PropertyContext ctx) {
+		if ( iterator == null )
+			throw new IllegalStateException("Iterator has not been set.");
 
 		String identifier = ctx.identifier().IDENTIFIER().getSymbol().getText();
 		Vector<String> values = new Vector<>();
@@ -78,7 +72,7 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTreeBuilder> {
 
 		GameTreeProperty property = GameTreeProperty.getSGFProperty(identifier, values);
 
-		builder.appendProperty(property);
+		iterator.addProperty(property);
 
 		return null;
 	}

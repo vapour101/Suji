@@ -1,11 +1,14 @@
 package logic.gametree;
 
 import logic.board.Board;
+import util.Coords;
 import util.Move;
+import util.StoneColour;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 public class ComplexTreeIterator implements GameTreeIterator {
 
@@ -23,6 +26,36 @@ public class ComplexTreeIterator implements GameTreeIterator {
 	@Override
 	public int getNumChildren() {
 		return node.getChildren().size();
+	}
+
+	@Override
+	public void stepForward() {
+		TreeNode child = new TreeNode(node);
+		node = child;
+	}
+
+	@Override
+	public void addProperty(GameTreeBuilder.GameTreeProperty property) {
+		String identifier = property.getIdentifier();
+
+		if ( identifier.equals("B") || identifier.equals("W") ) {
+			System.out.println("Here");
+			StoneColour colour = StoneColour.fromString(identifier);
+			String value = property.getValues().firstElement();
+			Move move = Move.pass(colour);
+
+			if ( !value.equals("") ) {
+				Coords coords = Coords.fromSGFString(value);
+				move = Move.play(coords, colour);
+			}
+
+			node.setMove(move);
+		}
+	}
+
+	@Override
+	public void preorder(Consumer<TreeNode> enterNode, Consumer<TreeNode> exitNode) {
+		node.preorder(enterNode, exitNode);
 	}
 
 	@Override

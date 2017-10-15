@@ -22,7 +22,6 @@ import util.Coords;
 import util.Move;
 import util.StoneColour;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static util.Coords.fromSGFString;
@@ -113,8 +112,8 @@ public class ComplexTree implements GameTree {
 	}
 
 	@Override
-	public TreeNode getRoot() {
-		return root;
+	public GameTreeIterator getRoot() {
+		return current;
 	}
 
 

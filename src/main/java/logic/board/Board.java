@@ -142,4 +142,27 @@ public class Board {
 	public int getCaptures(StoneColour colour) {
 		return captures[colour.ordinal()];
 	}
+
+	@Override
+	public String toString() {
+		Collection<Coords> black = getStones(StoneColour.BLACK);
+		Collection<Coords> white = getStones(StoneColour.WHITE);
+		StringBuilder result = new StringBuilder();
+
+		result.append('\n');
+		for (int i = 1; i < 20; i++) {
+			for (int j = 1; j < 20; j++) {
+				Coords coords = Coords.getCoords(i, j);
+				if ( black.contains(coords) )
+					result.append("B");
+				else if ( white.contains(coords) )
+					result.append("W");
+				else
+					result.append(".");
+			}
+			result.append('\n');
+		}
+
+		return result.toString();
+	}
 }

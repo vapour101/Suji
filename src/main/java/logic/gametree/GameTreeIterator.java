@@ -19,6 +19,12 @@ public interface GameTreeIterator {
 	 */
 	int getNumChildren();
 
+	void stepForward();
+
+	void addProperty(GameTreeBuilder.GameTreeProperty property);
+
+	void preorder(Consumer<TreeNode> enterNode, Consumer<TreeNode> exitNode);
+
 	/**
 	 * Move the iterator to a pre-existing child node.
 	 *
