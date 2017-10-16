@@ -24,7 +24,7 @@ import javafx.event.EventDispatchChain;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import logic.board.Board;
-import logic.gametree.ComplexGameTree;
+import logic.gametree.ComplexTree;
 import logic.gametree.GameTree;
 import logic.score.BoardScorer;
 import logic.score.EventScorer;
@@ -52,11 +52,16 @@ public class LocalGame implements GameHandler {
 	}
 
 	public LocalGame(int handicap) {
-		gameTree = new ComplexGameTree();
+		gameTree = new ComplexTree();
 		this.handicap = handicap;
 		komi = 0;
 		publisher = new EventHelper(this);
 		scorer = null;
+	}
+
+	public LocalGame(GameTree tree) {
+		this(0);
+		gameTree = tree;
 	}
 
 	@Override

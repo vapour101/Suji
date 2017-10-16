@@ -25,7 +25,6 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import util.LogHelper;
-import util.WebHelper;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -36,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import static ogs.OGSReference.*;
+import static util.WebHelper.*;
 
 public class Connection {
 
@@ -46,14 +46,13 @@ public class Connection {
 
 	private Connection() {
 
-		if ( WebHelper.USE_PROXY ) {
+		if ( USE_PROXY ) {
 			OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-			clientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(WebHelper.PROXY_SERVER, 80)));
+			clientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(PROXY_SERVER, PROXY_PORT)));
 			clientBuilder.proxyAuthenticator(new Authenticator() {
 				@Override
 				public Request authenticate(Route route, Response response) throws IOException {
-					String credential = Credentials.basic(WebHelper.PROXY_DOMAIN + "\\" + WebHelper.PROXY_USER,
-														  WebHelper.PROXY_PASS);
+					String credential = Credentials.basic(PROXY_DOMAIN + "\\" + PROXY_USER, PROXY_PASS);
 					return response.request().newBuilder().header("Proxy-Authorization", credential).build();
 				}
 			});

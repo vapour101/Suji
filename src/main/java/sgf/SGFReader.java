@@ -8,20 +8,20 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 public class SGFReader implements GameTreeProvider {
 
-	private GameTreeBuilder builder;
+	SGFParser parser;
+	SGFVisitor visitor;
 
 	public SGFReader(String sgfString) {
 		ANTLRInputStream inputStream = new ANTLRInputStream(sgfString);
 		SGFLexer lexer = new SGFLexer(inputStream);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		SGFParser parser = new SGFParser(tokens);
+		parser = new SGFParser(tokens);
 
-		SGFVisitor visitor = new SGFVisitor();
-		builder = visitor.visitCollection(parser.collection());
+		visitor = new SGFVisitor();
 	}
 
 	@Override
 	public GameTree getGameTree() {
-		return builder.build();
+		return visitor.visitCollection(parser.collection());
 	}
 }

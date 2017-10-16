@@ -1,20 +1,3 @@
-/*
- * Copyright (c) 2017
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package logic.gametree;
 
 import logic.board.Board;
@@ -24,23 +7,23 @@ import util.Move;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * Tracks the history of a Go game, possibly including variations, and iterate over it.
- */
-public interface GameTree {
-
+public interface GameTreeIterator {
 	/**
 	 * @return Whether the iterator is at the root node.
 	 */
 	boolean isRoot();
-
-	GameTreeIterator getRoot();
 
 	/**
 	 * @return The number of children to the current node pointed to by the GameTree's
 	 * internal iterator.
 	 */
 	int getNumChildren();
+
+	void stepForward();
+
+	void addProperty(GameTreeBuilder.GameTreeProperty property);
+
+	void preorder(Consumer<TreeNode> enterNode, Consumer<TreeNode> exitNode);
 
 	/**
 	 * Move the iterator to a pre-existing child node.
@@ -73,9 +56,6 @@ public interface GameTree {
 	 */
 	int getNumMoves();
 
-	/**
-	 * @return All moves played between the root node and the iterator.
-	 */
 	List<Move> getSequence();
 
 	/**

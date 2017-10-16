@@ -55,7 +55,7 @@ public class BoardController extends DockNodeController implements Initializable
 		this(gameHandler, resourcePath, true);
 	}
 
-	BoardController(GameHandler gameHandler, String resourcePath, boolean interactive) {
+	public BoardController(GameHandler gameHandler, String resourcePath, boolean interactive) {
 		game = gameHandler;
 		fxmlLocation = resourcePath;
 		sideBarItems = new ArrayDeque<>();
@@ -96,11 +96,7 @@ public class BoardController extends DockNodeController implements Initializable
 	Drawer buildGameDrawer() {
 		Drawer gameDrawer = new GameDrawer(boardCanvas);
 
-		Image blackStone = new Image("/images/black.png", false);
-		Image whiteStone = new Image("/images/white.png", false);
-
-		StoneDrawer stoneDrawer = new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
-		gameDrawer.setStoneDrawer(stoneDrawer);
+		gameDrawer.setStoneDrawer(buildStoneDrawer());
 
 		Image wood = new Image("/images/wood.jpg", false);
 		Image lines = new Image("/images/grid.png", false);
@@ -111,6 +107,12 @@ public class BoardController extends DockNodeController implements Initializable
 		gameDrawer = new GameDrawerEventWrapper(gameDrawer, getGameHandler());
 
 		return gameDrawer;
+	}
+
+	StoneDrawer buildStoneDrawer() {
+		Image blackStone = new Image("/images/black.png", false);
+		Image whiteStone = new Image("/images/white.png", false);
+		return new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
 	}
 
 	GameHandler getGameHandler() {

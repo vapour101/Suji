@@ -39,12 +39,13 @@ import java.util.function.Consumer;
 
 public class WebHelper {
 
-	public static final String PROXY_PROTOCOL = "http://";
-	public static final String PROXY_SERVER = "";
-	public static final String PROXY_DOMAIN = "";
-	public static final String PROXY_USER = "";
-	public static final String PROXY_PASS = "";
-	public static final boolean USE_PROXY = false;
+	public static String PROXY_PROTOCOL = "http://";
+	public static String PROXY_SERVER = "";
+	public static String PROXY_DOMAIN = "";
+	public static String PROXY_USER = "";
+	public static String PROXY_PASS = "";
+	public static int PROXY_PORT = 80;
+	public static boolean USE_PROXY = false;
 
 	private static Client client = null;
 

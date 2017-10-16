@@ -21,9 +21,9 @@ public enum StoneColour {
 	BLACK, WHITE;
 
 	public static StoneColour fromString(String colour) {
-		if ( colour.equals("B") )
+		if ( colour.equals("B") || colour.equals("black") )
 			return BLACK;
-		else if ( colour.equals("W") )
+		else if ( colour.equals("W") || colour.equals("white") )
 			return WHITE;
 
 		return null;

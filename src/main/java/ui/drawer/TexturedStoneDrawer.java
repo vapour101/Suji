@@ -29,6 +29,12 @@ public class TexturedStoneDrawer extends StoneDrawer {
 	private Image black;
 	private Image white;
 
+	private TexturedStoneDrawer(TexturedStoneDrawer other) {
+		super(other);
+		black = other.black;
+		white = other.white;
+	}
+
 	public TexturedStoneDrawer(Canvas canvas, Image blackStone, Image whiteStone) {
 		super(canvas);
 		black = blackStone;
@@ -38,6 +44,11 @@ public class TexturedStoneDrawer extends StoneDrawer {
 	@Override
 	public void draw(DrawCoords position, StoneColour colour) {
 		drawStone(position, colour, getRadius());
+	}
+
+	@Override
+	public StoneDrawer clone() {
+		return new TexturedStoneDrawer(this);
 	}
 
 	@Override

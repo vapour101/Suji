@@ -31,9 +31,23 @@ public class SimpleStoneDrawer extends StoneDrawer {
 		super(canvas);
 	}
 
+	private SimpleStoneDrawer(StoneDrawer other) {
+		super(other);
+	}
+
 	@Override
 	public void draw(DrawCoords position, StoneColour colour) {
 		drawStone(position, colour, getRadius());
+	}
+
+	@Override
+	public StoneDrawer clone() {
+		return new SimpleStoneDrawer(this);
+	}
+
+	@Override
+	public void draw(DrawCoords position, StoneColour colour, double scale) {
+		drawStone(position, colour, getRadius() * scale);
 	}
 
 	private void drawStone(DrawCoords position, StoneColour colour, double radius) {
@@ -53,10 +67,5 @@ public class SimpleStoneDrawer extends StoneDrawer {
 		double diameter = 2 * radius;
 
 		getGraphicsContext().fillOval(left, top, diameter, diameter);
-	}
-
-	@Override
-	public void draw(DrawCoords position, StoneColour colour, double scale) {
-		drawStone(position, colour, getRadius() * scale);
 	}
 }

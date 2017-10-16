@@ -1,96 +1,184 @@
-/*
- * Copyright (c) 2017
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package logic.gametree;
 
 import util.Move;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-class TreeNode {
+public class TreeNode {
 
-	private Vector<TreeNode> children;
+	//private proplist
+	private Move move;
+
 	private TreeNode parent;
-	private Map<PropertyType, Object> properties;
+	private TreeNode firstChild;
+	private TreeNode nextSibling;
+	private TreeNode prevSibling;
+
+	private Integer depth;
+	private Integer width;
 
 	protected TreeNode() {
 		parent = null;
-		children = new Vector<>();
-		properties = new HashMap<>();
+		firstChild = null;
+		nextSibling = null;
+		prevSibling = null;
+		move = null;
+
+		depth = null;
+		width = null;
 	}
 
-	public Vector<TreeNode> getChildren() {
-		return children;
+	public boolean hasMove() {
+		return move != null;
+	}
+
+	public Move getMove() {
+		return move;
+	}
+
+	public void setMove(Move move) {
+		this.move = move;
+	}
+
+	protected TreeNode(TreeNode parent) {
+		this();
+
+		parent.addChild(this);
 	}
 
 	public void addChild(TreeNode child) {
-		child.setParent(this);
-		children.add(child);
+		child.parent = this;
+
+		if ( hasChild() )
+			firstChild.addSibling(child);
+		else
+			firstChild = child;
+	}
+
+	public void addSibling(TreeNode sibling) {
+		if ( hasNextSibling() )
+			nextSibling.addSibling(sibling);
+		else {
+			sibling.prevSibling = this;
+			nextSibling = sibling;
+		}
+	}
+
+	public List<TreeNode> getSequence() {
+		LinkedList<TreeNode> sequence = new LinkedList<>();
+
+		backtrack(sequence::addFirst);
+
+		return sequence;
+	}
+
+	public boolean hasChild() {
+		return firstChild != null;
+	}
+
+	private boolean hasPrevSibling() {
+		return prevSibling != null;
+	}
+
+	private boolean hasNextSibling() {
+		return nextSibling != null;
+	}
+
+	private boolean hasParent() {
+		return parent != null;
+	}
+
+	public boolean isRoot() {
+		return !hasParent();
+	}
+
+	public int getWidth() {
+		if ( width == null )
+			width = calculateWidth();
+
+		return width;
+	}
+
+	public int getDepth() {
+		if ( depth == null )
+			depth = calculateDepth();
+
+		return depth;
 	}
 
 	public TreeNode getParent() {
 		return parent;
 	}
 
-	public void setParent(TreeNode parent) {
-		if ( this.parent != null ) {
-			parent.removeChild(this);
-		}
+	public Vector<TreeNode> getChildren() {
+		Vector<TreeNode> children = new Vector<>();
 
-		this.parent = parent;
+		if ( hasChild() )
+			firstChild.siblingTraverse(children::add);
+
+		return children;
 	}
 
-	public void removeChild(TreeNode child) {
-		children.remove(child);
+	private int calculateDepth() {
+		if ( isRoot() )
+			return 0;
+		else
+			return parent.getDepth() + 1;
 	}
 
-	public Move getMove() {
-		if ( !hasMove() )
+	private int calculateWidth() {
+		if ( isRoot() )
+			return 1;
+		else if ( hasPrevSibling() )
+			return prevSibling.getWidth() + 1;
+		else
+			return parent.getWidth();
+	}
+
+	public void preorder(Consumer<TreeNode> enterNode, Consumer<TreeNode> exitNode) {
+		enterNode.accept(this);
+
+		if ( hasChild() )
+			firstChild.preorder(enterNode, exitNode);
+
+		exitNode.accept(this);
+
+		if ( hasNextSibling() )
+			nextSibling.preorder(enterNode, exitNode);
+	}
+
+	public void backtrack(Consumer<TreeNode> visitor) {
+		visitor.accept(this);
+
+		if ( hasParent() )
+			parent.backtrack(visitor);
+	}
+
+	public void siblingTraverse(Consumer<TreeNode> visitor) {
+		visitor.accept(this);
+
+		if ( hasNextSibling() )
+			nextSibling.siblingTraverse(visitor);
+	}
+
+	public TreeNode getChildMatching(Predicate<TreeNode> searchFunction) {
+		if ( !hasChild() )
 			return null;
 
-		return (Move) properties.get(PropertyType.MOVE);
+		return firstChild.getSiblingMatching(searchFunction);
 	}
 
-	public void setMove(Move move) {
-		properties.put(PropertyType.MOVE, move);
-	}
+	public TreeNode getSiblingMatching(Predicate<TreeNode> searchFunction) {
+		if ( searchFunction.test(this) )
+			return this;
 
-	public boolean hasMove() {
-		return properties.containsKey(PropertyType.MOVE);
-	}
-
-	public String getComment() {
-		if ( !hasComment() )
+		if ( !hasNextSibling() )
 			return null;
 
-		return (String) properties.get(PropertyType.COMMENT);
-	}
-
-	public void setComment(String comment) {
-		properties.put(PropertyType.COMMENT, comment);
-	}
-
-	public boolean hasComment() {
-		return properties.containsKey(PropertyType.COMMENT);
-	}
-
-	protected enum PropertyType {
-		MOVE, COMMENT
+		return nextSibling.getSiblingMatching(searchFunction);
 	}
 }

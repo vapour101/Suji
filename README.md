@@ -18,6 +18,7 @@ The latest builds can be found on the [Releases](https://github.com/GoSuji/Suji/
 
 - Issue Tracker: [github.com/GoSuji/Suji/issues](https://github.com/GoSuji/Suji/issues)
 - Source Code: [github.com/GoSuji/Suji](https://github.com/GoSuji/Suji)
+- Taiga Backlog: [tree.taiga.io/project/vapour101-suji/backlog](https://tree.taiga.io/project/vapour101-suji/backlog)
 
 ## License
 

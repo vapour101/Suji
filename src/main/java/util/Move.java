@@ -69,6 +69,18 @@ public class Move {
 		}
 	}
 
+	@Override
+	public String toString() {
+		String out = player.toString();
+
+		if ( moveType == Type.PLAY )
+			out += " " + position.toString();
+		else
+			out += " PASS";
+
+		return out;
+	}
+
 	public enum Type {
 		PLAY, PASS;
 	}

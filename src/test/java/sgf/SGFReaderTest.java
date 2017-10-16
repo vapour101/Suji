@@ -1,8 +1,10 @@
 package sgf;
 
 import logic.board.Board;
+import logic.gametree.GameTree;
 import logic.score.BoardScorerTest;
 import org.junit.Test;
+import util.Move;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,7 +28,12 @@ public class SGFReaderTest {
 		Board board = new Board();
 		board.playStone(play(getCoords("A1"), BLACK));
 
-		assertThat(reader.getGameTree().getPosition(), is(board));
+		GameTree tree = reader.getGameTree();
+
+		while (tree.getNumChildren() != 0)
+			tree.stepForward(0);
+
+		assertThat(tree.getPosition(), is(board));
 	}
 
 	@Test
@@ -34,7 +41,12 @@ public class SGFReaderTest {
 		SGFReader reader = new SGFReader(loadFile(complexSGF));
 		Board board = BoardScorerTest.buildTestBoard(BoardScorerTest.testBoard4, 3);
 
-		assertThat(reader.getGameTree().getPosition(), is(board));
+		GameTree tree = reader.getGameTree();
+
+		while (tree.getNumChildren() != 0)
+			tree.stepForward(0);
+
+		assertThat(tree.getPosition(), is(board));
 	}
 
 	private String loadFile(String filepath) {
