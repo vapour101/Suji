@@ -2,7 +2,6 @@ package sgf;
 
 import logic.gametree.ComplexTree;
 import logic.gametree.GameTree;
-import logic.gametree.GameTreeBuilder;
 import logic.gametree.GameTreeBuilder.GameTreeProperty;
 import logic.gametree.GameTreeIterator;
 import sgf.SGFParser.*;
@@ -42,6 +41,9 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTree> {
 
 		visitChildren(ctx);
 
+		for (int i = 0; i < ctx.node().size(); i++)
+			iterator.stepBack();
+
 		return null;
 	}
 
@@ -52,7 +54,6 @@ public class SGFVisitor extends SGFParserBaseVisitor<GameTree> {
 
 		iterator.stepForward();
 		visitChildren(ctx);
-		iterator.stepBack();
 
 		return null;
 	}

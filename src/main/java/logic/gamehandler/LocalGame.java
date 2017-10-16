@@ -59,6 +59,11 @@ public class LocalGame implements GameHandler {
 		scorer = null;
 	}
 
+	public LocalGame(GameTree tree) {
+		this(0);
+		gameTree = tree;
+	}
+
 	@Override
 	public void pass() {
 		boolean gameOver = false;

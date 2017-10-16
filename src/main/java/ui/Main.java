@@ -23,16 +23,23 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import logic.gamehandler.GameHandler;
+import logic.gamehandler.LocalGame;
 import ogs.Connection;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
+import sgf.SGFReader;
+import ui.controller.BoardController;
 import ui.controller.DockNodeController;
 import ui.controller.GameListController;
 import ui.controller.NewLocalGameController;
 import ui.controller.dialog.ProxySettings;
 import util.LogHelper;
+
+import java.io.*;
 
 public class Main extends Application {
 
@@ -91,9 +98,9 @@ public class Main extends Application {
 	}
 
 	private Menu getFileMenu() {
-		Menu fileMenu = new Menu("New...");
+		Menu fileMenu = new Menu("File");
 
-		MenuItem newLocalGame = new MenuItem("Local Game");
+		MenuItem newLocalGame = new MenuItem("New Local Game");
 		newLocalGame.setOnAction(event -> {
 			DockNodeController controller = new NewLocalGameController();
 			DockNode node = controller.getDockNode();
@@ -102,7 +109,58 @@ public class Main extends Application {
 			node.setFloating(true);
 		});
 
+		MenuItem openSGFFile = new MenuItem("Open SGF File");
+		openSGFFile.setOnAction(event -> {
+			FileChooser.ExtensionFilter sgfFilter = new FileChooser.ExtensionFilter("SGF File", "*.sgf");
+
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open SGF");
+			fileChooser.getExtensionFilters().add(sgfFilter);
+			fileChooser.setSelectedExtensionFilter(sgfFilter);
+
+			File file = fileChooser.showOpenDialog(window);
+
+			InputStreamReader is = null;
+			BufferedReader reader = null;
+			StringBuilder builder = new StringBuilder();
+
+			try {
+				is = new FileReader(file.getPath());
+				reader = new BufferedReader(is);
+
+				String currentLine = null;
+				while ((currentLine = reader.readLine()) != null) {
+					builder.append(currentLine);
+				}
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			finally {
+				try {
+					if ( is != null )
+						is.close();
+
+					if ( reader != null )
+						reader.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			String sgfString = builder.toString();
+
+			SGFReader sgfReader = new SGFReader(sgfString);
+			GameHandler handler = new LocalGame(sgfReader.getGameTree());
+			BoardController controller = new BoardController(handler, "/fxml/localGame.fxml", false);
+			DockNode node = controller.getDockNode();
+			node.setTitle("SGF Game");
+			node.dock(dockPane, DockPos.CENTER);
+		});
+
 		fileMenu.getItems().add(newLocalGame);
+		fileMenu.getItems().add(openSGFFile);
 
 		return fileMenu;
 	}

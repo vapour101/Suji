@@ -55,7 +55,7 @@ public class BoardController extends DockNodeController implements Initializable
 		this(gameHandler, resourcePath, true);
 	}
 
-	BoardController(GameHandler gameHandler, String resourcePath, boolean interactive) {
+	public BoardController(GameHandler gameHandler, String resourcePath, boolean interactive) {
 		game = gameHandler;
 		fxmlLocation = resourcePath;
 		sideBarItems = new ArrayDeque<>();

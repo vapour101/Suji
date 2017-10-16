@@ -4,6 +4,7 @@ import logic.board.Board;
 import logic.gametree.GameTree;
 import logic.score.BoardScorerTest;
 import org.junit.Test;
+import util.Move;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -29,12 +30,8 @@ public class SGFReaderTest {
 
 		GameTree tree = reader.getGameTree();
 
-
-
-		while (tree.getNumChildren() != 0) {
-			System.out.println(tree.getNumChildren());
+		while (tree.getNumChildren() != 0)
 			tree.stepForward(0);
-		}
 
 		assertThat(tree.getPosition(), is(board));
 	}

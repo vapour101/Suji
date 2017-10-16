@@ -30,8 +30,7 @@ public class ComplexTreeIterator implements GameTreeIterator {
 
 	@Override
 	public void stepForward() {
-		TreeNode child = new TreeNode(node);
-		node = child;
+		node = new TreeNode(node);
 	}
 
 	@Override
@@ -39,17 +38,15 @@ public class ComplexTreeIterator implements GameTreeIterator {
 		String identifier = property.getIdentifier();
 
 		if ( identifier.equals("B") || identifier.equals("W") ) {
-			System.out.println("Here");
 			StoneColour colour = StoneColour.fromString(identifier);
-			String value = property.getValues().firstElement();
-			Move move = Move.pass(colour);
 
-			if ( !value.equals("") ) {
-				Coords coords = Coords.fromSGFString(value);
-				move = Move.play(coords, colour);
+			if ( property.getValues().isEmpty() )
+				node.setMove(Move.pass(colour));
+			else {
+				Coords coords = Coords.fromSGFString(property.getValues().firstElement());
+
+				node.setMove(Move.play(coords, colour));
 			}
-
-			node.setMove(move);
 		}
 	}
 
@@ -62,7 +59,7 @@ public class ComplexTreeIterator implements GameTreeIterator {
 	public void stepForward(int child) {
 		Vector<TreeNode> children = node.getChildren();
 
-		if ( child >= children.size() )
+		if ( child < children.size() )
 			node = children.get(child);
 	}
 
