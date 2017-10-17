@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ui.controller.NewBoardGameMenu">
+
+    <GridPane prefWidth="300.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" prefWidth="10.0"/>
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+
+        <Label text="Komi:" GridPane.rowIndex="3"/>
+    </GridPane>
+    <Button fx:id="startButton" mnemonicParsing="false" text="Start"/>
+
+</VBox>
+
+
+
+
+
