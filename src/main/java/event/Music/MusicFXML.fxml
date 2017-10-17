@@ -1,0 +1,6 @@
+
+<?import javafx.scene.layout.VBox?>
+<VBox fx:controller="event.Music.Controller"
+      xmlns:fx="http://javafx.com/fxml" alignment="center">
+</VBox>
+
