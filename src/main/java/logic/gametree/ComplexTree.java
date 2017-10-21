@@ -47,6 +47,65 @@ public class ComplexTree implements GameTree {
 		return new Builder();
 	}
 
+	@Override
+	public boolean isRoot() {
+		return current.isRoot();
+	}
+
+	@Override
+	public GameTreeIterator getRoot() {
+		return current;
+	}
+
+	@Override
+	public int getNumChildren() {
+		return current.getNumChildren();
+	}
+
+	@Override
+	public void stepForward(int child) {
+		current.stepForward(child);
+	}
+
+	@Override
+	public void stepForward(Move move) {
+		current.stepForward(move);
+	}
+
+	@Override
+	public void stepBack() {
+		current.stepBack();
+	}
+
+	@Override
+	public Move getLastMove() {
+		return current.getLastMove();
+	}
+
+	@Override
+	public int getNumMoves() {
+		return current.getNumMoves();
+	}
+
+	@Override
+	public List<Move> getSequence() {
+		return getSequenceAt(current);
+	}
+
+	private List<Move> getSequenceAt(GameTreeIterator node) {
+		return node.getSequence();
+	}
+
+	@Override
+	public Board getPosition() {
+		return current.getPosition();
+	}
+
+	@Override
+	public Board getLastPosition() {
+		return current.getLastPosition();
+	}
+
 	private static class Builder implements GameTreeBuilder {
 
 		private TreeNode root;
@@ -104,65 +163,5 @@ public class ComplexTree implements GameTree {
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean isRoot() {
-		return current.isRoot();
-	}
-
-	@Override
-	public GameTreeIterator getRoot() {
-		return current;
-	}
-
-
-	@Override
-	public int getNumChildren() {
-		return current.getNumChildren();
-	}
-
-	@Override
-	public void stepForward(int child) {
-		current.stepForward(child);
-	}
-
-	@Override
-	public void stepForward(Move move) {
-		current.stepForward(move);
-	}
-
-	@Override
-	public void stepBack() {
-		current.stepBack();
-	}
-
-	@Override
-	public Move getLastMove() {
-		return current.getLastMove();
-	}
-
-	@Override
-	public int getNumMoves() {
-		return current.getNumMoves();
-	}
-
-	@Override
-	public List<Move> getSequence() {
-		return getSequenceAt(current);
-	}
-
-	private List<Move> getSequenceAt(GameTreeIterator node) {
-		return node.getSequence();
-	}
-
-	@Override
-	public Board getPosition() {
-		return current.getPosition();
-	}
-
-	@Override
-	public Board getLastPosition() {
-		return current.getLastPosition();
 	}
 }

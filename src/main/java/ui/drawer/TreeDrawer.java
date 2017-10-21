@@ -60,6 +60,10 @@ public class TreeDrawer {
 		last = current;
 	}
 
+	private void insertEdge(TreeDrawerNode left, TreeDrawerNode right) {
+		edges.put(left.coords, right.coords);
+	}
+
 	private void modelExit(TreeNode treeNode) {
 		if ( treeNode.isRoot() ) {
 			last = null;
@@ -74,10 +78,6 @@ public class TreeDrawer {
 
 		for (TreeDrawerNode node : nodeMap.values())
 			node.draw(drawer);
-	}
-
-	private void insertEdge(TreeDrawerNode left, TreeDrawerNode right) {
-		edges.put(left.coords, right.coords);
 	}
 
 	private void drawEdges() {
@@ -100,23 +100,23 @@ public class TreeDrawer {
 		}
 	}
 
-	private DrawCoords getDrawCoords(Pair<Integer, Integer> coords) {
-		double x = getDrawX(coords);
-		double y = getDrawY(coords);
-
-		return new DrawCoords(x, y);
+	private double getDrawX(Pair<Integer, Integer> coords) {
+		return drawTransform(coords.getKey());
 	}
 
 	private double drawTransform(int val) {
 		return (val * (size + spacing) + spacing);
 	}
 
-	private double getDrawX(Pair<Integer, Integer> coords) {
-		return drawTransform(coords.getKey());
-	}
-
 	private double getDrawY(Pair<Integer, Integer> coords) {
 		return drawTransform(coords.getValue());
+	}
+
+	private DrawCoords getDrawCoords(Pair<Integer, Integer> coords) {
+		double x = getDrawX(coords);
+		double y = getDrawY(coords);
+
+		return new DrawCoords(x, y);
 	}
 
 	private class TreeDrawerNode {
@@ -125,6 +125,10 @@ public class TreeDrawer {
 		private Pair<Integer, Integer> coords;
 		private TreeDrawerNode parent;
 
+		TreeDrawerNode(int x, int y) {
+			setup(null, x, y);
+		}
+
 		private void setup(TreeNode treeNode, int x, int y) {
 			node = treeNode;
 			coords = new Pair<>(x, y);
@@ -132,8 +136,8 @@ public class TreeDrawer {
 			addToMap();
 		}
 
-		TreeDrawerNode(int x, int y) {
-			setup(null, x, y);
+		private void addToMap() {
+			nodeMap.put(coords, this);
 		}
 
 		TreeDrawerNode(TreeNode root) {
@@ -151,12 +155,12 @@ public class TreeDrawer {
 			parent = parentDrawer;
 		}
 
-		int getX() {
-			return coords.getKey();
-		}
-
 		int getY() {
 			return coords.getValue();
+		}
+
+		int getX() {
+			return coords.getKey();
 		}
 
 		TreeDrawerNode getParent() {
@@ -173,10 +177,6 @@ public class TreeDrawer {
 
 				drawer.draw(drawCoords, colour);
 			}
-		}
-
-		private void addToMap() {
-			nodeMap.put(coords, this);
 		}
 	}
 }

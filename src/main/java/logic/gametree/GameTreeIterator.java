@@ -1,13 +1,13 @@
 package logic.gametree;
 
 import logic.board.Board;
-import logic.gamehandler.GameHandler;
 import util.Move;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public interface GameTreeIterator {
+
 	/**
 	 * @return Whether the iterator is at the root node.
 	 */

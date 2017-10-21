@@ -32,6 +32,12 @@ public class TreeNode {
 		width = null;
 	}
 
+	protected TreeNode(TreeNode parent) {
+		this();
+
+		parent.addChild(this);
+	}
+
 	public boolean hasMove() {
 		return move != null;
 	}
@@ -42,12 +48,6 @@ public class TreeNode {
 
 	public void setMove(Move move) {
 		this.move = move;
-	}
-
-	protected TreeNode(TreeNode parent) {
-		this();
-
-		parent.addChild(this);
 	}
 
 	public void addChild(TreeNode child) {

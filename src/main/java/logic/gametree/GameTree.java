@@ -18,11 +18,9 @@
 package logic.gametree;
 
 import logic.board.Board;
-import logic.gamehandler.GameHandler;
 import util.Move;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Tracks the history of a Go game, possibly including variations, and iterate over it.

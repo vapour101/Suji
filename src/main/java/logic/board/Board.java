@@ -133,16 +133,6 @@ public class Board {
 		return getChainSet(colour).getStones();
 	}
 
-	/**
-	 * Gets the number of stones captured by a particular player
-	 *
-	 * @param colour The player
-	 * @return The number of stones captured by that player
-	 */
-	public int getCaptures(StoneColour colour) {
-		return captures[colour.ordinal()];
-	}
-
 	@Override
 	public String toString() {
 		Collection<Coords> black = getStones(StoneColour.BLACK);
@@ -164,5 +154,15 @@ public class Board {
 		}
 
 		return result.toString();
+	}
+
+	/**
+	 * Gets the number of stones captured by a particular player
+	 *
+	 * @param colour The player
+	 * @return The number of stones captured by that player
+	 */
+	public int getCaptures(StoneColour colour) {
+		return captures[colour.ordinal()];
 	}
 }

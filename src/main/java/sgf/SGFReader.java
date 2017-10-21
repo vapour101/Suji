@@ -1,7 +1,6 @@
 package sgf;
 
 import logic.gametree.GameTree;
-import logic.gametree.GameTreeBuilder;
 import logic.gametree.GameTreeProvider;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
