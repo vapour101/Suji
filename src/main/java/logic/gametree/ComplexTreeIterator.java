@@ -40,7 +40,7 @@ public class ComplexTreeIterator implements GameTreeIterator {
 		if ( identifier.equals("B") || identifier.equals("W") ) {
 			StoneColour colour = StoneColour.fromString(identifier);
 
-			if ( property.getValues().isEmpty() )
+			if ( property.getValues().isEmpty() || property.getValues().firstElement().equals("") )
 				node.setMove(Move.pass(colour));
 			else {
 				Coords coords = Coords.fromSGFString(property.getValues().firstElement());
