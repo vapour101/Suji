@@ -23,12 +23,14 @@ import logic.gamehandler.GameHandler;
 import logic.gamehandler.LocalGame;
 import org.junit.Test;
 import util.Move;
+import util.StoneColour;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 import static util.Move.play;
 import static util.StoneColour.BLACK;
+import static util.StoneColour.WHITE;
 
 public class GameEventTest {
 
@@ -36,16 +38,21 @@ public class GameEventTest {
 	public void getState() {
 		GameHandler game = new LocalGame(0);
 		final Board[] result = {null};
+		final StoneColour[] colours = {null};
 		Board board = new Board();
 
 		Move move = play(getCoords("K10"), BLACK);
 		board.playStone(move);
 
-		EventHandler<GameEvent> dummy = event -> result[0] = event.getBoard();
+		EventHandler<GameEvent> dummy = event -> {
+			result[0] = event.getBoard();
+			colours[0] = event.getTurnPlayer();
+		};
 		game.subscribe(GameEvent.MOVE, dummy);
 
 		game.playMove(move);
 
 		assertThat(result[0], is(board));
+		assertThat(colours[0], is(WHITE));
 	}
 }

@@ -18,11 +18,12 @@
 package logic.gamehandler;
 
 import logic.board.Board;
+import logic.gametree.GameTree;
 import org.junit.Test;
+import sgf.SGFReader;
 import util.Move;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static util.Coords.getCoords;
 import static util.Move.play;
@@ -32,6 +33,33 @@ import static util.StoneColour.WHITE;
 public class LocalGameTest {
 
 	private static final String[] koBoard = {"C4", "D4", "D3", "E3", "D5", "E5", "K4", "F4", "E4"};
+
+	@Test
+	public void generatingSGF() {
+		LocalGame handler = new LocalGame();
+		handler.playMove(play(getCoords("D4"), BLACK));
+		handler.playMove(play(getCoords("D4"), WHITE)); //Illegal, should be ignored
+		handler.pass();
+		handler.pass();
+
+		String sgf = handler.getSGFWriter().getSGFString();
+
+		assertThat(sgf, containsString("B[dd]"));
+		assertThat(sgf, not(containsString("W[dd]")));
+		assertThat(sgf, containsString("W[]"));
+
+		SGFReader reader = new SGFReader(sgf);
+		GameTree tree = reader.getGameTree();
+
+		while (tree.getNumChildren() > 0)
+			tree.stepForward(0);
+
+		LocalGame compare = new LocalGame(tree);
+
+		assertThat(handler.getBoard(), is(compare.getBoard()));
+
+		assertThat(handler.getScorer(), not(nullValue()));
+	}
 
 	@Test
 	public void gameTracking() {

@@ -52,6 +52,7 @@ public class BoardTest {
 
 		assertThat(board1, is(board1));
 		assertThat(board1, is(not(getCoords("D4"))));
+		assertThat(board1.toString(), containsString("B"));
 	}
 
 	@Test
