@@ -18,16 +18,9 @@
 package logic.gametree;
 
 import logic.board.Board;
-import util.Coords;
 import util.Move;
-import util.StoneColour;
 
 import java.util.List;
-
-import static util.Coords.fromSGFString;
-import static util.Move.pass;
-import static util.Move.play;
-import static util.StoneColour.fromString;
 
 public class ComplexTree implements GameTree {
 
@@ -41,10 +34,6 @@ public class ComplexTree implements GameTree {
 	private ComplexTree(TreeNode rootNode) {
 		root = rootNode;
 		current = new ComplexTreeIterator(root);
-	}
-
-	public static GameTreeBuilder getBuilder() {
-		return new Builder();
 	}
 
 	@Override
@@ -104,64 +93,5 @@ public class ComplexTree implements GameTree {
 	@Override
 	public Board getLastPosition() {
 		return current.getLastPosition();
-	}
-
-	private static class Builder implements GameTreeBuilder {
-
-		private TreeNode root;
-		private TreeNode current;
-
-		private Builder() {
-			root = new TreeNode();
-			current = root;
-		}
-
-		@Override
-		public GameTree build() {
-			GameTree result = new ComplexTree(root);
-
-			while (result.getNumChildren() > 0)
-				result.stepForward(0);
-
-			return result;
-		}
-
-		@Override
-		public void gotoRoot() {
-			current = root;
-		}
-
-		@Override
-		public TreeNode getRoot() {
-			return root;
-		}
-
-		@Override
-		public void addVariation(GameTreeBuilder subtree) {
-			current.addChild(subtree.getRoot());
-		}
-
-		@Override
-		public void appendNode() {
-			TreeNode node = new TreeNode();
-			current.addChild(node);
-			current = node;
-		}
-
-		@Override
-		public void appendProperty(GameTreeProperty property) {
-			String identifier = property.getIdentifier();
-			if ( identifier.equals("B") || identifier.equals("W") ) {
-				StoneColour colour = fromString(identifier);
-
-				if ( property.getValues().isEmpty() )
-					current.setMove(pass(colour));
-				else {
-					Coords coords = fromSGFString(property.getValues().firstElement());
-
-					current.setMove(play(coords, colour));
-				}
-			}
-		}
 	}
 }
