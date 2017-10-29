@@ -18,6 +18,7 @@
 package ui.controller;
 
 import event.GameDrawerEventWrapper;
+import event.GameEvent;
 import event.HoverEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -28,10 +29,15 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 import logic.gamehandler.GameHandler;
 import ui.drawer.*;
 import util.DrawCoords;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -45,6 +51,10 @@ public class BoardController extends DockNodeController implements Initializable
 	VBox sideBar;
 	Canvas boardCanvas;
 	Drawer gameDrawer;
+
+	@FXML
+	MediaView mediaView;
+	MediaPlayer mediaPlayer;
 
 	private GameHandler game;
 	private String fxmlLocation;
@@ -60,6 +70,20 @@ public class BoardController extends DockNodeController implements Initializable
 		fxmlLocation = resourcePath;
 		sideBarItems = new ArrayDeque<>();
 		this.interactive = interactive;
+
+		mediaPlayer = null;
+		try {
+			Media media = new Media(getClass().getResource("/sound/sound6.mp3").toURI().toString());
+			mediaPlayer = new MediaPlayer(media);
+
+			gameHandler.subscribe(GameEvent.MOVE, event -> {
+				mediaPlayer.seek(Duration.ZERO);
+				mediaPlayer.play();
+			});
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final void addToSideBar(Node node) {
@@ -71,6 +95,9 @@ public class BoardController extends DockNodeController implements Initializable
 		setupPanes();
 		constructCanvas();
 		setupSideBar();
+
+		if ( mediaPlayer != null )
+			mediaView.setMediaPlayer(mediaPlayer);
 	}
 
 	void setupPanes() {
