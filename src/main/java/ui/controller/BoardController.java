@@ -110,7 +110,7 @@ public class BoardController extends DockNodeController implements Initializable
 	}
 
 	StoneDrawer buildStoneDrawer() {
-		Image blackStone = new Image("/images/black1.JPG", false);
+		Image blackStone = new Image("/images/black1.png", false);
 		Image whiteStone = new Image("/images/img_hanajirushi.png", false);
 		return new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
 	}
