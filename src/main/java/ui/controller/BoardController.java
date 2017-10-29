@@ -98,7 +98,7 @@ public class BoardController extends DockNodeController implements Initializable
 
 		gameDrawer.setStoneDrawer(buildStoneDrawer());
 
-		Image wood = new Image("/images/wood.jpg", false);
+		Image wood = new Image("/images/kaya.jpg", false);
 		Image lines = new Image("/images/grid.png", false);
 
 		BoardDrawer boardDrawer = new TexturedBoardDrawer(boardCanvas, wood, lines);
@@ -110,8 +110,8 @@ public class BoardController extends DockNodeController implements Initializable
 	}
 
 	StoneDrawer buildStoneDrawer() {
-		Image blackStone = new Image("/images/black.png", false);
-		Image whiteStone = new Image("/images/white.png", false);
+		Image blackStone = new Image("/images/black1.png", false);
+		Image whiteStone = new Image("/images/img_hanajirushi.png", false);
 		return new TexturedStoneDrawer(boardCanvas, blackStone, whiteStone);
 	}
 

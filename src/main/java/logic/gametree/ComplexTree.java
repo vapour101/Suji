@@ -54,7 +54,7 @@ public class ComplexTree implements GameTree {
 
 	@Override
 	public GameTreeIterator getRoot() {
-		return current;
+		return new ComplexTreeIterator(root);
 	}
 
 	@Override
