@@ -56,7 +56,7 @@ generateGrammarSource {
 
 cobertura {
     coverageFormats = ['html', 'xml']
-    coverageExcludes = ['.*instrumented_classes.ui.*']
+    coverageExcludes = ['.*instrumented_classes.ui.*', '.*instrumented_classes.event.*DrawerEventWrapper*']
     coverageIgnoreTrivial = true
 }
 
